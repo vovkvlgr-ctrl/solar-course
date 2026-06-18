@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Калькулятор сонячної станції</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f5f5f0;
+    color: #1a1a1a;
+    padding: 1.5rem;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  h1 { font-size: 20px; font-weight: 500; margin-bottom: 4px; }
+  .subtitle { font-size: 14px; color: #666; margin-bottom: 1.5rem; }
+
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.1);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .card-title { font-size: 13px; font-weight: 500; color: #888; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 1rem; }
+
+  .row { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
+  .row:last-child { margin-bottom: 0; }
+  .row label { font-size: 14px; color: #555; width: 200px; flex-shrink: 0; }
+  .row input[type=range] { flex: 1; accent-color: #1D9E75; }
+  .row select {
+    flex: 1; padding: 6px 10px; border-radius: 8px;
+    border: 1px solid rgba(0,0,0,0.15); font-size: 14px;
+    background: #fff; color: #1a1a1a;
+  }
+  .row .val { font-size: 14px; font-weight: 500; min-width: 72px; text-align: right; }
+
+  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 1rem; }
+  .metric { background: #f5f5f0; border-radius: 8px; padding: 12px 14px; }
+  .metric-label { font-size: 12px; color: #888; margin-bottom: 3px; }
+  .metric-val { font-size: 22px; font-weight: 500; }
+  .metric-unit { font-size: 12px; color: #888; }
+  .metric.hi .metric-val { color: #1D9E75; }
+
+  .chart-wrap { position: relative; width: 100%; height: 200px; margin-bottom: 1rem; }
+
+  .months-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; margin-bottom: 1rem; }
+  .month-col { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .month-bar-wrap { height: 70px; display: flex; align-items: flex-end; width: 100%; }
+  .month-bar { width: 100%; background: #1D9E75; border-radius: 2px 2px 0 0; transition: height 0.3s; }
+  .month-name { font-size: 10px; color: #888; }
+  .month-val { font-size: 9px; color: #aaa; }
+
+  .hint {
+    font-size: 13px; color: #085041;
+    background: #E1F5EE; border-radius: 8px;
+    padding: 10px 14px;
+  }
+
+  .legend { display: flex; gap: 16px; font-size: 12px; color: #888; margin-bottom: 8px; }
+  .legend span { display: flex; align-items: center; gap: 5px; }
+  .legend-dot { width: 12px; height: 3px; border-radius: 2px; }
+
+  @media (max-width: 500px) {
+    .row label { width: 130px; font-size: 13px; }
+    .month-val { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Калькулятор виробітку сонячної станції</h1>
+<p class="subtitle">Модуль 1 · Теорія сонячної енергетики</p>
+
+<div class="card">
+  <div class="card-title">Параметри системи</div>
+
+  <div class="row">
+    <label>Регіон України</label>
+    <select id="region" onchange="calc()">
+      <option value="4.5">Північ (Київ, Чернігів) — 4.5 год</option>
+      <option value="4.8" selected>Центр (Полтава, Харків) — 4.8 год</option>
+      <option value="5.1">Захід (Львів, Вінниця) — 5.1 год</option>
+      <option value="5.4">Південь (Одеса, Миколаїв) — 5.4 год</option>
+      <option value="5.6">Херсон / Запоріжжя — 5.6 год</option>
+    </select>
+  </div>
+
+  <div class="row">
+    <label>Потужність станції (кВт)</label>
+    <input type="range" id="power" min="1" max="100" step="1" value="10" oninput="calc()">
+    <span class="val" id="power-out">10 кВт</span>
+  </div>
+
+  <div class="row">
+    <label>Кут нахилу панелей</label>
+    <input type="range" id="tilt" min="0" max="60" step="5" value="30" oninput="calc()">
+    <span class="val" id="tilt-out">30°</span>
+  </div>
+
+  <div class="row">
+    <label>ККД системи</label>
+    <input type="range" id="eff" min="70" max="95" step="1" value="80" oninput="calc()">
+    <span class="val" id="eff-out">80%</span>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">Результати</div>
+  <div class="metrics" id="metrics"></div>
+  <div class="hint" id="hint"></div>
+</div>
+
+<div class="card">
+  <div class="card-title">Виробіток по місяцях (кВт·год)</div>
+  <div class="months-grid" id="months-grid"></div>
+</div>
+
+<div class="card">
+  <div class="card-title">Що таке Peak Sun Hours?</div>
+  <div class="legend">
+    <span><span class="legend-dot" style="background:#EF9F27; height:3px; display:inline-block;"></span>Реальна радіація</span>
+    <span><span class="legend-dot" style="background:#1D9E75; height:3px; display:inline-block; border-top: 2px dashed #1D9E75; background: none;"></span>PSH еквівалент</span>
+  </div>
+  <div class="chart-wrap">
+    <canvas id="sunChart"></canvas>
+  </div>
+  <p style="font-size:13px; color:#666; line-height:1.6;">
+    PSH — це не кількість годин сонця, а <strong>еквівалентні години</strong> при потужності 1000 Вт/м².
+    Площа під кривою реального сонця = площа зеленого прямокутника.
+    Тому формула <code style="background:#f0f0f0; padding:1px 5px; border-radius:4px;">P × PSH × ККД</code> дає правильний виробіток.
+  </p>
+</div>
+
+<script>
+const MONTHS = ['Січ','Лют','Бер','Кві','Тра','Чер','Лип','Сер','Вер','Жов','Лис','Гру'];
+const MONTH_F = [0.42,0.55,0.78,1.0,1.15,1.22,1.20,1.14,0.95,0.72,0.48,0.38];
+
+let chart;
+
+function buildCurve(psh) {
+  const hours = [], real = [], rect = [];
+  for (let h = 5; h <= 21; h += 0.5) {
+    hours.push(h % 1 === 0 ? h + ':00' : '');
+    const t = (h - 13) / 5;
+    real.push(Math.round(Math.max(0, 1000 * Math.exp(-t * t * 1.8))));
+    rect.push((h >= (13 - psh/2) && h <= (13 + psh/2)) ? 1000 : 0);
+  }
+  return { hours, real, rect };
+}
+
+function initChart(psh) {
+  const { hours, real, rect } = buildCurve(psh);
+  chart = new Chart(document.getElementById('sunChart'), {
+    type: 'line',
+    data: {
+      labels: hours,
+      datasets: [
+        { label: 'Реальна радіація', data: real, borderColor: '#EF9F27', backgroundColor: 'rgba(239,159,39,0.12)', fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2 },
+        { label: 'PSH', data: rect, borderColor: '#1D9E75', backgroundColor: 'rgba(29,158,117,0.1)', fill: true, tension: 0, pointRadius: 0, borderWidth: 2, borderDash: [5,3] }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { font: { size: 11 }, color: '#aaa', maxTicksLimit: 8 }, grid: { color: 'rgba(0,0,0,0.05)' } },
+        y: { min: 0, max: 1100, ticks: { font: { size: 11 }, color: '#aaa', callback: v => v + ' Вт' }, grid: { color: 'rgba(0,0,0,0.05)' } }
+      }
+    }
+  });
+}
+
+function calc() {
+  const psh = parseFloat(document.getElementById('region').value);
+  const power = parseInt(document.getElementById('power').value);
+  const tilt = parseInt(document.getElementById('tilt').value);
+  const eff = parseInt(document.getElementById('eff').value);
+
+  document.getElementById('power-out').textContent = power + ' кВт';
+  document.getElementById('tilt-out').textContent = tilt + '°';
+  document.getElementById('eff-out').textContent = eff + '%';
+
+  const tiltF = 1 - Math.abs(tilt - 35) * 0.003;
+  const daily = power * psh * (eff / 100) * tiltF;
+  const yearly = Math.round(daily * 365);
+  const monthly = Math.round(daily * 30);
+  const specific = Math.round(yearly / power);
+  const cf = (daily / (power * 24) * 100).toFixed(1);
+
+  document.getElementById('metrics').innerHTML = `
+    <div class="metric hi"><div class="metric-label">Виробіток на добу</div><div class="metric-val">${daily.toFixed(1)}</div><div class="metric-unit">кВт·год/день</div></div>
+    <div class="metric hi"><div class="metric-label">На місяць</div><div class="metric-val">${monthly.toLocaleString('uk-UA')}</div><div class="metric-unit">кВт·год/міс</div></div>
+    <div class="metric hi"><div class="metric-label">На рік</div><div class="metric-val">${yearly.toLocaleString('uk-UA')}</div><div class="metric-unit">кВт·год/рік</div></div>
+    <div class="metric"><div class="metric-label">Специфічний виробіток</div><div class="metric-val">${specific.toLocaleString('uk-UA')}</div><div class="metric-unit">кВт·год/кВт/рік</div></div>
+    <div class="metric"><div class="metric-label">Capacity factor</div><div class="metric-val">${cf}</div><div class="metric-unit">%</div></div>
+  `;
+
+  const mVals = MONTH_F.map(f => daily * 30 * f);
+  const maxV = Math.max(...mVals);
+  document.getElementById('months-grid').innerHTML = MONTHS.map((m, i) => {
+    const h = Math.round((mVals[i] / maxV) * 66);
+    return `<div class="month-col">
+      <div class="month-bar-wrap"><div class="month-bar" style="height:${h}px"></div></div>
+      <div class="month-name">${m}</div>
+      <div class="month-val">${Math.round(mVals[i])}</div>
+    </div>`;
+  }).join('');
+
+  let hint = '';
+  if (tilt < 20) hint = `Кут ${tilt}° — замалий. Рекомендовано 30–40° для максимального річного виробітку в Україні.`;
+  else if (tilt > 50) hint = `Кут ${tilt}° — занадто крутий. Взимку добре, але влітку суттєві втрати.`;
+  else if (eff < 76) hint = `ККД ${eff}% — нижче норми. Перевірте якість кабелів, інвертора, затінення.`;
+  else hint = `Специфічний виробіток ${specific.toLocaleString('uk-UA')} кВт·год/кВт/рік. Норма для України: 1050–1400.`;
+  document.getElementById('hint').textContent = hint;
+
+  if (chart) {
+    const { rect } = buildCurve(psh);
+    chart.data.datasets[1].data = rect;
+    chart.update('none');
+  }
+}
+
+initChart(4.8);
+calc();
+</script>
+</body>
+</html>
