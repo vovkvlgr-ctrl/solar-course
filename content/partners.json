@@ -1,0 +1,60 @@
+{
+  "items": [
+    {
+      "name": "Київський авіаційний інститут",
+      "short": "КАІ",
+      "url": "https://nau.edu.ua",
+      "logo": "https://academy-viatec.netlify.app/Images/univers/kai.png",
+      "lab": "kai"
+    },
+    {
+      "name": "Державний університет інформаційно-комунікаційних технологій",
+      "short": "ДУІКТ",
+      "url": "https://duikt.edu.ua",
+      "logo": "https://academy-viatec.netlify.app/Images/univers/duikt.png",
+      "lab": ""
+    },
+    {
+      "name": "Київський столичний університет імені Бориса Грінченка",
+      "short": "Університет Грінченка",
+      "url": "https://kubg.edu.ua",
+      "logo": "https://academy-viatec.netlify.app/Images/univers/grin.png",
+      "lab": ""
+    },
+    {
+      "name": "КПІ ім. Ігоря Сікорського",
+      "short": "КПІ",
+      "url": "https://kpi.ua",
+      "logo": "https://academy-viatec.netlify.app/Images/univers/kpi.png",
+      "lab": ""
+    },
+    {
+      "name": "Національний університет «Львівська політехніка»",
+      "short": "Львівська політехніка",
+      "url": "https://lpnu.ua",
+      "logo": "https://academy-viatec.netlify.app/Images/univers/lvpol.png",
+      "lab": ""
+    },
+    {
+      "name": "Київський національний університет імені Тараса Шевченка",
+      "short": "КНУ",
+      "url": "https://knu.ua",
+      "logo": "https://academy-viatec.netlify.app/Images/univers/shev.png",
+      "lab": ""
+    },
+    {
+      "name": "Державний університет інтелектуальних технологій і зв'язку",
+      "short": "ДУІТЗ",
+      "url": "https://suitt.edu.ua",
+      "logo": "https://academy-viatec.netlify.app/Images/univers/duits.png",
+      "lab": ""
+    },
+    {
+      "name": "Національний університет біоресурсів і природокористування України",
+      "short": "НУБіП",
+      "url": "https://nubip.edu.ua",
+      "logo": "",
+      "lab": "nubip"
+    }
+  ]
+}

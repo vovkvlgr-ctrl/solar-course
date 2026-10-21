@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Адмінка — Академія Viatec</title>
+</head>
+<body>
+  <!-- Адмінка сайту (Sveltia CMS). Налаштування — у файлі config.yml поруч. -->
+  <script>
+    // Відкрито подвійним кліком по файлу — адмінка так не працює, пояснюємо що робити
+    if (location.protocol === "file:") {
+      document.write(
+        '<div style="font:17px/1.6 system-ui,sans-serif;max-width:640px;margin:10vh auto;padding:32px;border-radius:16px;background:#F1F5F4;color:#0F1B1E">' +
+        '<h1 style="margin:0 0 12px;font-size:24px">Адмінку треба відкривати через запуск сайту</h1>' +
+        '<ol style="padding-left:20px;margin:0">' +
+        '<li>Закрийте цю вкладку.</li>' +
+        '<li>У папці сайту двічі клацніть <b>Open-site-Windows.bat</b> (на Mac — <b>Open-site-Mac.command</b>).</li>' +
+        '<li>Не закриваючи чорне вікно, відкрийте в Chrome або Edge адресу <b>http://localhost:8080/admin/</b> (порт дивіться в чорному вікні).</li>' +
+        '<li>Натисніть <b>Work with Local Repository</b> і виберіть папку сайту.</li>' +
+        '</ol></div>'
+      );
+    } else {
+      document.write('<script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"><\/script>');
+    }
+  </script>
+</body>
+</html>

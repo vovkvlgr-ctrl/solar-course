@@ -1,0 +1,100 @@
+{
+  "items": [
+    {
+      "course": "ses-installer",
+      "format": "offline",
+      "date": "2026-10-23",
+      "end": "",
+      "time": "09:30",
+      "city": "Київ",
+      "venue": "КАІ",
+      "trainer": "Іван Яшанов",
+      "seats": "",
+      "seatsLeft": ""
+    },
+    {
+      "course": "ruijie",
+      "format": "offline",
+      "date": "2026-10-29",
+      "end": "2026-10-30",
+      "time": "10:00",
+      "city": "Київ",
+      "venue": "офіс Viatec, вул. Михайла Стельмаха, 3",
+      "trainer": "Дмитро Дергачов",
+      "seats": "",
+      "seatsLeft": ""
+    },
+    {
+      "course": "lifepo4",
+      "format": "offline",
+      "date": "2026-10-30",
+      "end": "",
+      "time": "09:30",
+      "city": "Київ",
+      "venue": "КАІ",
+      "trainer": "Іван Яшанов",
+      "seats": "",
+      "seatsLeft": ""
+    },
+    {
+      "course": "cctv",
+      "format": "offline",
+      "date": "2026-11-10",
+      "end": "2026-11-12",
+      "city": "Київ",
+      "venue": "[лабораторія]",
+      "trainer": "[Ім'я тренера]",
+      "seats": 10,
+      "seatsLeft": 3,
+      "time": ""
+    },
+    {
+      "course": "cctv",
+      "format": "online",
+      "date": "2026-11-17",
+      "end": "2026-11-28",
+      "city": "",
+      "venue": "",
+      "trainer": "[Ім'я тренера]",
+      "seats": 20,
+      "seatsLeft": 14,
+      "time": ""
+    },
+    {
+      "course": "vms",
+      "format": "offline",
+      "date": "2026-11-24",
+      "end": "2026-11-26",
+      "city": "Київ",
+      "venue": "[лабораторія]",
+      "trainer": "[Ім'я тренера]",
+      "seats": 10,
+      "seatsLeft": 7,
+      "time": ""
+    },
+    {
+      "course": "aai",
+      "format": "offline",
+      "date": "2026-12-08",
+      "end": "2026-12-10",
+      "city": "Київ",
+      "venue": "Лабораторія в НАУ",
+      "trainer": "[Ім'я тренера]",
+      "seats": 10,
+      "seatsLeft": 10,
+      "time": ""
+    },
+    {
+      "course": "cctv",
+      "format": "offline",
+      "date": "2027-01-19",
+      "end": "2027-01-21",
+      "city": "Київ",
+      "venue": "[лабораторія]",
+      "trainer": "[Ім'я тренера]",
+      "seats": 10,
+      "seatsLeft": 10,
+      "time": ""
+    }
+  ]
+}

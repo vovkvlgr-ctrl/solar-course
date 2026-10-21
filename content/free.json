@@ -1,0 +1,52 @@
+{
+  "items": [
+    {
+      "tag": "Hikvision",
+      "title": "Базовий курс HIKVISION",
+      "text": "7 уроків. Обов'язковий крок перед сертифікацією HCSA.",
+      "url": "https://viatec.kwiga.com/courses/bazovii-kurs-hikwision"
+    },
+    {
+      "tag": "ШІ",
+      "title": "Від початківця до експерта в ШІ",
+      "text": "65 уроків про штучний інтелект для роботи.",
+      "url": "https://viatec.kwiga.com/courses/vid-pochatkivtsia-do-eksperta-v-shi"
+    },
+    {
+      "tag": "Енергетика",
+      "title": "Інвертори Deye — повний технічний гайд",
+      "text": "Для інженерів і монтажників.",
+      "url": "https://viatec.kwiga.com/courses/invertori-deye-povnii-tekhnichnii-gaid-dlia-inzheneriv-ta-montazhnikiv"
+    },
+    {
+      "tag": "Ruijie",
+      "title": "Рішення Reyee Wi-Fi 7",
+      "text": "Нове покоління бездротових мереж.",
+      "url": "https://viatec.kwiga.com/courses/rishennia-reyee-wi-fi-7"
+    },
+    {
+      "tag": "Hikvision",
+      "title": "AcuSeek — інноваційна технологія ШІ",
+      "text": "Пошук у відеоархіві за допомогою штучного інтелекту.",
+      "url": "https://viatec.kwiga.com/courses/acuseek-innovatsiina-tekhnologiia-shtuchnogo-intelektu"
+    },
+    {
+      "tag": "Dahua",
+      "title": "Dahua AirShield",
+      "text": "Новий стандарт надійності в бездротовій безпеці. Вебінар.",
+      "url": "https://viatec.kwiga.com/courses/vebinar-dahua-airshield-novii-standart-nadiinosti-u-bezdrotovii-bezpetsi"
+    },
+    {
+      "tag": "Мережі",
+      "title": "Основи мереж",
+      "text": "7 уроків: база для всіх, хто працює з IP-системами.",
+      "url": "https://viatec.kwiga.com/courses/osnovi-merezh"
+    },
+    {
+      "tag": "Кібербезпека",
+      "title": "Основи кібербезпеки",
+      "text": "11 уроків про захист систем і даних.",
+      "url": "https://viatec.kwiga.com/courses/osnovi-kiberbezpeki"
+    }
+  ]
+}

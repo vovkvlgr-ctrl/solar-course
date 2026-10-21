@@ -1,0 +1,384 @@
+# =====================================================================
+#  АДМІНКА САЙТУ АКАДЕМІЇ (Sveltia CMS)
+#  Перед першим запуском замініть ВЛАСНИК/РЕПОЗИТОРІЙ на свій
+#  GitHub-репозиторій (напр. academy-team/academy-site). Див. README.
+# =====================================================================
+
+backend:
+  name: github
+  repo: ВЛАСНИК/РЕПОЗИТОРІЙ
+  branch: main
+  # Коли налаштуєте вхід через кнопку «Sign In with GitHub» (див. README),
+  # розкоментуйте рядок нижче й вставте адресу свого Cloudflare Worker:
+  # base_url: https://sveltia-cms-auth.ВАШ-АКАУНТ.workers.dev
+  commit_messages:
+    create: "Додано: {{collection}} «{{slug}}»"
+    update: "Оновлено: {{collection}} «{{slug}}»"
+    delete: "Видалено: {{collection}} «{{slug}}»"
+    uploadMedia: "Завантажено файл {{path}}"
+    deleteMedia: "Видалено файл {{path}}"
+
+# Куди складаються фото, завантажені через адмінку
+media_folder: img/uploads
+public_folder: /img/uploads
+
+# Фото автоматично зменшуються й перетворюються в WebP при завантаженні
+media_libraries:
+  default:
+    config:
+      max_file_size: 25000000
+      slugify_filename: true
+      transformations:
+        raster_image:
+          format: webp
+          quality: 82
+          width: 1920
+          height: 1920
+
+collections:
+
+  # ---------------------------------------------------------------
+  - name: site
+    label: "⚙️ Налаштування сайту"
+    description: "Контакти, головний екран, онлайн-навчання, робосумо, форма заявок."
+    files:
+      - name: settings
+        label: "Загальні налаштування"
+        file: content/settings.json
+        format: json
+        fields:
+          - label: "Адреса обробника форм (Google Apps Script)"
+            name: formEndpoint
+            widget: string
+            required: false
+            hint: "Посилання на веб-застосунок з README, розділ «Форми». Поки порожньо — заявки відкриваються листом на пошту."
+
+          - label: "Контакти"
+            name: contacts
+            widget: object
+            fields:
+              - { label: "Телефон", name: phone, widget: string }
+              - { label: "Пошта", name: email, widget: string }
+              - { label: "Telegram (посилання)", name: telegram, widget: string, required: false, hint: "Напр. https://t.me/academy. Порожньо — не показується." }
+              - { label: "Сайт компанії", name: site, widget: string, required: false }
+
+          - label: "Нові напрями (позначка «Новий напрям» біля заголовка)"
+            name: newDirections
+            widget: list
+            required: false
+            field: { label: "Напрям", name: dir, widget: string }
+
+          - label: "Головний екран"
+            name: hero
+            widget: object
+            fields:
+              - { label: "Заголовок (початок)", name: title, widget: string }
+              - { label: "Заголовок (виділена бірюзовим частина)", name: titleAccent, widget: string }
+              - { label: "Підзаголовок", name: subtitle, widget: text }
+              - label: "Цифри справа"
+                name: stats
+                widget: list
+                label_singular: "показник"
+                summary: "{{value}} — {{label}}"
+                max: 4
+                fields:
+                  - { label: "Число або слово", name: value, widget: string }
+                  - { label: "Підпис", name: label, widget: string }
+
+          - label: "Онлайн-навчання (Kwiga)"
+            name: online
+            widget: object
+            fields:
+              - { label: "Заголовок", name: title, widget: string }
+              - { label: "Текст", name: text, widget: text }
+              - { label: "Посилання на каталог Kwiga", name: url, widget: string }
+              - label: "Розділи каталогу (кнопки)"
+                name: categories
+                widget: list
+                label_singular: "розділ"
+                summary: "{{title}}"
+                fields:
+                  - { label: "Назва", name: title, widget: string }
+                  - { label: "Посилання", name: url, widget: string }
+              - label: "Курси в розробці"
+                name: inDev
+                widget: list
+                required: false
+                label_singular: "курс"
+                summary: "{{title}}"
+                hint: "На сайті показуються перші 3. Порожній список — блок «У розробці» сховано."
+                fields:
+                  - { label: "Назва", name: title, widget: string }
+                  - { label: "Коротко", name: text, widget: string, required: false }
+
+          - label: "Дуальна освіта"
+            name: dual
+            widget: object
+            fields:
+              - { label: "Заголовок", name: title, widget: string }
+              - { label: "Текст", name: text, widget: text }
+              - { label: "Що ми даємо (галочки)", name: points, widget: list, field: { label: "Пункт", name: item, widget: string } }
+              - label: "Кому пропонуємо співпрацю"
+                name: audiences
+                widget: list
+                label_singular: "картку"
+                summary: "{{title}}"
+                fields:
+                  - { label: "Заголовок", name: title, widget: string }
+                  - { label: "Текст", name: text, widget: text }
+                  - { label: "Кнопка вибирає у формі", name: role, widget: select, options: [{ label: "Університет / коледж", value: university }, { label: "Компанія", value: company }, { label: "Студент", value: student }] }
+
+          - label: "Конкурс робосумо"
+            name: robosumo
+            widget: object
+            fields:
+              - { label: "Дата й час початку", name: date, widget: datetime, hint: "Київський час. Таймер на сайті рахує до цього моменту." }
+              - { label: "Місце проведення", name: place, widget: string }
+              - { label: "Посилання на положення (PDF)", name: rulesUrl, widget: string, required: false, hint: "Можна завантажити PDF у «Медіа» й вставити його адресу. Порожньо — кнопку сховано." }
+              - { label: "Короткий опис", name: intro, widget: text }
+              - { label: "Хто бере участь", name: who, widget: text }
+              - { label: "Правила", name: rules, widget: text }
+              - { label: "Призи", name: prizes, widget: text }
+              - { label: "Глядачам", name: viewers, widget: text }
+              - { label: "Текст для компаній-партнерів", name: partner, widget: text }
+
+  # ---------------------------------------------------------------
+  - name: catalog
+    label: "🎓 Курси й розклад"
+    description: "Платні курси, курси «скоро», розклад груп, безкоштовні курси."
+    files:
+      - name: courses
+        label: "Сертифікаційні курси"
+        file: content/courses.json
+        format: json
+        fields:
+          - label: "Курси"
+            name: items
+            widget: list
+            label_singular: "курс"
+            summary: "{{title}} — {{price}} грн"
+            collapsed: true
+            fields:
+              - { label: "Код курсу (латиницею, без пробілів)", name: id, widget: string, pattern: ['^[a-z0-9-]+$', "Лише малі латинські літери, цифри й дефіс"], hint: "Іде в адресу сторінки: course.html?id=cctv. Після публікації краще не змінювати." }
+              - { label: "Напрям", name: direction, widget: string, hint: "Курси з однаковим напрямом стоять на сайті разом під одним заголовком. Напр. «Системи безпеки», «Енергетика»." }
+              - { label: "Бренд / мітка над назвою", name: vendor, widget: string }
+              - { label: "Назва", name: title, widget: string }
+              - { label: "Виділити картку", name: featured, widget: boolean, default: false, required: false }
+              - { label: "Наліпка (напр. «Найпопулярніший», «Скоро · практика на дахах»)", name: badge, widget: string, required: false }
+              - { label: "Курс ще не стартував («Скоро»)", name: soon, widget: boolean, default: false, required: false, hint: "Кнопка на сторінці курсу стане «Повідомити про старт»." }
+              - { label: "Короткий опис (картка й шапка сторінки)", name: text, widget: text }
+              - { label: "Теги (тривалість, формат, сертифікат)", name: tags, widget: list, field: { label: "Тег", name: tag, widget: string } }
+              - { label: "Ціна, грн", name: price, widget: number, value_type: int, min: 0, hint: "0 — на сайті буде «Ціна за запитом»." }
+              - { label: "Фото курсу", name: image, widget: image, required: false, hint: "Горизонтальне, бажано 1920×820." }
+              - { label: "Відео про курс (посилання YouTube)", name: video, widget: string, required: false }
+              - { label: "Сторінка події на viatec.ua (необов'язково)", name: eventUrl, widget: string, required: false, hint: "На сторінці курсу з'явиться кнопка «Сторінка події на viatec.ua»." }
+              - { label: "Що входить у вартість", name: included, widget: list, required: false, field: { label: "Пункт", name: item, widget: string } }
+              - { label: "Для кого", name: audience, widget: text, required: false }
+              - { label: "Що треба знати до курсу", name: requirements, widget: text, required: false }
+              - { label: "Результати: що вмітиме випускник", name: outcomes, widget: list, field: { label: "Результат", name: item, widget: string } }
+              - label: "Програма (модулі)"
+                name: modules
+                widget: list
+                label_singular: "модуль"
+                summary: "{{title}}"
+                collapsed: true
+                fields:
+                  - { label: "Назва модуля", name: title, widget: string }
+                  - { label: "Що в модулі", name: text, widget: text }
+              - label: "Питання про курс"
+                name: faq
+                widget: list
+                required: false
+                label_singular: "питання"
+                summary: "{{q}}"
+                collapsed: true
+                fields:
+                  - { label: "Питання", name: q, widget: string }
+                  - { label: "Відповідь", name: a, widget: text }
+
+      - name: soon
+        label: "Курси «Скоро»"
+        file: content/soon.json
+        format: json
+        fields:
+          - label: "Курси, що готуються"
+            name: items
+            widget: list
+            label_singular: "курс"
+            summary: "{{title}}"
+            fields:
+              - { label: "Код (латиницею)", name: id, widget: string, pattern: ['^[a-z0-9-]+$', "Лише малі латинські літери, цифри й дефіс"] }
+              - { label: "Назва", name: title, widget: string }
+              - { label: "Опис", name: text, widget: text }
+
+      - name: schedule
+        label: "Розклад груп"
+        file: content/schedule.json
+        format: json
+        fields:
+          - label: "Групи"
+            name: items
+            widget: list
+            label_singular: "групу"
+            summary: "{{date}} · {{course}} · {{format}} · вільно {{seatsLeft}}"
+            collapsed: true
+            add_to_top: true
+            hint: "Минулі групи на сайті ховаються самі, видаляти їх не обов'язково."
+            fields:
+              - label: "Курс"
+                name: course
+                widget: relation
+                collection: catalog
+                file: courses
+                value_field: "{{items.*.id}}"
+                display_fields: ["{{items.*.title}}"]
+                search_fields: ["{{items.*.title}}"]
+              - { label: "Формат", name: format, widget: select, default: offline, options: [{ label: "Очно", value: offline }, { label: "Онлайн", value: online }] }
+              - { label: "Дата початку", name: date, widget: datetime, type: date }
+              - { label: "Дата завершення", name: end, widget: datetime, type: date, required: false }
+              - { label: "Час початку", name: time, widget: string, required: false, hint: "Напр. 09:30" }
+              - { label: "Місто (для очних)", name: city, widget: string, required: false }
+              - { label: "Майданчик / лабораторія", name: venue, widget: string, required: false }
+              - { label: "Тренер", name: trainer, widget: string }
+              - { label: "Всього місць", name: seats, widget: number, value_type: int, min: 1, required: false, hint: "Не знаєте — залиште порожнім: на сайті буде «Реєстрація відкрита»." }
+              - { label: "Вільних місць", name: seatsLeft, widget: number, value_type: int, min: 0, required: false, hint: "0 — на сайті з'явиться «Місць немає» і запис у лист очікування." }
+
+      - name: free
+        label: "Онлайн-курси: нові (Kwiga)"
+        file: content/free.json
+        format: json
+        fields:
+          - label: "Курси"
+            name: items
+            widget: list
+            hint: "На сайті показуються перші 3 зі списку. Нові курси ставте нагору."
+            label_singular: "курс"
+            summary: "{{title}}"
+            fields:
+              - { label: "Напрям (мітка)", name: tag, widget: string }
+              - { label: "Назва", name: title, widget: string }
+              - { label: "Опис", name: text, widget: string }
+              - { label: "Посилання на курс у Kwiga", name: url, widget: string, required: false, hint: "Порожньо — картка з позначкою «Незабаром»." }
+
+  # ---------------------------------------------------------------
+  - name: labs
+    label: "🔬 Лабораторії"
+    description: "Точки на карті України: фото, відео, опис, обладнання."
+    files:
+      - name: labs
+        label: "Лабораторії на карті"
+        file: content/labs.json
+        format: json
+        fields:
+          - label: "Лабораторії"
+            name: items
+            widget: list
+            label_singular: "лабораторію"
+            summary: "{{title}}, {{city}}"
+            collapsed: true
+            fields:
+              - { label: "Код (латиницею)", name: id, widget: string, pattern: ['^[a-z0-9-]+$', "Лише малі латинські літери, цифри й дефіс"] }
+              - { label: "Назва", name: title, widget: string }
+              - { label: "Місто", name: city, widget: string }
+              - { label: "Адреса", name: address, widget: string }
+              - { label: "Широта (lat)", name: lat, widget: number, value_type: float, hint: "Google Maps: правий клік по точці → перше число." }
+              - { label: "Довгота (lon)", name: lon, widget: number, value_type: float, hint: "Друге число." }
+              - { label: "Ще не відкрита (жовта точка «Скоро»)", name: soon, widget: boolean, default: false, required: false }
+              - { label: "Фото", name: photos, widget: list, required: false, field: { label: "Фото", name: photo, widget: image } }
+              - { label: "Відео (посилання YouTube)", name: video, widget: string, required: false }
+              - { label: "Опис", name: text, widget: text }
+              - { label: "Що в лабораторії", name: zones, widget: list, field: { label: "Пункт", name: item, widget: string } }
+              - { label: "Обладнання / бренди (теги)", name: tags, widget: list, field: { label: "Тег", name: tag, widget: string } }
+
+      - name: partners
+        label: "Університети-партнери"
+        file: content/partners.json
+        format: json
+        fields:
+          - label: "Університети"
+            name: items
+            widget: list
+            label_singular: "університет"
+            summary: "{{short}} — {{name}}"
+            fields:
+              - { label: "Повна назва", name: name, widget: string }
+              - { label: "Коротка назва (показується, якщо немає логотипу)", name: short, widget: string }
+              - { label: "Сайт", name: url, widget: string, required: false }
+              - { label: "Логотип", name: logo, widget: image, required: false }
+              - label: "Лабораторія в цьому університеті"
+                name: lab
+                widget: relation
+                required: false
+                collection: labs
+                file: labs
+                value_field: "{{items.*.id}}"
+                display_fields: ["{{items.*.title}}"]
+                search_fields: ["{{items.*.title}}"]
+
+  # ---------------------------------------------------------------
+  - name: media
+    label: "📸 Відео, фото, відгуки"
+    files:
+      - name: videos
+        label: "Відео"
+        file: content/videos.json
+        format: json
+        fields:
+          - label: "Відео"
+            name: items
+            widget: list
+            label_singular: "відео"
+            summary: "{{title}}"
+            hint: "Завантажте відео на YouTube (можна «Доступ за посиланням») і вставте посилання. Порожній список — блок на сайті сховано."
+            fields:
+              - { label: "Назва", name: title, widget: string }
+              - { label: "Посилання YouTube", name: url, widget: string }
+              - { label: "Підпис", name: caption, widget: string, required: false }
+
+      - name: gallery
+        label: "Фотогалерея"
+        file: content/gallery.json
+        format: json
+        fields:
+          - label: "Фото"
+            name: items
+            widget: list
+            label_singular: "фото"
+            summary: "{{caption}}"
+            thumbnail: image
+            hint: "Порожній список — блок на сайті сховано."
+            fields:
+              - { label: "Фото", name: image, widget: image }
+              - { label: "Підпис", name: caption, widget: string, required: false }
+
+      - name: reviews
+        label: "Відгуки випускників"
+        file: content/reviews.json
+        format: json
+        fields:
+          - label: "Відгуки"
+            name: items
+            widget: list
+            label_singular: "відгук"
+            summary: "{{name}} — {{course}}"
+            hint: "Тільки реальні відгуки з дозволу людини."
+            fields:
+              - { label: "Текст відгуку", name: text, widget: text }
+              - { label: "Ім'я та прізвище", name: name, widget: string }
+              - { label: "Посада, компанія", name: role, widget: string, required: false }
+              - { label: "Курс", name: course, widget: string, required: false }
+              - { label: "Фото", name: photo, widget: image, required: false }
+
+      - name: faq
+        label: "Часті питання"
+        file: content/faq.json
+        format: json
+        fields:
+          - label: "Питання"
+            name: items
+            widget: list
+            label_singular: "питання"
+            summary: "{{q}}"
+            fields:
+              - { label: "Питання", name: q, widget: string }
+              - { label: "Відповідь", name: a, widget: text }
