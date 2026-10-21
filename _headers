@@ -1,0 +1,7 @@
+# Налаштування Cloudflare Pages
+/content/*
+  Cache-Control: no-cache
+
+/admin/*
+  X-Robots-Tag: noindex
+  Cache-Control: no-cache

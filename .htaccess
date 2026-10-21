@@ -1,0 +1,12 @@
+# Для звичайного хостингу (Apache): дані й адмінка не кешуються,
+# тож зміни з адмінки видно одразу.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(json|yml)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+AddType application/json .json
+AddType image/webp .webp
+AddDefaultCharset utf-8
+DirectoryIndex index.html
+Options -Indexes

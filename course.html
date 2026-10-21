@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Курс — Академія Viatec</title>
+<meta name="description" content="Академія Viatec — навчальний центр для ринку систем безпеки, мереж та енергетики: сертифікаційні курси Hikvision, Dahua, Ruijie, лабораторії, онлайн-навчання, корпоративні програми й конкурс робосумо.">
+<meta name="robots" content="index, follow">
+
+<!-- Соцмережі / месенджери: картинка 1200x630 -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="uk_UA">
+<meta property="og:title" content="Академія Viatec — вчимося будувати системи, яким довіряють">
+<meta property="og:description" content="Навчальний центр Viatec: сертифікація брендів, лабораторії, онлайн-навчання й робосумо.">
+<meta property="og:image" content="https://[ВАШ-ДОМЕН]/og-image.jpg">
+<meta name="theme-color" content="#0F1B1E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+
+<!-- Розмітка для Google: організація та курси -->
+</head>
+<body>
+
+<!-- ============ ШАПКА ============ -->
+<header class="header">
+  <div class="wrap">
+    <a class="logo" href="./" aria-label="Академія Viatec, на головну">
+      <span class="logo-mark"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3FC2B3" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-5 9 5-9 5-9-5z"/><path d="M7 11.5V16c0 1.5 2.2 3 5 3s5-1.5 5-3v-4.5"/></svg></span>
+      <span>Академія <b>Viatec</b></span>
+    </a>
+    <nav class="nav" id="nav" aria-label="Головне меню">
+      <a href="./#courses">Курси</a>
+      <a href="./#online">Онлайн</a>
+      <a href="./#labs">Лабораторії</a>
+      <a href="./#robosumo">Робосумо</a>
+      <a href="./#dual">Дуальна освіта</a>
+      <a href="./#calendar">Календар</a>
+      <a href="./#business">Для компаній</a>
+    </nav>
+    <a class="btn btn-primary" href="./#quiz">Підібрати курс</a>
+    <button class="menu-btn" id="menuBtn" aria-label="Відкрити меню" aria-expanded="false" aria-controls="nav">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+<!-- Сторінка одного курсу. Що показувати — визначає ?id=… в адресі.
+     Увесь вміст береться з адмінки: Курси → потрібний курс. -->
+<section class="hero">
+  <div class="wrap c-hero">
+    <div class="c-hero-copy">
+      <div class="crumbs"><a href="./">Академія</a> / <a href="./#courses">Курси</a> / <span id="cCrumb">Курс</span></div>
+      <div class="badge" style="margin-top:22px"><i></i><span id="cVendor"></span></div>
+      <h1 id="cTitle">Курс</h1>
+      <p class="lead-l" id="cText"></p>
+      <div class="tags" id="cTags"></div>
+    </div>
+    <aside class="buy" aria-label="Вартість і запис">
+      <div class="price" id="cPrice"></div>
+      <p class="note">Навчання, робоче місце з обладнанням, матеріали, іспит і сертифікат.</p>
+      <button type="button" class="btn btn-primary btn-lg" id="cSignup">Записатися на курс</button>
+      <a class="btn btn-dark" href="#c-schedule">Дати груп</a>
+      <div class="next" id="cNext"></div>
+    </aside>
+  </div>
+</section>
+
+<section class="section" id="c-about">
+  <div class="wrap">
+    <div class="c-media" id="cMedia"></div>
+    <div class="eyebrow">Результат</div>
+    <h2>Що ви вмітимете після курсу</h2>
+    <ul class="outcomes" id="cOutcomes"></ul>
+    <div class="c-cols">
+      <div><h3>Для кого</h3><p id="cAudience"></p></div>
+      <div><h3>Що треба знати до курсу</h3><p id="cReq"></p></div>
+    </div>
+    <div class="c-video" id="cVideo"></div>
+  </div>
+</section>
+
+<section class="section soft" id="c-program">
+  <div class="wrap faq">
+    <div class="eyebrow">Програма</div>
+    <h2>Що буде на курсі</h2>
+    <div class="modules faq-list" id="cModules"></div>
+  </div>
+</section>
+
+<section class="section" id="c-schedule">
+  <div class="wrap">
+    <div class="eyebrow">Розклад</div>
+    <h2>Найближчі групи</h2>
+    <div class="table-box">
+      <table>
+        <thead><tr><th>Дата</th><th>Місто / майданчик</th><th>Тренер</th><th>Місця</th><th><span class="sr-only">Дія</span></th></tr></thead>
+        <tbody id="cSchedule"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="section soft" id="c-faq" hidden>
+  <div class="wrap faq">
+    <h2>Питання про курс</h2>
+    <div class="faq-list" id="cFaq"></div>
+  </div>
+</section>
+
+<section class="section dark" id="business">
+  <div class="wrap biz">
+    <div class="biz-copy">
+      <div class="eyebrow">Запис</div>
+      <h2 id="cFormHead">Записатися на курс</h2>
+      <ul class="checks">
+        <li><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Передзвонимо й підберемо зручну групу</li>
+        <li><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Рахунок на ТОВ або ФОП, закривальні документи</li>
+        <li><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Навчаєте команду? Зробимо окрему групу</li>
+      </ul>
+      <div class="c-other" id="cOther"></div>
+    </div>
+
+    <form class="form" id="signup" novalidate>
+      <h3 id="formTitle">Залишити заявку</h3>
+      <p class="sub">Передзвонимо протягом робочого дня й підберемо дату.</p>
+      <div class="fields">
+        <label>Ім'я<input name="name" type="text" autocomplete="name" placeholder="Як до вас звертатись" required></label>
+        <label>Телефон<input name="phone" type="tel" autocomplete="tel" placeholder="+380" required></label>
+        <label>Компанія<input name="company" type="text" autocomplete="organization" placeholder="Необов'язково"></label>
+        <label>Курс<select name="course" id="courseSelect"></select></label>
+        <label class="robo-field" hidden>Назва команди<input name="team" type="text" placeholder="Як звати вашого робота чи команду"></label>
+        <label class="robo-field" hidden>Університет<input name="university" type="text" placeholder="Назва закладу"></label>
+        <label class="full">Коментар<input name="comment" type="text" placeholder="Скільки людей, бажані дати тощо (необов'язково)"></label>
+      </div>
+      <!-- пастка для ботів: людина це поле не бачить -->
+      <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <input type="hidden" name="quiz" id="quizField">
+      <button class="btn btn-mint btn-lg" type="submit" id="submitBtn">Надіслати заявку</button>
+      <div id="formMsg" role="status"></div>
+      <p class="note">Натискаючи кнопку, ви погоджуєтесь на обробку персональних даних.</p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <span>© <span id="year">2026</span> Академія Viatec</span>
+    <nav aria-label="Контакти" id="contacts"></nav>
+  </div>
+</footer>
+
+<script src="js/common.js"></script>
+<script src="js/course.js"></script>
+</body>
+</html>
