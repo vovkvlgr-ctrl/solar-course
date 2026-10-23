@@ -35,66 +35,6 @@
       "trainer": "Іван Яшанов",
       "seats": "",
       "seatsLeft": ""
-    },
-    {
-      "course": "cctv",
-      "format": "offline",
-      "date": "2026-11-10",
-      "end": "2026-11-12",
-      "city": "Київ",
-      "venue": "[лабораторія]",
-      "trainer": "Тренер Hikvision",
-      "seats": 10,
-      "seatsLeft": 3,
-      "time": ""
-    },
-    {
-      "course": "cctv",
-      "format": "online",
-      "date": "2026-11-17",
-      "end": "2026-11-28",
-      "city": "",
-      "venue": "",
-      "trainer": "Тренер Hikvision",
-      "seats": 20,
-      "seatsLeft": 14,
-      "time": ""
-    },
-    {
-      "course": "vms",
-      "format": "offline",
-      "date": "2026-11-24",
-      "end": "2026-11-26",
-      "city": "Київ",
-      "venue": "[лабораторія]",
-      "trainer": "Тренер Hikvision",
-      "seats": 10,
-      "seatsLeft": 7,
-      "time": ""
-    },
-    {
-      "course": "aai",
-      "format": "offline",
-      "date": "2026-12-08",
-      "end": "2026-12-10",
-      "city": "Київ",
-      "venue": "Лабораторія в НАУ",
-      "trainer": "Тренер Hikvision",
-      "seats": 10,
-      "seatsLeft": 10,
-      "time": ""
-    },
-    {
-      "course": "cctv",
-      "format": "offline",
-      "date": "2027-01-19",
-      "end": "2027-01-21",
-      "city": "Київ",
-      "venue": "[лабораторія]",
-      "trainer": "Тренер Hikvision",
-      "seats": 10,
-      "seatsLeft": 10,
-      "time": ""
     }
   ]
 }

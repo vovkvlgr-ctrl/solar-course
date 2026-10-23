@@ -166,7 +166,17 @@ collections:
               - { label: "Виділити картку", name: featured, widget: boolean, default: false, required: false }
               - { label: "Наліпка (напр. «Найпопулярніший», «Скоро · практика на дахах»)", name: badge, widget: string, required: false }
               - { label: "Курс ще не стартував («Скоро»)", name: soon, widget: boolean, default: false, required: false, hint: "Кнопка на сторінці курсу стане «Повідомити про старт»." }
+              - { label: "Підзаголовок на лендінгу", name: subtitle, widget: string, required: false, hint: "Напр. «Hikvision Certified Security Associate · Відеоспостереження»" }
               - { label: "Короткий опис (картка й шапка сторінки)", name: text, widget: text }
+              - label: "Ключові факти (плашки на першому екрані лендінгу)"
+                name: facts
+                widget: list
+                required: false
+                summary: "{{label}}: {{value}}"
+                hint: "Підписи «Тривалість», «Формат», «Група», «Сертифікат» отримують свої іконки."
+                fields:
+                  - { label: "Підпис", name: label, widget: string }
+                  - { label: "Значення", name: value, widget: string }
               - { label: "Теги (тривалість, формат, сертифікат)", name: tags, widget: list, field: { label: "Тег", name: tag, widget: string } }
               - { label: "Ціна, грн", name: price, widget: number, value_type: int, min: 0, hint: "0 — на сайті буде «Ціна за запитом»." }
               - { label: "Фото курсу", name: image, widget: image, required: false, hint: "Горизонтальне, бажано 1920×820." }
@@ -175,6 +185,45 @@ collections:
               - { label: "Що входить у вартість", name: included, widget: list, required: false, field: { label: "Пункт", name: item, widget: string } }
               - { label: "Для кого", name: audience, widget: text, required: false }
               - { label: "Що треба знати до курсу", name: requirements, widget: text, required: false }
+              - { label: "Що потрібно для участі (список)", name: requirementsList, widget: list, required: false, field: { label: "Пункт", name: item, widget: string } }
+              - { label: "Блок «Знайомо?»: проблеми без курсу", name: pains, widget: list, required: false, field: { label: "Проблема", name: item, widget: string } }
+              - label: "Формати навчання"
+                name: formats
+                widget: list
+                required: false
+                summary: "{{title}}"
+                fields:
+                  - { label: "Назва", name: title, widget: string }
+                  - { label: "Опис", name: text, widget: text }
+              - label: "Сертифікат"
+                name: certificate
+                widget: object
+                required: false
+                collapsed: true
+                fields:
+                  - { label: "Назва", name: title, widget: string, required: false }
+                  - { label: "Опис", name: text, widget: text, required: false }
+                  - { label: "Пункти", name: points, widget: list, required: false, field: { label: "Пункт", name: item, widget: string } }
+              - label: "Шлях до сертифіката (кроки)"
+                name: path
+                widget: list
+                required: false
+                summary: "{{title}}"
+                hint: "Крок, назва якого збігається з назвою курсу, підсвічується."
+                fields:
+                  - { label: "Назва", name: title, widget: string }
+                  - { label: "Опис", name: text, widget: string, required: false }
+                  - { label: "Посилання", name: url, widget: string, required: false }
+              - label: "Тренери курсу"
+                name: trainers
+                widget: relation
+                required: false
+                multiple: true
+                collection: people
+                file: trainers
+                value_field: "{{items.*.id}}"
+                display_fields: ["{{items.*.name}}"]
+                search_fields: ["{{items.*.name}}"]
               - { label: "Результати: що вмітиме випускник", name: outcomes, widget: list, field: { label: "Результат", name: item, widget: string } }
               - label: "Програма (модулі)"
                 name: modules

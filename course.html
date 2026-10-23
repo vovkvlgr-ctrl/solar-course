@@ -47,50 +47,118 @@
 </header>
 
 <main>
-<!-- Сторінка одного курсу. Що показувати — визначає ?id=… в адресі.
-     Увесь вміст береться з адмінки: Курси → потрібний курс. -->
-<section class="hero">
-  <div class="wrap c-hero">
+<!-- ЛЕНДІНГ КУРСУ. Що показувати — визначає ?id=… в адресі (course.html?id=cctv).
+     Увесь вміст береться з адмінки: Курси → потрібний курс. Блоки без даних ховаються самі. -->
+
+<!-- 1. Перший екран -->
+<section class="hero c-land">
+  <div class="wrap c-hero-panel">
     <div class="c-hero-copy">
       <div class="crumbs"><a href="./">Академія</a> / <a href="./#courses">Курси</a> / <span id="cCrumb">Курс</span></div>
-      <div class="badge" style="margin-top:22px"><i></i><span id="cVendor"></span></div>
+      <div class="c-badges"><span class="badge"><i></i><span id="cVendor"></span></span></div>
       <h1 id="cTitle">Курс</h1>
+      <p class="c-sub" id="cSub"></p>
       <p class="lead-l" id="cText"></p>
-      <div class="tags" id="cTags"></div>
+      <div class="c-facts" id="cFacts"></div>
+      <div class="c-ctas">
+        <button type="button" class="btn btn-primary btn-lg" id="cSignupHero">Записатися на курс</button>
+        <a class="btn btn-ghost btn-lg" href="#c-program">Програма курсу</a>
+      </div>
     </div>
     <aside class="buy" aria-label="Вартість і запис">
-      <div class="price" id="cPrice"></div>
-      <p class="note">Навчання, робоче місце з обладнанням, матеріали, іспит і сертифікат.</p>
+      <div class="buy-top"><span class="buy-label">Вартість</span><div class="price" id="cPrice"></div></div>
+      <div class="buy-next" id="cNext"></div>
       <button type="button" class="btn btn-primary btn-lg" id="cSignup">Записатися на курс</button>
-      <a class="btn btn-dark" href="#c-schedule">Дати груп</a>
-      <div class="next" id="cNext"></div>
+      <p class="note">Передзвонимо протягом робочого дня й підберемо групу.</p>
     </aside>
   </div>
 </section>
 
-<section class="section" id="c-about">
+<!-- 2. Біль → результат -->
+<section class="section" id="c-pain" hidden>
   <div class="wrap">
-    <div class="c-media" id="cMedia"></div>
-    <div class="eyebrow">Результат</div>
-    <h2>Що ви вмітимете після курсу</h2>
-    <ul class="outcomes" id="cOutcomes"></ul>
-    <div class="c-cols">
-      <div><h3>Для кого</h3><p id="cAudience"></p></div>
-      <div><h3>Що треба знати до курсу</h3><p id="cReq"></p></div>
+    <div class="eyebrow">Навіщо цей курс</div>
+    <h2>Знайомо?</h2>
+    <div class="pain-grid">
+      <div class="pain-col pain-bad"><h3>Без системи</h3><ul id="cPains"></ul></div>
+      <div class="pain-col pain-good"><h3>Після курсу</h3><ul id="cOutcomes"></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Формати -->
+<section class="section soft" id="c-formats" hidden>
+  <div class="wrap">
+    <div class="eyebrow">Формат</div>
+    <h2>Оберіть, як вам зручніше</h2>
+    <div class="fmt-grid" id="cFormats"></div>
+  </div>
+</section>
+
+<!-- 4. Програма + вимоги -->
+<section class="section" id="c-program">
+  <div class="wrap">
+    <div class="eyebrow">Програма</div>
+    <h2>Що буде на курсі</h2>
+    <div class="prog">
+      <div class="prog-list" id="cModules"></div>
+      <aside class="prog-side">
+        <div class="side-card" id="cReqBox"><h3>Що потрібно для участі</h3><ul class="incl" id="cReq"></ul></div>
+        <div class="side-card" id="cAudBox"><h3>Для кого</h3><p id="cAudience"></p></div>
+      </aside>
     </div>
     <div class="c-video" id="cVideo"></div>
   </div>
 </section>
 
-<section class="section soft" id="c-program">
-  <div class="wrap faq">
-    <div class="eyebrow">Програма</div>
-    <h2>Що буде на курсі</h2>
-    <div class="modules faq-list" id="cModules"></div>
+<!-- 5. Сертифікат -->
+<section class="section soft" id="c-cert" hidden>
+  <div class="wrap">
+    <div class="cert">
+      <div class="cert-art" aria-hidden="true">
+        <svg viewBox="0 0 220 160"><rect x="6" y="6" width="208" height="148" rx="10" fill="#fff" stroke="#0099ad" stroke-width="2"/><rect x="18" y="18" width="184" height="124" rx="6" fill="none" stroke="#c9e6eb" stroke-width="1.5" stroke-dasharray="4 4"/><rect x="40" y="38" width="140" height="10" rx="5" fill="#0099ad"/><rect x="60" y="58" width="100" height="6" rx="3" fill="#c9d6dc"/><rect x="50" y="72" width="120" height="6" rx="3" fill="#c9d6dc"/><circle cx="110" cy="112" r="20" fill="#0099ad"/><path d="M100 112l7 7 13-14" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M96 128l-8 22 12-6 6 10 6-20M124 128l8 22-12-6-6 10-6-20" fill="#2f88b3"/></svg>
+      </div>
+      <div class="cert-copy">
+        <div class="eyebrow">Сертифікат</div>
+        <h2 id="cCertTitle"></h2>
+        <p id="cCertText"></p>
+        <ul class="incl" id="cCertPoints"></ul>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="section" id="c-schedule">
+<!-- 6. Шлях -->
+<section class="section" id="c-path" hidden>
+  <div class="wrap">
+    <div class="eyebrow">Як почати</div>
+    <h2>Ваш шлях до сертифіката</h2>
+    <ol class="path" id="cPath"></ol>
+  </div>
+</section>
+
+<!-- 7. Тренери -->
+<section class="section soft" id="c-trainers" hidden>
+  <div class="wrap">
+    <div class="eyebrow">Тренери</div>
+    <h2>Хто веде курс</h2>
+    <div class="tr-cols" id="cTrainers"></div>
+  </div>
+</section>
+
+<!-- 8. Що входить у вартість -->
+<section class="section" id="c-incl" hidden>
+  <div class="wrap">
+    <div class="incl-panel">
+      <div><div class="eyebrow">Вартість</div><h2>Що входить у <span id="cPrice2"></span></h2></div>
+      <ul class="incl incl-big" id="cIncluded"></ul>
+      <button type="button" class="btn btn-primary btn-lg" data-course-signup>Записатися на курс</button>
+    </div>
+  </div>
+</section>
+
+<!-- 9. Розклад -->
+<section class="section soft" id="c-schedule">
   <div class="wrap">
     <div class="eyebrow">Розклад</div>
     <h2>Найближчі групи</h2>
@@ -103,9 +171,11 @@
   </div>
 </section>
 
-<section class="section soft" id="c-faq" hidden>
+<!-- 10. Питання -->
+<section class="section" id="c-faq" hidden>
   <div class="wrap faq">
-    <h2>Питання про курс</h2>
+    <div class="eyebrow">Питання</div>
+    <h2>Часті питання про курс</h2>
     <div class="faq-list" id="cFaq"></div>
   </div>
 </section>
@@ -143,6 +213,12 @@
   </div>
 </section>
 </main>
+
+<!-- Липка панель запису на телефоні -->
+<div class="sticky-cta" id="stickyCta" hidden>
+  <div><b id="stickyPrice"></b><small id="stickyNext"></small></div>
+  <button type="button" class="btn btn-primary" data-course-signup>Записатися</button>
+</div>
 
 <footer class="footer">
   <div class="wrap">
