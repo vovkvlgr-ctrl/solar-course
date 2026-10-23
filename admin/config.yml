@@ -316,6 +316,31 @@ collections:
                 search_fields: ["{{items.*.title}}"]
 
   # ---------------------------------------------------------------
+  - name: people
+    label: "👥 Тренери"
+    files:
+      - name: trainers
+        label: "Тренери"
+        file: content/trainers.json
+        format: json
+        fields:
+          - label: "Тренери"
+            name: items
+            widget: list
+            label_singular: "тренера"
+            summary: "{{name}} — {{direction}}"
+            thumbnail: photo
+            hint: "На сайті тренери групуються в колонки за полем «Напрям»."
+            fields:
+              - { label: "Код (латиницею)", name: id, widget: string }
+              - { label: "Ім'я та прізвище", name: name, widget: string }
+              - { label: "Напрям", name: direction, widget: string, hint: "Напр. «Системи безпеки», «Мережі», «Енергетика»" }
+              - { label: "Роль", name: role, widget: string, required: false }
+              - { label: "Курси", name: courses, widget: string, required: false }
+              - { label: "Коротко про тренера", name: text, widget: text, required: false }
+              - { label: "Фото (квадратне)", name: photo, widget: image, required: false, hint: "Без фото показується силует." }
+
+  # ---------------------------------------------------------------
   - name: media
     label: "📸 Відео, фото, відгуки"
     files:

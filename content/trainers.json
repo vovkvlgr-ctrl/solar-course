@@ -1,0 +1,58 @@
+{
+  "items": [
+    {
+      "id": "avramenko",
+      "name": "Костянтин Авраменко",
+      "direction": "Системи безпеки",
+      "role": "Тренер Hikvision",
+      "courses": "HCSA",
+      "text": "",
+      "photo": ""
+    },
+    {
+      "id": "blashchuk",
+      "name": "Олександр Блащук",
+      "direction": "Системи безпеки",
+      "role": "Тренер Hikvision",
+      "courses": "HCSA",
+      "text": "",
+      "photo": ""
+    },
+    {
+      "id": "bezkorovainyi",
+      "name": "Юрій Безкоровайний",
+      "direction": "Системи безпеки",
+      "role": "Тренер Hikvision",
+      "courses": "HCSA",
+      "text": "",
+      "photo": ""
+    },
+    {
+      "id": "andriienko",
+      "name": "Олексій Андрієнко",
+      "direction": "Системи безпеки",
+      "role": "Тренер Dahua",
+      "courses": "DHCP-IPVSS",
+      "text": "",
+      "photo": ""
+    },
+    {
+      "id": "derhachov",
+      "name": "Дмитро Дергачов",
+      "direction": "Мережі",
+      "role": "Тренер RUIJIE",
+      "courses": "RUIJIE Network: Core + Advanced",
+      "text": "",
+      "photo": ""
+    },
+    {
+      "id": "yashanov",
+      "name": "Іван Яшанов",
+      "direction": "Енергетика",
+      "role": "Спеціаліст з енергетичних та безпекових систем",
+      "courses": "Професійний інсталятор СЕС, LiFePO₄ для резервного живлення та СЕС",
+      "text": "",
+      "photo": ""
+    }
+  ]
+}

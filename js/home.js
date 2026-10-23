@@ -4,7 +4,7 @@
   const { $, esc } = A;
   let D;
   try {
-    D = await A.load(["settings", "courses", "soon", "schedule", "labs", "free", "videos", "gallery", "reviews", "faq", "partners"]);
+    D = await A.load(["settings", "courses", "soon", "schedule", "labs", "free", "videos", "gallery", "reviews", "faq", "partners", "trainers"]);
   } catch (e) { A.fail(e); return; }
 
   const S = D.settings, COURSES = D.courses, SOON = D.soon;
@@ -95,6 +95,26 @@
       A.lightbox(photos.map((p) => ({ src: p.image, caption: p.caption })), Number(b.dataset.photo));
     });
   } else $("#gallery").hidden = true;
+
+  /* ---------- Тренери: колонки за напрямами ---------- */
+  (function () {
+    const list = D.trainers || [];
+    if (!list.length) { $("#trainers").hidden = true; return; }
+    // силует, поки немає фото (фото завантажується в адмінці)
+    const silhouette = '<svg viewBox="0 0 96 96" aria-hidden="true"><rect width="96" height="96" fill="#e3f4f6"/><circle cx="48" cy="38" r="17" fill="#9fcfd8"/><path d="M14 96c3-20 17-31 34-31s31 11 34 31z" fill="#9fcfd8"/></svg>';
+    // одна сітка без пустот; напрям — позначка на картці
+    $("#trainersList").innerHTML = list.map((t) => `
+      <article class="tr-card reveal">
+        <div class="tr-photo">${t.photo ? `<img src="${esc(t.photo)}" alt="${esc(t.name)}" loading="lazy">` : silhouette}</div>
+        <div class="tr-body">
+          ${t.direction ? `<span class="tr-tag">${esc(t.direction)}</span>` : ""}
+          <h4>${esc(t.name)}</h4>
+          <div class="tr-role">${esc(t.role || "")}</div>
+          ${t.courses ? `<div class="tr-courses">Курси — ${esc(t.courses)}</div>` : ""}
+          ${t.text ? `<p>${esc(t.text)}</p>` : ""}
+        </div>
+      </article>`).join("");
+  })();
 
   /* ---------- Університети-партнери (у блоці лабораторій) ---------- */
   const partners = D.partners || [];
@@ -269,31 +289,6 @@
   });
   window.addEventListener("resize", () => { if (openLab) positionPop(pinFor(openLab.id)); });
 
-  /* ---------- Робосумо ---------- */
-  (function () {
-    const R = S.robosumo || {};
-    if (!R.date) return;
-    const iso = String(R.date).slice(0, 16);
-    const m = Number(iso.slice(5, 7));
-    const target = new Date(iso + ":00" + (m >= 4 && m <= 10 ? "+03:00" : "+02:00"));
-    const d = A.parseDate(iso);
-    $("#roboDate").textContent = `${d.getDate()} ${A.monthsFull[d.getMonth()]}${iso.length > 10 ? ", " + iso.slice(11, 16) : ""} · ${R.place || ""}`;
-    const rules = $("#roboRules");
-    if (R.rulesUrl) rules.href = R.rulesUrl; else rules.hidden = true;
-    const cells = {}; document.querySelectorAll("[data-cd]").forEach((el) => { cells[el.dataset.cd] = el; });
-    const pad = (v) => String(v).padStart(2, "0");
-    (function tick() {
-      let s = Math.floor((target - Date.now()) / 1000);
-      if (isNaN(s)) return;
-      if (s <= 0) { $("#roboCd").innerHTML = '<div style="grid-column:1/-1"><b>Конкурс стартував!</b></div>'; return; }
-      cells.d.textContent = Math.floor(s / 86400); s %= 86400;
-      cells.h.textContent = pad(Math.floor(s / 3600)); s %= 3600;
-      cells.m.textContent = pad(Math.floor(s / 60));
-      cells.s.textContent = pad(s % 60);
-      setTimeout(tick, 1000);
-    })();
-  })();
-
   /* ---------- Дуальна освіта ---------- */
   (function () {
     const DU = S.dual;
@@ -458,6 +453,6 @@
   document.head.appendChild(ld);
 
   A.reveal();
-  // якщо прийшли за посиланням з якорем (#robosumo) — докрутити після рендеру
+  // якщо прийшли за посиланням з якорем (#labs) — докрутити після рендеру
   if (location.hash) { const t = document.getElementById(location.hash.slice(1)); if (t) setTimeout(() => t.scrollIntoView(), 50); }
 })();

@@ -126,8 +126,6 @@
       ["online", "Дистанційне навчання (онлайн-група)"],
       ["corp", "Корпоративне навчання"],
       ["lab-visit", "Візит до лабораторії"],
-      ["robosumo", "Робосумо: реєстрація команди"],
-      ["robosumo-partner", "Робосумо: партнерство"],
       ["", "Ще не визначився"]
     ];
     select.innerHTML = options.map(([v, t]) => `<option value="${esc(v)}">${esc(t)}</option>`).join("");
@@ -156,9 +154,7 @@
       const special = {
         online: "Запис в онлайн-групу",
         corp: "Корпоративне навчання",
-        "lab-visit": `Візит до лабораторії${s.dataset.lab ? ": " + s.dataset.lab : ""}`,
-        robosumo: "Реєстрація команди на робосумо",
-        "robosumo-partner": "Партнерство в конкурсі робосумо"
+        "lab-visit": `Візит до лабораторії${s.dataset.lab ? ": " + s.dataset.lab : ""}`
       };
       const c = byId(id);
       const t = special[id] || (s.dataset.wait ? `Лист очікування: ${c ? c.title : ""}` : c ? `Запис на ${c.title}${s.dataset.date ? ", " + s.dataset.date : ""}` : "Залишити заявку");

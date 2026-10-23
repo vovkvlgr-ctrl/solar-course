@@ -43,7 +43,7 @@
       "end": "2026-11-12",
       "city": "Київ",
       "venue": "[лабораторія]",
-      "trainer": "[Ім'я тренера]",
+      "trainer": "Тренер Hikvision",
       "seats": 10,
       "seatsLeft": 3,
       "time": ""
@@ -55,7 +55,7 @@
       "end": "2026-11-28",
       "city": "",
       "venue": "",
-      "trainer": "[Ім'я тренера]",
+      "trainer": "Тренер Hikvision",
       "seats": 20,
       "seatsLeft": 14,
       "time": ""
@@ -67,7 +67,7 @@
       "end": "2026-11-26",
       "city": "Київ",
       "venue": "[лабораторія]",
-      "trainer": "[Ім'я тренера]",
+      "trainer": "Тренер Hikvision",
       "seats": 10,
       "seatsLeft": 7,
       "time": ""
@@ -79,7 +79,7 @@
       "end": "2026-12-10",
       "city": "Київ",
       "venue": "Лабораторія в НАУ",
-      "trainer": "[Ім'я тренера]",
+      "trainer": "Тренер Hikvision",
       "seats": 10,
       "seatsLeft": 10,
       "time": ""
@@ -91,7 +91,7 @@
       "end": "2027-01-21",
       "city": "Київ",
       "venue": "[лабораторія]",
-      "trainer": "[Ім'я тренера]",
+      "trainer": "Тренер Hikvision",
       "seats": 10,
       "seatsLeft": 10,
       "time": ""

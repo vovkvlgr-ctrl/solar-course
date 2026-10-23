@@ -550,3 +550,191 @@ html.lb-open{overflow:hidden}
 .course-flex .course-foot{gap:12px}
 /* Лабораторії на сірому фоні: карта — біла */
 #labs .map-wrap{background:#fff}
+
+/* =====================================================================
+   СТИЛЬ VIATEC.UA (за сторінкою viatec.ua/hcsa)
+   Open Sans, текст #364A63, заголовки #303030 тонкі, бірюза #0099AD,
+   картки білі з тонкою бірюзовою рамкою, сірі панелі з візерунком «мережа».
+   ===================================================================== */
+:root{
+  --ink:#303030;          /* заголовки */
+  --text:#364a63;         /* основний текст */
+  --muted:#717171;        /* підписи */
+  --soft:#f1f2f3;         /* сірі панелі */
+  --page:#f9f9f9;         /* фон сторінки */
+  --line:#e2e6ea;
+  --via:#0099ad;          /* фірмова бірюза: рамки, великі заголовки */
+  --teal:#007f90;         /* кнопки й дрібний текст (та сама бірюза, глибша для читабельності) */
+  --teal-dark:#006a78;
+  --teal-light:#e3f4f6;
+  --mint:#0099ad;
+  --blue:#2f88b3;         /* номери етапів, імена тренерів */
+  --amber:#f2a33a; --amber-soft:#fdecd2; --amber-text:#7a4a06;
+  --on-dark:#e9f4f6;
+  --radius:10px;
+  --display:'Open Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --body:'Open Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --plexus:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='420' viewBox='0 0 520 420'%3E%3Cg stroke='%23c9dde5' stroke-width='1' fill='none'%3E%3Cpath d='M30 60L140 20L250 90L380 40L500 110M140 20L120 160L250 90L300 230L380 40M120 160L40 270L180 330L300 230L450 280L500 110M180 330L260 410M450 280L380 400M40 270L10 400M300 230L380 400'/%3E%3C/g%3E%3Cg fill='%23d6e7ee'%3E%3Ccircle cx='30' cy='60' r='5'/%3E%3Ccircle cx='140' cy='20' r='7'/%3E%3Ccircle cx='250' cy='90' r='4'/%3E%3Ccircle cx='380' cy='40' r='8'/%3E%3Ccircle cx='500' cy='110' r='5'/%3E%3Ccircle cx='120' cy='160' r='6'/%3E%3Ccircle cx='300' cy='230' r='9'/%3E%3Ccircle cx='40' cy='270' r='5'/%3E%3Ccircle cx='180' cy='330' r='7'/%3E%3Ccircle cx='450' cy='280' r='6'/%3E%3Ccircle cx='380' cy='400' r='5'/%3E%3C/g%3E%3C/svg%3E");
+}
+body{background:var(--page);color:var(--text);font-size:16px}
+h1,h2,h3{font-family:var(--display);color:var(--ink);letter-spacing:0}
+h2{font-weight:400;font-size:clamp(26px,2.6vw,32px);line-height:1.25}
+h3{font-weight:600}
+.eyebrow{color:var(--teal);font-weight:600;letter-spacing:.04em;font-size:13px}
+.lead,.head-row .lead{color:var(--text)}
+.section{background:var(--page)}
+.section.soft{background:#fff}
+a{color:var(--teal)}
+
+/* Кнопки — як на viatec.ua: заливка бірюзою, радіус 4px, звичайна вага */
+.btn{border-radius:4px;font-weight:600;min-height:46px}
+.btn-lg{min-height:52px;font-size:16px;padding:14px 26px}
+.btn-primary,.btn-mint,.btn-amber{background:var(--teal);color:#fff}
+.btn-primary:hover,.btn-mint:hover,.btn-amber:hover{background:var(--teal-dark);color:#fff;transform:none}
+.btn-dark{background:var(--text);color:#fff}
+.btn-dark:hover{background:#26364a}
+.btn-ghost,.btn-ghost-dark{background:#fff;border:1px solid var(--via);color:var(--teal)}
+.btn-ghost:hover,.btn-ghost-dark:hover{background:var(--teal-light);color:var(--teal-dark);border-color:var(--via)}
+.link-btn{color:var(--teal)}
+.pill{border-radius:4px;font-weight:600}
+.pill-hot{background:var(--via);color:#fff}
+.pill-teal{background:var(--teal-light);color:var(--teal-dark)}
+.chip{border-radius:4px;border:1px solid var(--line);font-weight:600}
+.chip[aria-pressed="true"]{background:var(--teal);border-color:var(--teal);color:#fff}
+
+/* Шапка */
+.header{background:#fff;box-shadow:0 1px 0 var(--line)}
+.logo{font-family:var(--body);font-weight:700}
+.logo-mark{background:var(--via);border-radius:6px}
+.logo-mark svg{stroke:#fff}
+.logo b{color:var(--teal)}
+.nav a{font-weight:400;color:var(--text)}
+.nav a:hover{color:var(--teal)}
+
+/* Перший екран — сіра панель з візерунком «мережа», як на viatec.ua */
+.hero{background:var(--page);color:var(--text)}
+.hero-inner{background:var(--soft) var(--plexus) right -40px center/auto 120% no-repeat;border-radius:16px;padding:64px 56px;margin-top:32px;margin-bottom:32px}
+.hero h1{font-weight:400;font-size:clamp(32px,4vw,52px);line-height:1.15;color:var(--ink)}
+.hero h1 span{color:var(--via);font-weight:600}
+.hero p{color:var(--text);font-size:18px}
+.badge{background:#fff;border:1px solid var(--line);color:var(--text);border-radius:4px}
+.badge i{background:var(--via)}
+.stat{background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:none}
+.stat b,.stat b.word{color:var(--via);font-family:var(--body);font-weight:700}
+.stat span{color:var(--text)}
+.brands{border-top:0;background:transparent}
+.brands .wrap{color:#8a96a3;font-family:var(--body);font-weight:600;padding-top:0}
+.brands small{color:#a3adb7}
+@media (max-width:600px){.hero-inner{padding:32px 20px;border-radius:12px;margin-top:16px}}
+
+/* Картки: білі, тонка бірюзова рамка, радіус 10px */
+.card,.soon,.step,.free,.review,.trainer,.aud,.dev,.uni-card,.vcard,.logo-card,.lab,.stat{box-shadow:none}
+.card,.soon,.step,.free,.review,.trainer,.aud,.dev,.uni-card,.vcard{background:#fff;border:1px solid var(--line);border-radius:10px}
+.course{background:#fff;border:.8px solid var(--via);border-radius:10px;box-shadow:none}
+.course.featured{border-width:2px}
+.course h3,.course-link{color:var(--via);font-weight:700}
+.course-link:hover{color:var(--teal-dark)}
+.vendor{color:var(--muted);font-weight:600;font-size:14px}
+.price{font-family:var(--body);font-weight:700;color:var(--text)}
+.tags span{background:var(--page);color:var(--text);border-radius:4px;font-weight:400}
+.step .num{color:var(--blue);font-family:var(--body);font-weight:700;font-size:28px;width:64px;height:64px;border:1px solid var(--blue);border-radius:50%;display:grid;place-items:center}
+.step h3{color:var(--via)}
+.step.final{background:#fff;border:.8px solid var(--via)}
+.step.final .num{color:var(--blue)}
+.step.final p{color:var(--text)}
+.step.final .pill{background:var(--via);color:#fff}
+.card svg,.checks svg,.dual-points svg,.outcomes svg{color:var(--via)}
+.card{text-align:center}
+.card svg{width:56px;height:56px;margin:0 auto}
+.card h3{font-weight:600;font-size:18px}
+.trainer h3{color:var(--blue);font-weight:600}
+.t-photo{border-radius:10px;background:var(--teal-light);color:var(--teal-dark)}
+.logo-card{border:1px solid var(--line)}
+
+/* Онлайн-академія — біла картка з бірюзовою рамкою, як «Онлайн-навчання у Viatec Academy» */
+#online .wrap{background:#fff;border:.8px solid var(--via);border-radius:10px;padding:40px}
+#online{background:var(--page)}
+#online h2{color:var(--via);font-weight:700;font-size:clamp(24px,2.4vw,30px)}
+.kw-cats a{border-radius:4px;border:1px solid var(--line)}
+#online .free,#online .dev{background:var(--page);border:1px solid var(--line)}
+@media (max-width:600px){#online .wrap{padding:24px 18px;margin:0 16px;width:auto}}
+
+/* Лабораторії */
+.map-wrap,#labs .map-wrap{background:var(--soft) var(--plexus) left -60px top -40px/auto 90% no-repeat;border-radius:16px}
+.ua-map .regions path{fill:#dfe9ee;stroke:#fff}
+.ua-map .regions path:hover{fill:#cfe0e7}
+.pin span,.pin::before{background:var(--via)}
+.pin[aria-expanded="true"] span{background:var(--text)}
+
+/* Квіз і фінальний заклик — бірюзова панель */
+.quiz-sec{background:var(--via) var(--plexus) right -80px center/auto 140% no-repeat}
+.quiz-sec h2,.quiz-sec .eyebrow{color:#fff}
+.quiz-intro p{color:#eaf7f9}
+.quiz{border-radius:10px}
+.quiz h3{color:var(--ink)}
+.opt{border:1px solid var(--line);border-radius:6px;font-weight:600}
+.opt[aria-pressed="true"]{background:var(--teal-light);border-color:var(--via);color:var(--teal-dark)}
+.final{background:var(--soft) var(--plexus) right -40px center/auto 130% no-repeat;color:var(--text);border-radius:16px}
+.final h2{color:var(--ink)}
+.final p{color:var(--text)}
+.final .btn-ghost{background:#fff}
+
+/* «Для компаній» і форми — світлі */
+.section.dark{background:var(--page);color:var(--text)}
+.section.dark h2{color:var(--ink)}
+.section.dark .eyebrow{color:var(--teal)}
+.checks li{color:var(--text)}
+.form{background:#fff;border:.8px solid var(--via);border-radius:10px;color:var(--text);box-shadow:none}
+.form h3{color:var(--via);font-weight:700}
+.form .sub,.form .note{color:var(--muted)}
+.form label,.seg legend{color:var(--text);font-weight:600}
+.form input,.form select,.form textarea{background:#fff;color:var(--text);border:1px solid #cdd5dc;border-radius:4px}
+.form input::placeholder,.form textarea::placeholder{color:#9aa4ae}
+.form input:focus,.form select:focus,.form textarea:focus{border-color:var(--via);box-shadow:0 0 0 3px var(--teal-light)}
+.form-msg.ok{background:#e3f4ec;color:#155c3a}
+.form-msg.err{background:#fde8e6;color:#8a1f12}
+.seg span{border:1px solid #cdd5dc;border-radius:4px;color:var(--text)}
+.seg input:checked + span{background:var(--teal);border-color:var(--teal);color:#fff}
+
+/* FAQ, календар */
+details{border:1px solid var(--line);border-radius:10px}
+summary{font-weight:600;color:var(--text)}
+summary::after{color:var(--via);font-family:var(--body)}
+th{background:var(--page);color:var(--muted)}
+.table-box{background:#fff;border-radius:10px}
+
+/* Сторінка курсу */
+.crumbs{color:var(--muted)}
+.crumbs a{color:var(--teal)}
+.c-hero h1{font-weight:400;color:var(--ink)}
+.c-hero .lead-l{color:var(--text)}
+.c-hero .tags span{background:#fff;border:1px solid var(--line);color:var(--text)}
+.buy{border:.8px solid var(--via);border-radius:10px;box-shadow:none}
+.c-cols>div{background:#fff;border:1px solid var(--line);border-radius:10px}
+.outcomes li{border-radius:10px}
+.modules summary::before{color:var(--blue);font-family:var(--body);font-weight:700}
+.c-other p{color:var(--muted)!important}
+.c-other a{color:var(--teal)!important}
+.incl svg{color:var(--via)}
+.dir-filters .pill{background:var(--amber);color:#3a2300}
+/* Картка «04» — звичайна картка кроку, не фінальний банер */
+.step.final{padding:28px;border-radius:10px;display:block;background:#fff}
+.step.final h3{color:var(--via);font-size:19px}
+.step.final p{font-size:15px;margin:10px 0 16px;color:var(--text)}
+.course.featured{border-color:var(--via)}
+
+/* ===== Тренери: три колонки за напрямами ===== */
+.tr-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:24px;margin-top:36px}
+.tr-col{display:flex;flex-direction:column;gap:14px}
+.tr-dir{font-size:18px;font-weight:600;color:var(--ink);padding-bottom:10px;border-bottom:2px solid var(--via)}
+.tr-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;gap:16px;align-items:flex-start}
+.tr-photo{flex:none;width:96px;height:96px;border-radius:10px;overflow:hidden;background:var(--teal-light)}
+.tr-photo img,.tr-photo svg{width:100%;height:100%;object-fit:cover;display:block}
+.tr-body{min-width:0}
+.tr-body h4{margin:0;font-size:18px;font-weight:600;color:var(--blue)}
+.tr-role{font-size:14px;color:var(--muted);margin-top:2px}
+.tr-courses{font-size:14px;color:var(--text);font-weight:600;margin-top:8px}
+.tr-body p{margin:6px 0 0;font-size:14px;color:var(--text)}
+/* Тренери: одна сітка 3×2 */
+.tr-cols{grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:16px}
+.tr-tag{display:inline-block;font-size:12px;font-weight:600;color:var(--teal-dark);background:var(--teal-light);padding:2px 8px;border-radius:4px;margin-bottom:6px}
