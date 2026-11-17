@@ -414,9 +414,11 @@ function inProfile(id,t){ const r=PROFILE[id]; if(!r) return false; if(id==='ac'
 let CUSTOM=[]; try{CUSTOM=JSON.parse(localStorage.getItem('o4lab-custom')||'[]')}catch(e){}
 CUSTOM.forEach(c=>FEED.push(c));
 function saveCustom(){ try{localStorage.setItem('o4lab-custom',JSON.stringify(FEED.filter(f=>f.custom)))}catch(e){} }
-const KOPTS=[[1,'Без двигуна: лампа, нагрівач, електроніка'],[2,'Невеликий двигун: вентилятор, пральна'],[3,'Компресор: холодильник, кондиціонер'],[4,'Насос, компресор великої потужності'],[6,'Важкий пуск: верстат, зварювання']];
-function addFormHTML(){ const n=FEED.filter(f=>f.custom).length; return n>=6?'<p class="date">Додано максимум 6 своїх приладів.</p>':`<details class="addf"><summary class="chip" style="display:inline-flex">+ Додати свій прилад</summary>
-  <div class="addbox"><label class="sel">Назва<input type="text" class="nfN" maxlength="28" placeholder="напр. Обігрівач"></label>
+const KOPTS=[[1,'Без двигуна: лампа, нагрівач, електроніка'],[2,'Невеликий двигун: вентилятор, пральна'],[3,'Компресор: холодильник, кондиціонер'],[4,'Насос, компресор великої потужності'],[5,'Поршневий компресор'],[6,'Важкий пуск: верстат, зварювання']];
+const APPL=[['Обігрівач масляний',2000,1],['Тепловентилятор',2000,1],['Електрочайник',2000,1],['Мікрохвильова піч',1200,1],['Індукційна плита (конфорка)',1800,1],['Духова шафа',2500,1],['Посудомийна машина',1800,2],['Сушильна машина',2500,2],['Праска',2200,1],['Пилосос',1400,2],['Морозильна камера',200,3],['Кондиціонер 12 000 BTU',1200,3],['Тепловий насос',2500,3],['Циркуляційний насос опалення',80,2],['Насос свердловини 1,5 кВт',1500,4],['Електрокотел 6 кВт',6000,1],['Болгарка',2000,3],['Компресор повітряний',1500,5],['Зарядка електромобіля',3700,1],['Комп’ютер з монітором',350,1]];
+function addFormHTML(){ const n=FEED.filter(f=>f.custom).length; return n>=12?'<p class="date">Додано максимум 12 приладів. Видаліть зайвий хрестиком.</p>':`<details class="addf"><summary class="chip" style="display:inline-flex">+ Додати прилад</summary>
+  <div class="addbox"><label class="sel">Типовий прилад<select class="nfP"><option value="">Обрати зі списку…</option>${APPL.map((a,i)=>`<option value="${i}">${a[0]} · ${a[1]>=1000?fmt(a[1]/1000,1)+' кВт':a[1]+' Вт'}${a[2]>1?' · пуск ×'+a[2]:''}</option>`).join('')}</select></label>
+  <p class="date">або введіть свій:</p><label class="sel">Назва<input type="text" class="nfN" maxlength="28" placeholder="напр. Обігрівач"></label>
   <label class="sel">Потужність, Вт<input type="number" class="nfW" min="10" max="10000" step="10" value="1000"></label>
   <label class="sel">Пусковий струм<select class="nfK">${KOPTS.map(([v,t])=>`<option value="${v}">×${v} — ${t}</option>`).join('')}</select></label>
   <button class="btn primary" data-add="1">Додати і увімкнути</button><p class="date addmsg"></p></div></details>`; }
@@ -551,6 +553,7 @@ document.addEventListener('input',e=>{
 });
 let sldT=null; function buildSldSoon(){ clearTimeout(sldT); sldT=setTimeout(buildSld,120); }
 document.addEventListener('change',e=>{
+  if(e.target.classList&&e.target.classList.contains('nfP')){ const a=APPL[+e.target.value]; if(!a) return; const box=e.target.closest('.addbox'); box.querySelector('.nfN').value=a[0]; box.querySelector('.nfW').value=a[1]; const k=box.querySelector('.nfK'); k.value=String(a[2]); if(k.value!==String(a[2])) k.value='1'; box.querySelector('.addmsg').textContent='Перевірте дані і натисніть «Додати і увімкнути».'; return; }
   const id=e.target.id, v=e.target.value;
   if(id==='inv'){ S.inv=v; const inv=INVS[v]; S.nb=inv.bus==='HV'?4:2; S.fuse=inv.bus==='HV'?63:250; trip=null; fuseBlown=false; if(inv.type!=='hyb') S.offgrid=false; buildCfg(); buildSld(); }
   else if(id==='panel'){ S.panel=v; buildSld(); }
