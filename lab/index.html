@@ -274,8 +274,8 @@ body.simple .meters .m:nth-child(n+4){display:none}
       <p class="gh" style="margin-top:14px">Як пройти курс</p>
       <ol class="wsteps">
         <li><span><b>Пройдіть 10 лабораторних робіт по черзі.</b> Кожна займає 5–10 хвилин. Лабораторія сама підказує кожен крок і підсвічує, куди натиснути.</span></li>
-        <li><span><b>Після кожної роботи запишіть код</b> — наприклад «КРИГА-58». Усі коди зберігаються в кнопці «Мої коди для тесту».</span></li>
-        <li><span><b>Поверніться в курс на Kwiga і пройдіть тест</b> «Лабораторний практикум», обираючи свої коди. Після тесту Kwiga видасть сертифікат.</span></li>
+        <li><span><b>Після кожної роботи прочитайте висновок.</b> Він пояснює, чому сталося саме так і як це рахують на реальному об’єкті.</span></li>
+        <li><span><b>Після всіх 10 робіт поверніться в курс</b> і продовжуйте навчання. Прогрес видно над схемою: 10 квадратиків.</span></li>
       </ol>
       <div class="wact"><button class="btn primary big" id="wStart" type="button"></button><button class="btn big" id="wTour" type="button">Показати, як влаштований екран (1 хв)</button><button class="btn big" id="wFree" type="button">Вільний режим</button></div>
       <p class="muted" id="wProg"></p>
@@ -883,7 +883,7 @@ function renderGuide(){
       (q.type==='choice'?`<div class="opts">${q.opts.map((o,i)=>`<label><input type="radio" name="gopt" value="${i}"> ${o}</label>`).join('')}</div>`:
        `<div class="ans"><input id="gAns" type="text" inputmode="decimal" placeholder="${q.type==='time'?'наприклад 22:15':'число'}" aria-label="Відповідь">${q.unit?`<span>${q.unit}</span>`:''}</div>`)+
       `<button class="btn primary" data-g="check">Перевірити</button>${LAB.msg?`<p class="fb ${LAB.ok?'ok':'bad'}">${LAB.msg}</p>`:''}`; }
-  else{ markDone(e.id); right=`<p class="gh ok">Роботу виконано ✓ · зараховано ${DONE.length} з ${EXPS.length}</p><p class="gq">Висновок</p><p>${e.concl}</p><div class="codebox">Код роботи для тесту в Kwiga: <b>${e.code}</b><span>Запишіть його — у підсумковому тесті курсу треба буде обрати цей код.</span></div><div class="actions">${nextExp()?`<button class="btn primary" data-g="nextExp">Наступна робота →</button>`:''}<button class="btn" data-g="again">Пройти ще раз</button><button class="btn" data-g="exit">Вільний режим</button></div>`; }
+  else{ markDone(e.id); right=`<p class="gh ok">Роботу виконано ✓ · зараховано ${DONE.length} з ${EXPS.length}</p><p class="gq">Висновок</p><p>${e.concl}</p><div class="actions">${nextExp()?`<button class="btn primary" data-g="nextExp">Наступна робота →</button>`:''}<button class="btn" data-g="again">Пройти ще раз</button><button class="btn" data-g="exit">Вільний режим</button></div>`; }
   g.innerHTML=`<div class="gcol"><p class="gh">Умови</p><p>${e.cond}</p><p class="gh" style="margin-top:6px">Кроки</p><ol class="gsteps">${steps}</ol></div><div class="gcol gq-col">${right}</div><button class="gx btn" data-g="exit" aria-label="Закрити роботу">×</button>`;
   hl(LAB.state==='steps'?e.steps[LAB.step].watch:null); renderProg(); nowBar();
 }
@@ -915,7 +915,7 @@ let DONE=[]; try{DONE=JSON.parse(localStorage.getItem('o4lab-done')||'[]')}catch
 function markDone(id){ if(!DONE.includes(id)){ DONE.push(id); try{localStorage.setItem('o4lab-done',JSON.stringify(DONE))}catch(e){} addLog('o',`Лабораторну роботу зараховано: ${DONE.length} з ${EXPS.length}.`);} renderProg(); }
 function renderProg(){
   const n=EXPS.filter(e=>DONE.includes(e.id)).length, all=n===EXPS.length;
-  $('#prog').innerHTML=`<span>Прогрес:</span><span class="dots">${EXPS.map((e,i)=>`<button type="button" class="${DONE.includes(e.id)?'ok':''}${LAB&&LAB.e===e?' cur':''}" data-go2="${e.id}" title="${e.t}${DONE.includes(e.id)?' — виконано':''}">${DONE.includes(e.id)?'✓':i+1}</button>`).join('')}</span><span class="bar"><i style="width:${n/EXPS.length*100}%"></i></span><b style="color:var(--ink)">${n} з ${EXPS.length}</b><button class="btn${all?' primary':''}" id="certBtn"${n?'':' disabled title="З’явиться після першої виконаної роботи"'}>Мої коди для тесту (${n})</button>`;
+  $('#prog').innerHTML=`<span>Прогрес:</span><span class="dots">${EXPS.map((e,i)=>`<button type="button" class="${DONE.includes(e.id)?'ok':''}${LAB&&LAB.e===e?' cur':''}" data-go2="${e.id}" title="${e.t}${DONE.includes(e.id)?' — виконано':''}">${DONE.includes(e.id)?'✓':i+1}</button>`).join('')}</span><span class="bar"><i style="width:${n/EXPS.length*100}%"></i></span><b style="color:var(--ink)">${n} з ${EXPS.length}</b>${all?'<b style="color:var(--ok)">✓ Усі роботи виконано — поверніться в курс</b>':''}`;
 }
 function renderCert(){
   const c=$('#cert'); c.hidden=false; const all=EXPS.every(e=>DONE.includes(e.id));
@@ -963,7 +963,7 @@ function buildDoc(){
     ['Схід–захід','Два MPPT з різним азимутом. Ширший графік генерації.','ew'],
     ['Автономна СЕС','Будь-який гібрид з опцією «Автономна система»: лише PV і АКБ.','frost']];
   $('#viewDoc').innerHTML=`<div class="doc"><nav class="toc" aria-label="Зміст">
-    <a href="#d1">1. Що це</a><a href="#d2">2. Екран</a><a href="#d3">3. Що можна змінювати</a><a href="#d4">4. Що можна побачити</a><a href="#d5">5. Що можна побудувати</a><a href="#d6">6. Лабораторні роботи</a><a href="#d7">7. Як вести заняття</a><a href="#d8">8. Межі моделі</a><a href="#d9">9. Коди і сертифікат</a></nav>
+    <a href="#d1">1. Що це</a><a href="#d2">2. Екран</a><a href="#d3">3. Що можна змінювати</a><a href="#d4">4. Що можна побачити</a><a href="#d5">5. Що можна побудувати</a><a href="#d6">6. Лабораторні роботи</a><a href="#d7">7. Як вести заняття</a><a href="#d8">8. Межі моделі</a><a href="#d9">9. Прогрес</a></nav>
   <article class="art">
     <h2 id="d1">1. Що це</h2>
     <p>Віртуальний стенд сонячної електростанції. Ви збираєте систему з типового обладнання, задаєте погоду і час, вмикаєте навантаження і відключаєте мережу. Модель щосекунди рахує положення сонця, генерацію кожного MPPT, заряд АКБ, обмін з мережею і реакцію захисту.</p>
@@ -988,16 +988,14 @@ function buildDoc(){
     <ol><li>Покажіть вільний режим: сонце, хмари, кут. П’ять хвилин, щоб група звикла до схеми.</li>
     <li>Дайте роботу без підказки результату: учасники формулюють гіпотезу, потім перевіряють у лабораторії.</li>
     <li>Попросіть підтвердити результат розрахунком з курсу: лабораторія показує наслідок, формула пояснює причину.</li>
-    <li>Для онлайну на Kwiga: одна робота на урок, у завданні уроку — питання з роботи і відповідь числом.</li></ol>
+    <li>Для онлайну: лабораторія — окремий урок курсу перед підсумковим тестом.</li></ol>
     <h2 id="d8">8. Межі моделі</h2>
     <ul><li>Сонце — для широти 50,4°, 15-го числа місяця; хмарність усереднена.</li>
     <li>Температура панелі — за NOCT, без вітру. Vmp рахується через температурний коефіцієнт потужності як наближення.</li>
     <li>Параметри інверторів і АКБ типові для класу, не конкретних моделей. Для проєкту — лише паспорти.</li>
     <li>Не моделюються втрати в кабелях, затінення, деградація і алгоритми конкретних виробників.</li></ul>
-    <h2 id="d9">9. Коди робіт і сертифікат у Kwiga</h2>
-    <p>Робота зараховується, коли пройдено всі кроки і правильно відповідено на питання. Після цього лабораторія показує <b>код роботи</b>. Прогрес видно над схемою: 10 квадратиків і кнопка «Мої коди для тесту».</p>
-    <p>Коди потрібні для підсумкового тесту курсу в Kwiga «Лабораторний практикум». Після успішного тесту Kwiga сама видає сертифікат.</p>
-    <p>Прогрес зберігається в браузері учасника. Якщо очистити дані браузера або перейти на інший пристрій, роботи доведеться пройти знову.</p>
+    <h2 id="d9">9. Прогрес</h2>
+    <p>Робота зараховується, коли пройдено всі кроки і правильно відповідено на питання. Прогрес видно над схемою: 10 квадратиків. Він зберігається в браузері учасника — якщо очистити дані браузера або перейти на інший пристрій, роботи доведеться пройти знову.</p>
   </article></div>`;
 }
 
@@ -1007,7 +1005,7 @@ const TOUR=[
  {sel:'.sld',t:'Жива схема',p:'Центр екрана. Панелі → інвертор → батарея, мережа і щит з приладами. Точки біжать туди, куди йде енергія: жовті — сонце, зелені — батарея, сині — мережа, помаранчеві — будинок. Під схемою одне речення пояснює, що відбувається, а червоні й жовті рядки — що не так і як виправити.'},
  {sel:'.envcol .panel',t:'Сонце і погода',p:'Праворуч — час доби, місяць, хмарність і мороз або спека. Змініть, наприклад, місяць на грудень і подивіться, що станеться з генерацією.'},
  {sel:'#task',t:'Лабораторні роботи',p:'Тут обирається робота. Після вибору з’являється панель з умовами і кроками: «Що зробити» і «Що має статися». Потрібна кнопка чи поле підсвічується помаранчевою рамкою.'},
- {sel:'#prog',t:'Прогрес і коди',p:'10 квадратиків — ваші роботи. Після кожної ви отримуєте код, усі коди — в кнопці «Мої коди для тесту». З ними йдете на тест у Kwiga за сертифікатом.'}];
+ {sel:'#prog',t:'Прогрес',p:'10 квадратиків — ваші роботи. Виконана робота стає зеленою. Натисніть на квадратик, щоб відкрити будь-яку роботу ще раз.'}];
 let TI=-1;
 function tour(i){ document.querySelectorAll('.tour-on').forEach(x=>x.classList.remove('tour-on')); const tip=$('#tourTip');
   if(i<0||i>=TOUR.length){ TI=-1; tip.hidden=true; if(i>=TOUR.length){ const nx=EXPS.find(e=>!DONE.includes(e.id)); if(nx) startExp(nx.id);} return; }
@@ -1019,7 +1017,7 @@ document.addEventListener('keydown',e=>{ if(TI>=0&&e.key==='Escape') tour(-1); }
 function showWelcome(on){
   document.body.classList.toggle('welcoming',on); $('#welcome').hidden=!on;
   if(on){ const nx=EXPS.find(e=>!DONE.includes(e.id)), n=EXPS.filter(e=>DONE.includes(e.id)).length;
-    $('#wStart').textContent=n===0?'Почати з роботи 1 →':nx?`Продовжити: ${nx.t} →`:'Усі роботи виконано — мої коди →';
+    $('#wStart').textContent=n===0?'Почати з роботи 1 →':nx?`Продовжити: ${nx.t} →`:'Усі роботи виконано — пройти ще раз →';
     $('#wProg').textContent=n?`Виконано ${n} з ${EXPS.length} робіт.`:'';
     if(playing){ playing=false; setPlay(); } window.scrollTo({top:0}); }
 }
@@ -1027,7 +1025,7 @@ document.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b
   if(b.id==='helpBtn'){ showWelcome(true); return; }
   if(b.id==='wFree'){ showWelcome(false); setMode(true); setTimeout(drawChart,0); return; }
   if(b.id==='wTour'){ showWelcome(false); setMode(true); stopLab(); setTimeout(()=>tour(0),150); return; }
-  if(b.id==='wStart'){ showWelcome(false); const nx=EXPS.find(e=>!DONE.includes(e.id)); if(nx) startExp(nx.id); else renderCert(); setTimeout(drawChart,0); return; }
+  if(b.id==='wStart'){ showWelcome(false); const nx=EXPS.find(e=>!DONE.includes(e.id)); startExp((nx||EXPS[0]).id); setTimeout(drawChart,0); return; }
 });
 renderProg();
 let md='s'; try{md=localStorage.getItem('o4lab-mode')||'s'}catch(e){} setMode(md==='s');
