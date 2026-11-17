@@ -7,9 +7,9 @@
 <style>
 /* Layout: engineering HMI. Top bar (clock, speed, tabs) → [configuration | live single-line diagram | environment] → instruments → trend + alarm log. Second tab: full instruction. Deliberately single dark look, like a SCADA screen. */
 :root{
-  --bg:#F4F1EC; --panel:#FFFFFF; --panel2:#F7F4EF; --line:#E3DCD2; --line2:#D3CABD;
-  --ink:#1A1714; --muted:#6B6258; --dim:#8F857A;
-  --accent:#FF6A13; --accent-ink:#C24A00; --accent-soft:#FFEBDD;
+  --bg:#D9E3E8; --panel:#F7FAFB; --panel2:#E9EFF3; --line:#C9D6DE; --line2:#B3C4CF;
+  --ink:#17303D; --muted:#4F6672; --dim:#7D919C;
+  --accent:#DA532C; --accent-ink:#B5401C; --accent-soft:#F8E1D8;
   --pv:#D08A0A; --bat:#1E9E63; --grid:#2F6FD0; --load:#F05A12; --soc:#7A4FD6;
   --ok:#1E9E63; --warn:#D08A0A; --err:#D2372B;
   --f:'IBM Plex Sans',system-ui,'Segoe UI',Arial,sans-serif;
@@ -30,7 +30,7 @@ p{margin:0}
 .seg{display:flex;border:1px solid var(--line2);border-radius:8px;overflow:hidden}
 .seg button{font:inherit;font-size:12.5px;font-weight:600;background:transparent;color:var(--muted);border:none;padding:7px 11px;cursor:pointer;border-right:1px solid var(--line2)}
 .seg button:last-child{border-right:none}
-.seg button[aria-pressed="true"],.seg button[aria-selected="true"]{background:var(--accent);color:#111}
+.seg button[aria-pressed="true"],.seg button[aria-selected="true"]{background:var(--accent);color:#fff}
 button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
 .main{display:grid;grid-template-columns:290px minmax(0,1fr) 320px;gap:12px;align-items:start}
@@ -92,10 +92,10 @@ canvas{width:100%;height:230px;display:block}
 .mbar{display:flex;flex-direction:column;gap:10px}
 .mbar svg{width:100%;height:auto;display:block}
 
-.task{background:var(--accent-soft);border:1px solid #F2B88F;border-radius:10px;padding:10px 14px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.task{background:var(--accent-soft);border:1px solid #E9A58D;border-radius:10px;padding:10px 14px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
 .task .l{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);font-weight:700}
 .task p{font-size:14px}
-.task b{color:#B84500}
+.task b{color:#B5401C}
 .btn{font:inherit;font-size:12.5px;font-weight:600;background:transparent;color:var(--ink);border:1px solid var(--line2);border-radius:6px;padding:6px 10px;cursor:pointer}
 .btn:hover{border-color:var(--accent)}
 
@@ -106,13 +106,13 @@ canvas{width:100%;height:230px;display:block}
 .art{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:22px 26px;display:flex;flex-direction:column;gap:14px;min-width:0}
 .art h2{font-size:20px;margin-top:10px;padding-top:14px;border-top:1px solid var(--line)}
 .art h2:first-child{margin-top:0;padding-top:0;border-top:none}
-.art p,.art li{color:#3A332C;max-width:78ch}
+.art p,.art li{color:#2A4250;max-width:78ch}
 .art ul,.art ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
 .art b{color:var(--ink)}
 .tw{overflow-x:auto}
 .art table{border-collapse:collapse;width:100%;font-size:13px;min-width:560px}
 .art th{text-align:left;color:var(--muted);font-weight:600;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;padding:7px 10px;border-bottom:1px solid var(--line2)}
-.art td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;color:#3A332C}
+.art td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;color:#2A4250}
 .art td:first-child{color:var(--ink);font-weight:600;white-space:nowrap}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
 .cd{background:var(--panel2);border:1px solid var(--line2);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:6px}
@@ -124,22 +124,36 @@ canvas{width:100%;height:230px;display:block}
 .lab h4{margin:0;font-size:15px;font-weight:600}
 .lab dl{display:grid;grid-template-columns:150px minmax(0,1fr);gap:6px 12px;margin:0;font-size:13px}
 .lab dt{color:var(--muted)}
-.lab dd{margin:0;color:#3A332C}
+.lab dd{margin:0;color:#2A4250}
 .foot{font-size:12px;color:var(--dim);text-align:center}
 [hidden]{display:none!important}
+.bar{background:#1F3B4D;border-color:#1F3B4D}
+.bar .brand h1,.bar .clock{color:#fff}
+.bar .brand .e{color:#F39A76}
+.bar .date{color:#A9C3CE}
+.bar .seg{border-color:#3D5C6E}
+.bar .seg button{color:#CFE0E7;border-right-color:#3D5C6E}
+.bar .seg button[aria-pressed="true"],.bar .seg button[aria-selected="true"]{background:#5895A7;color:#fff}
+.bar #helpBtn{background:#DA532C;border-color:#DA532C;color:#fff}
+body.paused .bar #play{background:#E0A23A;color:#17303D}
+.ph{background:#5895A7;border-bottom-color:#5895A7;border-radius:10px 10px 0 0}
+.ph h2{color:#fff}
+.ph .date,.ph .legend{color:#E6F0F4}
+.panel{box-shadow:0 1px 2px rgba(23,48,61,.08)}
+.task{background:#F3DCD2;border-color:#E9A58D}
 body.welcoming #viewLab{display:none!important}
 .welcome{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:22px;background:var(--panel);border:1px solid var(--accent);border-radius:12px;padding:26px 28px}
 .welcome h2{font-size:clamp(20px,2.3vw,28px);line-height:1.25;margin:6px 0 10px}
-.wlead{font-size:15.5px;color:#3A332C;max-width:70ch}
+.wlead{font-size:15.5px;color:#2A4250;max-width:70ch}
 .wsteps{margin:16px 0 0;padding:0;list-style:none;counter-reset:w;display:flex;flex-direction:column;gap:10px}
-.wsteps li{counter-increment:w;display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;font-size:15px;color:#3A332C}
-.wsteps li::before{content:counter(w);width:30px;height:30px;border-radius:15px;background:var(--accent);color:#111;display:grid;place-items:center;font:700 14px var(--mono)}
+.wsteps li{counter-increment:w;display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;font-size:15px;color:#2A4250}
+.wsteps li::before{content:counter(w);width:30px;height:30px;border-radius:15px;background:var(--accent);color:#fff;display:grid;place-items:center;font:700 14px var(--mono)}
 .wsteps b{color:var(--ink)}
 .wact{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
 .btn.big{font-size:15px;padding:11px 18px}
 .wr{border-left:1px solid var(--line);padding-left:22px;display:flex;flex-direction:column;gap:8px}
 .legendL{list-style:none;margin:4px 0;padding:0;display:flex;flex-direction:column;gap:8px}
-.legendL li{display:flex;gap:10px;align-items:center;font-size:14px;color:#3A332C}
+.legendL li{display:flex;gap:10px;align-items:center;font-size:14px;color:#2A4250}
 .legendL i{width:28px;height:5px;border-radius:3px;flex-shrink:0}
 .legendL b{color:var(--ink)}
 #helpBtn{border-color:var(--accent);color:var(--accent-ink)}
@@ -189,7 +203,7 @@ table.codes b{font-family:var(--mono);color:var(--ok)}
 .gs{display:grid;grid-template-columns:26px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:8px;color:var(--muted)}
 .gs .n{width:24px;height:24px;border-radius:12px;display:grid;place-items:center;font-family:var(--mono);font-size:12px;background:var(--panel2);border:1px solid var(--line2)}
 .gs.cur{background:var(--accent-soft);color:var(--ink)}
-.gs.cur .n{background:var(--accent);color:#111;border-color:var(--accent)}
+.gs.cur .n{background:var(--accent);color:#fff;border-color:var(--accent)}
 .gs.done .n{background:#CDEBDA;color:var(--ok);border-color:#CDEBDA}
 .gs .btn{margin-top:6px}
 .wait{color:var(--accent-ink);font-size:12.5px;margin-top:4px}
@@ -198,7 +212,7 @@ table.codes b{font-family:var(--mono);color:var(--ok)}
 .opts input{accent-color:var(--accent);margin-top:3px}
 .ans{display:flex;align-items:center;gap:8px}
 .ans input{font:inherit;font-family:var(--mono);font-size:16px;background:var(--panel2);color:var(--ink);border:1px solid var(--line2);border-radius:6px;padding:7px 10px;width:140px}
-.btn.primary{background:var(--accent);color:#111;border-color:var(--accent);align-self:flex-start}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent);align-self:flex-start}
 .btn.small{font-size:12px;padding:4px 9px}
 .fb{font-size:13.5px;padding:7px 10px;border-radius:6px}
 .fb.ok{color:var(--ok);background:#E3F3E9}.fb.bad{color:var(--warn);background:#FBF0D9}
@@ -552,49 +566,49 @@ function reset(){ S=defaults(); clearRun(); playing=false; setPlay(); LAB=null; 
 function buildSld(){
   const inv=INVS[S.inv], hyb=inv.type==='hyb', off=S.offgrid&&hyb, pn=PANELS[S.panel];
   $('#topoL').textContent=(inv.type==='grid'?'мережева СЕС':off?'автономна СЕС':'гібридна СЕС');
-  const T=(x,y,t,o={})=>`<text x="${x}" y="${y}" font-size="${o.s||12}" fill="${o.c||'#6B6258'}" text-anchor="${o.a||'start'}"${o.id?` id="${o.id}"`:''} font-weight="${o.w||400}">${t}</text>`;
-  const track=(id,d)=>`<path d="${d}" stroke="#E8E2D9" stroke-width="7" fill="none" stroke-linejoin="round"/><path id="${id}" d="${d}" stroke="#555" stroke-width="3" fill="none" stroke-dasharray="2 12" stroke-linecap="round" stroke-linejoin="round" opacity="0"/>`;
-  const pvSym=(x,y,i,c)=>`<rect x="${x}" y="${y}" width="120" height="70" rx="3" fill="#FFFFFF" stroke="#D08A0A" stroke-width="1.6" id="pv${i}box"/>
-     ${[1,2,3,4].map(k=>`<line x1="${x+24*k}" y1="${y}" x2="${x+24*k}" y2="${y+70}" stroke="#D8D0C4"/>`).join('')}<line x1="${x}" y1="${y+35}" x2="${x+120}" y2="${y+35}" stroke="#D8D0C4"/>
+  const T=(x,y,t,o={})=>`<text x="${x}" y="${y}" font-size="${o.s||12}" fill="${o.c||'#4F6672'}" text-anchor="${o.a||'start'}"${o.id?` id="${o.id}"`:''} font-weight="${o.w||400}">${t}</text>`;
+  const track=(id,d)=>`<path d="${d}" stroke="#CFDCE3" stroke-width="7" fill="none" stroke-linejoin="round"/><path id="${id}" d="${d}" stroke="#555" stroke-width="3" fill="none" stroke-dasharray="2 12" stroke-linecap="round" stroke-linejoin="round" opacity="0"/>`;
+  const pvSym=(x,y,i,c)=>`<rect x="${x}" y="${y}" width="120" height="70" rx="3" fill="#F7FAFB" stroke="#D08A0A" stroke-width="1.6" id="pv${i}box"/>
+     ${[1,2,3,4].map(k=>`<line x1="${x+24*k}" y1="${y}" x2="${x+24*k}" y2="${y+70}" stroke="#BCCBD4"/>`).join('')}<line x1="${x}" y1="${y+35}" x2="${x+120}" y2="${y+35}" stroke="#BCCBD4"/>
      <path d="M${x+6} ${y-16} l12 10 M${x+24} ${y-18} l10 12" stroke="#D08A0A" stroke-width="1.5"/>
-     ${T(x,y+88,`PV${i} · ${c.s>1?c.s+'×':''}${c.n}×${pn.P} Вт`,{c:'#1A1714',w:600})}${T(x,y+103,`${fmt(c.n*c.s*pn.P/1000,2)} кВт · ${c.tilt}° · ${azT(c.az)}`,{s:11})}`;
-  const sw=(x,y,id)=>`<g id="${id}"><circle cx="${x}" cy="${y}" r="3" fill="#6B6258"/><line class="blade" x1="${x}" y1="${y}" x2="${x+28}" y2="${y-9}" stroke="#1A1714" stroke-width="2"/><circle cx="${x+30}" cy="${y}" r="3" fill="#6B6258"/></g>`;
+     ${T(x,y+88,`PV${i} · ${c.s>1?c.s+'×':''}${c.n}×${pn.P} Вт`,{c:'#17303D',w:600})}${T(x,y+103,`${fmt(c.n*c.s*pn.P/1000,2)} кВт · ${c.tilt}° · ${azT(c.az)}`,{s:11})}`;
+  const sw=(x,y,id)=>`<g id="${id}"><circle cx="${x}" cy="${y}" r="3" fill="#4F6672"/><line class="blade" x1="${x}" y1="${y}" x2="${x+28}" y2="${y-9}" stroke="#17303D" stroke-width="2"/><circle cx="${x+30}" cy="${y}" r="3" fill="#4F6672"/></g>`;
   let s='';
   const on1=S.m1.n>0, on2=S.m2.n>0;
   if(on1){ s+=track('fPv1','M160 95 H330')+pvSym(40,60,1,S.m1)+sw(205,95,'qs1')+T(205,80,'QS1',{s:10})+T(166,114,'',{id:'tPv1',s:10.5,c:'#D08A0A'}); }
   if(on2){ s+=track('fPv2','M160 245 H330')+pvSym(40,210,2,S.m2)+sw(205,245,'qs2')+T(205,230,'QS2',{s:10})+T(166,264,'',{id:'tPv2',s:10.5,c:'#D08A0A'}); }
-  s+=`<rect x="330" y="55" width="220" height="250" rx="6" fill="#F7F4EF" stroke="#8F857A" stroke-width="1.5" id="invBox"/>`;
-  s+=T(440,78,`${inv.type==='grid'?'Мережевий':'Гібридний'} інвертор ${inv.P} кВт`,{a:'middle',s:12,c:'#1A1714',w:600});
-  s+=(on1?T(340,99,'MPPT1',{s:10.5}):'')+(on2?T(340,249,'MPPT2',{s:10.5}):'')+T(440,128,'DC-шина',{a:'middle',s:10.5})+`<path d="M400 136 h80 M400 144 h80" stroke="#8F857A"/>`+T(440,170,'DC/AC',{a:'middle',s:10.5})+`<path d="M425 178 q7 -8 15 0 t15 0" stroke="#8F857A" fill="none"/>`;
-  s+=`<rect x="355" y="198" width="170" height="44" rx="4" fill="#F4F1EC" stroke="#E3DCD2"/>`+T(440,216,'',{id:'invMode',a:'middle',s:12,w:600,c:'#1E9E63'})+T(440,234,'',{id:'invLoad',a:'middle',s:10.5});
+  s+=`<rect x="330" y="55" width="220" height="250" rx="6" fill="#E9EFF3" stroke="#7D919C" stroke-width="1.5" id="invBox"/>`;
+  s+=T(440,78,`${inv.type==='grid'?'Мережевий':'Гібридний'} інвертор ${inv.P} кВт`,{a:'middle',s:12,c:'#17303D',w:600});
+  s+=(on1?T(340,99,'MPPT1',{s:10.5}):'')+(on2?T(340,249,'MPPT2',{s:10.5}):'')+T(440,128,'DC-шина',{a:'middle',s:10.5})+`<path d="M400 136 h80 M400 144 h80" stroke="#7D919C"/>`+T(440,170,'DC/AC',{a:'middle',s:10.5})+`<path d="M425 178 q7 -8 15 0 t15 0" stroke="#7D919C" fill="none"/>`;
+  s+=`<rect x="355" y="198" width="170" height="44" rx="4" fill="#D9E3E8" stroke="#C9D6DE"/>`+T(440,216,'',{id:'invMode',a:'middle',s:12,w:600,c:'#1E9E63'})+T(440,234,'',{id:'invLoad',a:'middle',s:10.5});
   if(!off) s+=T(544,114,'GRID',{a:'end',s:9.5});
   if(hyb) s+=T(544,256,'LOAD',{a:'end',s:9.5})+T(440,298,'BAT',{a:'middle',s:9.5});
   if(hyb){
     s+=track('fBat','M440 305 V420');
-    s+=`<rect x="430" y="334" width="20" height="40" rx="2" fill="#FFFFFF" stroke="#1A1714" stroke-width="1.5"/><line id="fuWire" x1="440" y1="334" x2="440" y2="374" stroke="#1A1714" stroke-width="1.5"/>`+T(458,350,`FU1 ${S.fuse} А`,{s:11,c:'#1A1714'})+T(458,366,'DC',{s:10});
-    s+=`<rect x="380" y="420" width="120" height="96" rx="4" fill="#FFFFFF" stroke="#1E9E63" stroke-width="1.6"/>
+    s+=`<rect x="430" y="334" width="20" height="40" rx="2" fill="#F7FAFB" stroke="#17303D" stroke-width="1.5"/><line id="fuWire" x1="440" y1="334" x2="440" y2="374" stroke="#17303D" stroke-width="1.5"/>`+T(458,350,`FU1 ${S.fuse} А`,{s:11,c:'#17303D'})+T(458,366,'DC',{s:10});
+    s+=`<rect x="380" y="420" width="120" height="96" rx="4" fill="#F7FAFB" stroke="#1E9E63" stroke-width="1.6"/>
       <path d="M396 444 v26 M407 450 v14 M418 444 v26 M429 450 v14" stroke="#1E9E63" stroke-width="2.5"/>
-      <rect x="458" y="430" width="30" height="76" rx="2" fill="none" stroke="#8F857A"/><rect id="socBar" x="460" y="432" width="26" height="72" fill="#1E9E63"/>`;
-    s+=T(390,492,'',{id:'tSoc',s:12.5,c:'#1A1714',w:600})+T(390,508,`${S.nb}×5,12 кВт·год ${inv.bus}`,{s:10});
+      <rect x="458" y="430" width="30" height="76" rx="2" fill="none" stroke="#7D919C"/><rect id="socBar" x="460" y="432" width="26" height="72" fill="#1E9E63"/>`;
+    s+=T(390,492,'',{id:'tSoc',s:12.5,c:'#17303D',w:600})+T(390,508,`${S.nb}×5,12 кВт·год ${inv.bus}`,{s:10});
     s+=T(370,450,'',{id:'tBat',s:11,a:'end',c:'#1E9E63'})+T(370,466,'',{id:'tBat2',s:11,a:'end'})+T(370,482,'',{id:'tBat3',s:10.5,a:'end'});
   }
   const gx=880;
   if(!off){
     s+=track('fGrid','M550 120 H862');
     s+=sw(600,120,'qf1')+T(600,104,'QF1',{s:10});
-    s+=`<rect x="690" y="104" width="54" height="32" rx="3" fill="#FFFFFF" stroke="#2F6FD0"/>`+T(717,124,'kWh',{a:'middle',s:11,c:'#2F6FD0'})+T(717,150,'лічильник ⇄',{a:'middle',s:9.5});
+    s+=`<rect x="690" y="104" width="54" height="32" rx="3" fill="#F7FAFB" stroke="#2F6FD0"/>`+T(717,124,'kWh',{a:'middle',s:11,c:'#2F6FD0'})+T(717,150,'лічильник ⇄',{a:'middle',s:9.5});
     s+=`<circle id="gC1" cx="${gx}" cy="120" r="18" fill="none" stroke="#2F6FD0" stroke-width="1.8"/><circle id="gC2" cx="${gx+24}" cy="120" r="18" fill="none" stroke="#2F6FD0" stroke-width="1.8"/>`;
-    s+=T(gx+12,158,'Мережа 0,4 кВ',{a:'middle',s:11,c:'#1A1714'})+T(gx+12,174,'',{id:'tGridS',a:'middle',s:10})+T(800,98,'',{id:'tGrid',s:11,a:'middle',c:'#2F6FD0'});
-  } else s+=T(600,124,'мережа не підключена — автономна система',{s:11,c:'#8F857A'});
+    s+=T(gx+12,158,'Мережа 0,4 кВ',{a:'middle',s:11,c:'#17303D'})+T(gx+12,174,'',{id:'tGridS',a:'middle',s:10})+T(800,98,'',{id:'tGrid',s:11,a:'middle',c:'#2F6FD0'});
+  } else s+=T(600,124,'мережа не підключена — автономна система',{s:11,c:'#7D919C'});
   const busTop=hyb?262:200;
   s+=track('fLoad',hyb?'M550 262 H680':'M780 120 V200 H680');
   if(hyb) s+=sw(600,262,'qf2')+T(600,246,'QF2',{s:10});
-  s+=`<line x1="680" y1="${busTop-8}" x2="680" y2="${busTop+18+(FEED.length-1)*24}" stroke="#1A1714" stroke-width="3"/>`;
-  s+=T(690,busTop-14,hyb?'Щит резервного живлення':'Щит будинку',{s:11,c:'#1A1714',w:600});
+  s+=`<line x1="680" y1="${busTop-8}" x2="680" y2="${busTop+18+(FEED.length-1)*24}" stroke="#17303D" stroke-width="3"/>`;
+  s+=T(690,busTop-14,hyb?'Щит резервного живлення':'Щит будинку',{s:11,c:'#17303D',w:600});
   s+=T(hyb?560:690,hyb?busTop+28:busTop-30,'',{id:'tLoad',s:11,c:'#F05A12'});
   FEED.forEach((f,i)=>{ const y=busTop+16+i*24;
-    s+=`<line x1="680" y1="${y}" x2="710" y2="${y}" stroke="#8F857A" stroke-width="1.5"/><rect x="710" y="${y-5}" width="12" height="10" fill="none" stroke="#8F857A"/><line x1="722" y1="${y}" x2="740" y2="${y}" stroke="#8F857A" stroke-width="1.5"/>
-      <circle id="fd-${f.id}" cx="748" cy="${y}" r="4" fill="#D3CABD"/>`+T(760,y+4,f.n,{s:11,id:'fn-'+f.id})+T(992,y+4,'',{id:'fv-'+f.id,s:11,a:'end'});
+    s+=`<line x1="680" y1="${y}" x2="710" y2="${y}" stroke="#7D919C" stroke-width="1.5"/><rect x="710" y="${y-5}" width="12" height="10" fill="none" stroke="#7D919C"/><line x1="722" y1="${y}" x2="740" y2="${y}" stroke="#7D919C" stroke-width="1.5"/>
+      <circle id="fd-${f.id}" cx="748" cy="${y}" r="4" fill="#B3C4CF"/>`+T(760,y+4,f.n,{s:11,id:'fn-'+f.id})+T(992,y+4,'',{id:'fv-'+f.id,s:11,a:'end'});
   });
   $('#sld').setAttribute('viewBox',`0 0 1000 ${Math.max(540,busTop+16+(FEED.length-1)*24+24)}`);
   $('#sld').innerHTML=s;
@@ -612,20 +626,20 @@ function updSld(o,dt){
   if(o.hasBat){ flow('fBat',o.chg-o.dis,o.chg>=o.dis?-1:1,'#1E9E63',dt);
     txt('tSoc',`SOC ${Math.round(S.soc)} %`); const h=72*S.soc/100, sb=$('#socBar'); if(sb){ sb.setAttribute('y',(432+72-h).toFixed(1)); sb.setAttribute('height',h.toFixed(1)); sb.setAttribute('fill',S.soc<=S.minSoc+2?'#D2372B':'#1E9E63'); }
     txt('tBat',fuseBlown?'FU1 перегорів':o.chg>0.02?`▲ заряд ${fmt(o.chg,2)} кВт`:o.dis>0.02?`▼ розряд ${fmt(o.dis,2)} кВт`:'очікування',fuseBlown?'#D2372B':'#1E9E63');
-    txt('tBat2',`${fmt(o.Vbat,1)} В · ${fmt(o.Ibat,0)} А`); txt('tBat3',`${fmt(o.tBat,0)} °C`+(o.cold?' · заряд заблоковано':''),o.cold?'#D08A0A':'#6B6258');
-    const fw=$('#fuWire'); if(fw){ fw.setAttribute('stroke',fuseBlown?'#D2372B':'#1A1714'); fw.setAttribute('stroke-dasharray',fuseBlown?'8 24':'none'); } }
+    txt('tBat2',`${fmt(o.Vbat,1)} В · ${fmt(o.Ibat,0)} А`); txt('tBat3',`${fmt(o.tBat,0)} °C`+(o.cold?' · заряд заблоковано':''),o.cold?'#D08A0A':'#4F6672');
+    const fw=$('#fuWire'); if(fw){ fw.setAttribute('stroke',fuseBlown?'#D2372B':'#17303D'); fw.setAttribute('stroke-dasharray',fuseBlown?'8 24':'none'); } }
   const g=o.gridAvail;
   flow('fGrid',o.imp-o.exp,o.imp>=o.exp?-1:1,'#2F6FD0',dt);
   txt('tGrid',!g?'':o.imp>0.02?`◀ імпорт ${fmt(o.imp,2)} кВт`:o.exp>0.02?`▶ експорт ${fmt(o.exp,2)} кВт`:'0 кВт');
-  txt('tGridS',g?'напруга є':'ВІДКЛЮЧЕННЯ',g?'#6B6258':'#D2372B');
+  txt('tGridS',g?'напруга є':'ВІДКЛЮЧЕННЯ',g?'#4F6672':'#D2372B');
   ['gC1','gC2'].forEach(i=>{const c=document.getElementById(i); if(c) c.setAttribute('stroke',g?'#2F6FD0':'#D2372B');});
   const q1=document.querySelector('#qf1 .blade'); if(q1) q1.setAttribute('y2',g?111:96);
   const q2=document.querySelector('#qf2 .blade'); if(q2) q2.setAttribute('y2',trip?238:253);
   flow('fLoad',o.L,1,'#F05A12',dt);
   txt('tLoad',o.L>0.001?`${fmt(o.L,2)} кВт`:(o.black||trip||o.anti)?'без живлення':'0 кВт',o.L>0.001?'#F05A12':'#D2372B');
   FEED.forEach(f=>{ const p=o.D.per[f.id], live=p>0&&o.L>0.001;
-    const d=document.getElementById('fd-'+f.id); if(!d) return; d.setAttribute('fill',live?'#1E9E63':p>0?'#D2372B':'#D3CABD');
-    txt('fv-'+f.id,p>0?(live?fmt(p,2)+' кВт':'немає живл.'):'—',live?'#1A1714':p>0?'#D2372B':'#8F857A'); txt('fn-'+f.id,f.n,live?'#1A1714':'#6B6258'); });
+    const d=document.getElementById('fd-'+f.id); if(!d) return; d.setAttribute('fill',live?'#1E9E63':p>0?'#D2372B':'#B3C4CF');
+    txt('fv-'+f.id,p>0?(live?fmt(p,2)+' кВт':'немає живл.'):'—',live?'#17303D':p>0?'#D2372B':'#7D919C'); txt('fn-'+f.id,f.n,live?'#17303D':'#4F6672'); });
   let mode='МЕРЕЖА',c='#1E9E63';
   if(trip){mode='АВАРІЯ';c='#D2372B';}
   else if(o.anti){mode='СТОП: НЕМАЄ МЕРЕЖІ';c='#D2372B';}
@@ -633,7 +647,7 @@ function updSld(o,dt){
   else if(o.black){mode='АКБ НА МІНІМУМІ';c='#D2372B';}
   else if(!g){mode='АВТОНОМНО';c='#D08A0A';}
   txt('invMode',mode,c); txt('invLoad',`вихід ${Math.round(o.L/inv.P*100)} % · PV ${fmt(o.pv,1)} кВт`);
-  const ib=$('#invBox'); if(ib) ib.setAttribute('stroke',c==='#D2372B'?(blink?c:'#8F857A'):'#8F857A');
+  const ib=$('#invBox'); if(ib) ib.setAttribute('stroke',c==='#D2372B'?(blink?c:'#7D919C'):'#7D919C');
 }
 
 let spC=null;
@@ -641,9 +655,9 @@ function drawSunPath(force){
   const W=280,H=150,pl=26,pb=20, X=t=>pl+(W-pl-6)*t/24, Y=a=>H-pb-(H-pb-10)*(a+8)/78;
   if(force||!spC||spC.m!==S.month){
     const path=m=>{let d=''; for(let t=0;t<=24;t+=0.25){ d+=(t?'L':'M')+X(t).toFixed(1)+' '+Y(Math.max(sunPos(t,m).alt,-8)).toFixed(1)+' '; } return d;};
-    let gr=''; [0,20,40,60].forEach(a=>{ gr+=`<line x1="${pl}" x2="${W-6}" y1="${Y(a)}" y2="${Y(a)}" stroke="#ECE6DD"/><text x="${pl-4}" y="${Y(a)+3}" font-size="9" fill="#8F857A" text-anchor="end" font-family="IBM Plex Mono, monospace">${a}°</text>`; });
-    [0,6,12,18,24].forEach(t=>{ gr+=`<text x="${X(t)}" y="${H-5}" font-size="9" fill="#8F857A" text-anchor="middle" font-family="IBM Plex Mono, monospace">${t}:00</text>`; });
-    $('#sunpath').innerHTML=gr+`<rect x="${pl}" y="${Y(0)}" width="${W-pl-6}" height="${Y(-8)-Y(0)}" fill="#F7F4EF"/><path d="${path(6)}" stroke="#D8D0C4" stroke-dasharray="3 3" fill="none"/><path d="${path(12)}" stroke="#E0D8CC" stroke-dasharray="1 3" fill="none"/><path d="${path(S.month)}" stroke="#D08A0A" stroke-width="2" fill="none"/><line x1="${pl}" x2="${W-6}" y1="${Y(0)}" y2="${Y(0)}" stroke="#8F857A"/><circle id="spDot" r="5.5" fill="#FF6A13" stroke="#fff" stroke-width="1.5"/><text x="${W-8}" y="12" font-size="9" fill="#8F857A" text-anchor="end">пунктир: червень / грудень</text>`;
+    let gr=''; [0,20,40,60].forEach(a=>{ gr+=`<line x1="${pl}" x2="${W-6}" y1="${Y(a)}" y2="${Y(a)}" stroke="#DCE5EA"/><text x="${pl-4}" y="${Y(a)+3}" font-size="9" fill="#7D919C" text-anchor="end" font-family="IBM Plex Mono, monospace">${a}°</text>`; });
+    [0,6,12,18,24].forEach(t=>{ gr+=`<text x="${X(t)}" y="${H-5}" font-size="9" fill="#7D919C" text-anchor="middle" font-family="IBM Plex Mono, monospace">${t}:00</text>`; });
+    $('#sunpath').innerHTML=gr+`<rect x="${pl}" y="${Y(0)}" width="${W-pl-6}" height="${Y(-8)-Y(0)}" fill="#E9EFF3"/><path d="${path(6)}" stroke="#BCCBD4" stroke-dasharray="3 3" fill="none"/><path d="${path(12)}" stroke="#C6D3DB" stroke-dasharray="1 3" fill="none"/><path d="${path(S.month)}" stroke="#D08A0A" stroke-width="2" fill="none"/><line x1="${pl}" x2="${W-6}" y1="${Y(0)}" y2="${Y(0)}" stroke="#7D919C"/><circle id="spDot" r="5.5" fill="#DA532C" stroke="#fff" stroke-width="1.5"/><text x="${W-8}" y="12" font-size="9" fill="#7D919C" text-anchor="end">пунктир: червень / грудень</text>`;
     spC={m:S.month,X,Y};
   }
   const d=$('#spDot'); d.setAttribute('cx',spC.X(S.t)); d.setAttribute('cy',spC.Y(Math.max(sunPos(S.t,S.month).alt,-8)));
@@ -651,10 +665,10 @@ function drawSunPath(force){
 function mpptBars(o){
   const inv=o.inv, max=inv.vmax*1.2, X=v=>8+330*clamp(v/max,0,1);
   $('#mppt').innerHTML=o.M.map((m,i)=>{ if(!m.on) return `<p class="date">MPPT${i+1}: вимкнено</p>`;
-    return `<svg viewBox="0 0 346 52" aria-label="Шкала MPPT${i+1}"><text x="8" y="10" font-size="10" fill="#6B6258" font-family="IBM Plex Mono, monospace">MPPT${i+1} · Vmp ${Math.round(m.vmp)} В · Voc ${Math.round(m.voc)} В · Isc ${fmt(m.isc,1)}/${inv.isc[i]} А</text>
-      <rect x="8" y="17" width="330" height="12" fill="#F7F4EF"/><rect x="${X(inv.mmin)}" y="17" width="${X(inv.mmax)-X(inv.mmin)}" height="12" fill="#CDEBDA"/><rect x="${X(inv.vmax)}" y="17" width="${338-X(inv.vmax)}" height="12" fill="#F7D3CE"/>
-      ${m.vmp>0?`<rect x="${X(m.vmp)-2}" y="14" width="4" height="18" fill="#D08A0A"/>`:''}${m.voc>0?`<line x1="${X(m.voc)}" x2="${X(m.voc)}" y1="13" y2="33" stroke="${m.state==='over'?'#D2372B':'#1A1714'}" stroke-width="2"/>`:''}
-      <text x="${X(inv.mmin)}" y="45" font-size="9.5" fill="#8F857A" text-anchor="middle" font-family="IBM Plex Mono, monospace">${inv.mmin}</text><text x="${X(inv.mmax)}" y="45" font-size="9.5" fill="#8F857A" text-anchor="middle" font-family="IBM Plex Mono, monospace">${inv.mmax}</text><text x="${X(inv.vmax)}" y="45" font-size="9.5" fill="#D2372B" text-anchor="middle" font-family="IBM Plex Mono, monospace">${inv.vmax} В</text></svg>`; }).join('');
+    return `<svg viewBox="0 0 346 52" aria-label="Шкала MPPT${i+1}"><text x="8" y="10" font-size="10" fill="#4F6672" font-family="IBM Plex Mono, monospace">MPPT${i+1} · Vmp ${Math.round(m.vmp)} В · Voc ${Math.round(m.voc)} В · Isc ${fmt(m.isc,1)}/${inv.isc[i]} А</text>
+      <rect x="8" y="17" width="330" height="12" fill="#E9EFF3"/><rect x="${X(inv.mmin)}" y="17" width="${X(inv.mmax)-X(inv.mmin)}" height="12" fill="#CDEBDA"/><rect x="${X(inv.vmax)}" y="17" width="${338-X(inv.vmax)}" height="12" fill="#F7D3CE"/>
+      ${m.vmp>0?`<rect x="${X(m.vmp)-2}" y="14" width="4" height="18" fill="#D08A0A"/>`:''}${m.voc>0?`<line x1="${X(m.voc)}" x2="${X(m.voc)}" y1="13" y2="33" stroke="${m.state==='over'?'#D2372B':'#17303D'}" stroke-width="2"/>`:''}
+      <text x="${X(inv.mmin)}" y="45" font-size="9.5" fill="#7D919C" text-anchor="middle" font-family="IBM Plex Mono, monospace">${inv.mmin}</text><text x="${X(inv.mmax)}" y="45" font-size="9.5" fill="#7D919C" text-anchor="middle" font-family="IBM Plex Mono, monospace">${inv.mmax}</text><text x="${X(inv.vmax)}" y="45" font-size="9.5" fill="#D2372B" text-anchor="middle" font-family="IBM Plex Mono, monospace">${inv.vmax} В</text></svg>`; }).join('');
 }
 function meters(o){
   const selfS=dayE.load>0.05?clamp(1-dayE.imp/dayE.load,0,1)*100:0;
@@ -705,15 +719,15 @@ function drawChart(){
   const g=cv.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,W,H);
   const pl=36,pr=34,pt=6,pb=20, iw=W-pl-pr, ih=H-pt-pb;
   const mx=Math.max(2,...hist.map(p=>Math.max(p.pv,p.load,Math.abs(p.bat),Math.abs(p.grid))))*1.1, y0=pt+ih/2, Y=v=>y0-v/mx*ih/2, X=i=>pl+iw*i/288;
-  g.font='10px IBM Plex Mono, monospace'; g.strokeStyle='#ECE6DD'; g.fillStyle='#8F857A'; g.lineWidth=1;
+  g.font='10px IBM Plex Mono, monospace'; g.strokeStyle='#DCE5EA'; g.fillStyle='#7D919C'; g.lineWidth=1;
   [-1,-.5,0,.5,1].forEach(k=>{const y=Y(mx*k); g.beginPath(); g.moveTo(pl,y); g.lineTo(W-pr,y); g.stroke(); g.textAlign='right'; g.fillText(fmt(mx*k,1),pl-4,y+3);});
   g.textAlign='left'; g.fillStyle='#7A4FD6'; [0,50,100].forEach(v=>g.fillText(v+'%',W-pr+4,pt+ih-ih*v/100+3));
-  const n=hist.length; if(n<2){ g.fillStyle='#8F857A'; g.textAlign='center'; g.fillText('Натисніть «Пуск» — тренд почне малюватися',pl+iw/2,y0-8); return; }
+  const n=hist.length; if(n<2){ g.fillStyle='#7D919C'; g.textAlign='center'; g.fillText('Натисніть «Пуск» — тренд почне малюватися',pl+iw/2,y0-8); return; }
   const st=288-n;
   g.fillStyle='rgba(208,138,10,.12)'; g.beginPath(); g.moveTo(X(st),y0); hist.forEach((p,i)=>g.lineTo(X(st+i),Y(p.pv))); g.lineTo(X(st+n-1),y0); g.fill();
   const line=(k,c,w,f=Y)=>{ g.strokeStyle=c; g.lineWidth=w; g.beginPath(); hist.forEach((p,i)=>{const x=X(st+i),y=f(p[k]); i?g.lineTo(x,y):g.moveTo(x,y);}); g.stroke(); };
   line('pv','#D08A0A',2); line('load','#F05A12',1.8); line('bat','#1E9E63',1.6); line('grid','#2F6FD0',1.6); line('soc','#7A4FD6',1.3,v=>pt+ih-ih*v/100);
-  g.fillStyle='#8F857A'; g.textAlign='center'; hist.forEach((p,i)=>{ if(p.lbl) g.fillText(p.lbl,X(st+i),H-5); });
+  g.fillStyle='#7D919C'; g.textAlign='center'; hist.forEach((p,i)=>{ if(p.lbl) g.fillText(p.lbl,X(st+i),H-5); });
 }
 
 let lastT=performance.now(), acc=1;
