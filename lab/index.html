@@ -127,6 +127,22 @@ canvas{width:100%;height:230px;display:block}
 .lab dd{margin:0;color:#2A4250}
 .foot{font-size:12px;color:var(--dim);text-align:center}
 [hidden]{display:none!important}
+.lbl2{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-top:2px}
+.doT{font-weight:600;color:var(--ink);font-size:15px}
+.expT{color:var(--ink);font-size:14px;background:var(--panel);border-left:3px solid var(--ok);padding:5px 9px;border-radius:4px}
+.nowBar{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:50;background:#1F3B4D;color:#fff;border-radius:10px;padding:10px 14px;display:flex;gap:12px;align-items:center;box-shadow:0 6px 24px rgba(23,48,61,.35);width:min(920px,calc(100% - 24px));font-size:14px}
+.nowBar .nbT{font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#F39A76;white-space:nowrap}
+.nowBar .nbS{flex:1;min-width:0}
+.nowBar .btn{color:#fff;border-color:#5895A7;background:#5895A7;white-space:nowrap}
+.tour-on{position:relative;z-index:70!important;box-shadow:0 0 0 4px #DA532C,0 0 0 9999px rgba(15,35,47,.55)!important;border-radius:10px}
+.tourTip{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:80;background:#F7FAFB;color:var(--ink);border-radius:12px;padding:16px 18px;width:min(560px,calc(100% - 24px));box-shadow:0 10px 40px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:8px}
+.tourTip h3{font-size:17px}
+.tourTip p{font-size:14.5px;color:var(--ink)}
+.tourTip .tn{font:600 11px var(--mono);letter-spacing:.1em;color:var(--accent-ink);text-transform:uppercase}
+.tourTip .row{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:4px}
+.learn{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 18px;margin:12px 0 0;padding:0;list-style:none}
+.learn li{font-size:14px;color:var(--ink);display:flex;gap:8px}
+.learn li::before{content:"✓";color:var(--ok);font-weight:700}
 .bar{background:#1F3B4D;border-color:#1F3B4D}
 .bar .brand h1,.bar .clock{color:#fff}
 .bar .brand .e{color:#F39A76}
@@ -253,12 +269,15 @@ body.simple .meters .m:nth-child(n+4){display:none}
       <p class="gh">Вітаємо в лабораторії</p>
       <h2 id="wT">Це віртуальна сонячна електростанція. Тут ви вчитеся на помилках, які на реальному об’єкті коштують інвертора.</h2>
       <p class="wlead">Перед вами жива схема гібридної СЕС: панелі, інвертор, батарея, мережа і будинок. Ви змінюєте погоду, кількість панелей, вимикаєте мережу — і бачите, що відбувається з системою.</p>
+      <p class="gh" style="margin-top:14px">Чого ви навчитеся</p>
+      <ul class="learn"><li>рахувати стрінг під мороз і спеку</li><li>обирати кут і орієнтацію панелей</li><li>оцінювати резерв батареї в блекаут</li><li>бачити пускові струми і перевантаження</li><li>підбирати запобіжник батареї</li><li>пояснювати клієнту гібрид проти мережевої СЕС</li></ul>
+      <p class="gh" style="margin-top:14px">Як пройти курс</p>
       <ol class="wsteps">
         <li><span><b>Пройдіть 10 лабораторних робіт по черзі.</b> Кожна займає 5–10 хвилин. Лабораторія сама підказує кожен крок і підсвічує, куди натиснути.</span></li>
         <li><span><b>Після кожної роботи запишіть код</b> — наприклад «КРИГА-58». Усі коди зберігаються в кнопці «Мої коди для тесту».</span></li>
         <li><span><b>Поверніться в курс на Kwiga і пройдіть тест</b> «Лабораторний практикум», обираючи свої коди. Після тесту Kwiga видасть сертифікат.</span></li>
       </ol>
-      <div class="wact"><button class="btn primary big" id="wStart" type="button"></button><button class="btn big" id="wFree" type="button">Спершу просто подивитися схему</button></div>
+      <div class="wact"><button class="btn primary big" id="wStart" type="button"></button><button class="btn big" id="wTour" type="button">Показати, як влаштований екран (1 хв)</button><button class="btn big" id="wFree" type="button">Вільний режим</button></div>
       <p class="muted" id="wProg"></p>
     </div>
     <div class="wr">
@@ -279,6 +298,8 @@ body.simple .meters .m:nth-child(n+4){display:none}
   <div class="prog" id="prog"></div>
   <section class="cert" id="cert" hidden></section>
   <section class="guide" id="guide" hidden aria-live="polite"></section>
+  <div class="nowBar" id="nowBar" hidden></div>
+  <div class="tourTip" id="tourTip" hidden role="dialog" aria-live="polite"></div>
 
   <div class="main">
     <section class="panel only-simple" aria-label="Головне"><div class="ph"><h2>Система</h2></div><div class="pb" id="quick"></div></section>
@@ -762,72 +783,72 @@ const EXPS=[
   {id:'cold',code:'КРИГА-58',t:'1. Мороз і Voc',set:{month:1,t:11.5,clouds:0,ta:-25,inv:'h8',m1:{n:11,s:1,tilt:45,az:0},m2:{n:11,s:1,tilt:45,az:0}},
    goal:'Знайти максимальну кількість панелей у стрінгу для морозу −25 °C.',
    cond:'Січень, 11:30, ясно, −25 °C. Інвертор 8 кВт, межа напруги 500 В. У кожному стрінгу 11 панелей 550 Вт.',
-   steps:[{do:'Прочитайте рядки стану під схемою. Рамки PV1 і PV2 блимають червоним, на дисплеї інвертора — «PV ПЕРЕНАПРУГА».',watch:'#alarms'},
-     {do:'Зменшуйте «Панелі» ліворуч на одну, поки червона аварія не зникне.',watch:'#q-n',check:o=>o.M[0].on&&!o.M.some(m=>m.state==='over')}],
+   steps:[{exp:'Ви бачите дві червоні аварії MPPT1 і MPPT2, а генерація панелей — нуль: інвертор відключив вхід.',do:'Прочитайте рядки стану під схемою. Рамки PV1 і PV2 блимають червоним, на дисплеї інвертора — «PV ПЕРЕНАПРУГА».',watch:'#alarms'},
+     {exp:'На 8 панелях червоні рядки зникнуть, а від панелей знову побіжить жовта лінія.',do:'Зменшуйте «Панелі» ліворуч на одну, поки червона аварія не зникне.',watch:'#q-n',check:o=>o.M[0].on&&!o.M.some(m=>m.state==='over')}],
    qs:[{q:'Скільки панелей максимум можна ставити в один стрінг?',type:'num',ans:8,tol:0,unit:'шт',hint:'Подивіться, за якої кількості аварія зникла.'}],
    concl:'На морозі напруга панелі зростає: Voc = 49,9 × (1 + 0,0027 × 50) ≈ 56,6 В. 500 ÷ 56,6 ≈ 8,8 → максимум 8 панелей. Більше — пошкодження інвертора в перший морозний ранок.'},
   {id:'hot',code:'СПЕКА-35',t:'2. Спека і вікно MPPT',set:{month:7,t:13,clouds:0,ta:38,inv:'h8',m1:{n:4,s:1,tilt:30,az:0},m2:{n:4,s:1,tilt:30,az:0}},
    goal:'Знайти мінімальну кількість панелей, за якої станція працює в спеку.',
    cond:'Липень, 13:00, ясно, +38 °C. У кожному стрінгу лише 4 панелі.',
-   steps:[{do:'Подивіться на показник «Панелі»: сонце яскраве, а генерація майже нульова. Прочитайте жовтий рядок стану.',watch:'#alarms'},
-     {do:'Додавайте «Панелі» ліворуч, поки жовте попередження «Vmp нижче вікна» не зникне.',watch:'#q-n',check:o=>o.M[0].on&&!o.M.some(m=>m.state==='low')&&o.pv>1}],
+   steps:[{exp:'Жовтий рядок «Vmp нижче вікна MPPT», а генерація майже нульова.',do:'Подивіться на показник «Панелі»: сонце яскраве, а генерація майже нульова. Прочитайте жовтий рядок стану.',watch:'#alarms'},
+     {exp:'Попередження зникне, і потужність панелей різко зросте.',do:'Додавайте «Панелі» ліворуч, поки жовте попередження «Vmp нижче вікна» не зникне.',watch:'#q-n',check:o=>o.M[0].on&&!o.M.some(m=>m.state==='low')&&o.pv>1}],
    qs:[{q:'Яка мінімальна кількість панелей у стрінгу для спеки?',type:'num',ans:5,tol:0,unit:'шт',hint:'Подивіться, за якої кількості попередження зникло.'}],
    concl:'У спеку панель гріється до 60–65 °C, і її Vmp падає до ≈ 35 В. 4 × 35 = 140 В — нижче вікна MPPT 150 В, трекер не працює. 5 панелей дають ≈ 177 В.'},
   {id:'tilt',code:'КУТ-70',t:'3. Оптимальний кут нахилу',set:{month:12,t:12,clouds:0,ta:-3,inv:'h8',m1:{n:8,s:1,tilt:15,az:0},m2:{n:8,s:1,tilt:15,az:0}},
    goal:'Знайти кут нахилу з максимальною генерацією взимку і влітку.',
    cond:'Грудень, полудень, ясно. Панелі нахилені на 15°.',
-   steps:[{do:'Повільно рухайте «Кут нахилу панелей» від 0° до 90° і стежте за показником «Панелі» під схемою. Знайдіть максимум.',watch:'#q-tilt',check:o=>S.m1.tilt>=55}],
+   steps:[{exp:'Потужність росте до певного кута, а потім падає. Запам’ятайте кут, де вона найбільша.',do:'Повільно рухайте «Кут нахилу панелей» від 0° до 90° і стежте за показником «Панелі» під схемою. Знайдіть максимум.',watch:'#q-tilt',check:o=>S.m1.tilt>=55}],
    qs:[{q:'Який кут дає максимум у грудні опівдні?',type:'num',ans:70,tol:10,unit:'°',hint:'Сонце взимку низько — близько 17° над горизонтом.'},
        {q:'Поставте праворуч «Місяць» = Червень і знайдіть максимум знову. Який кут найкращий у червні?',type:'num',ans:22,tol:10,unit:'°',hint:'Влітку сонце високо — понад 60°.',pre:()=>S.month===6,preMsg:'Спочатку поставте місяць «Червень».'}],
    concl:'Взимку сонце низько, тому вигідний крутий кут 60–75°. Влітку — пологий 15–25°. Для цілорічної генерації в Україні беруть компроміс 30–40°.'},
   {id:'ew',code:'СХІД-ЗАХІД',t:'4. Схід–захід на двох MPPT',pro:true,set:{month:6,t:5,clouds:0,ta:20,inv:'h8',m1:{n:8,s:1,tilt:30,az:-90},m2:{n:8,s:1,tilt:30,az:90}},
    goal:'Побачити, навіщо два MPPT, коли дах має два схили.',
    cond:'Червень, 05:00. PV1 — схід (азимут −90°), PV2 — захід (+90°). Час уже йде.',
-   steps:[{do:'Стежте за потужністю PV1 і PV2 на схемі (жовті підписи біля панелей).',watch:'#sld'},
-     {do:'Дочекайтеся 14:00 — порівняйте PV1 і PV2 ще раз.',watch:'#clock',check:()=>S.t>=14}],
+   steps:[{exp:'Вранці працює лише PV1 (схід), а PV2 майже нуль.',do:'Стежте за потужністю PV1 і PV2 на схемі (жовті підписи біля панелей).',watch:'#sld'},
+     {exp:'Після полудня навпаки: PV2 (захід) дає більше за PV1.',do:'Дочекайтеся 14:00 — порівняйте PV1 і PV2 ще раз.',watch:'#clock',check:()=>S.t>=14}],
    qs:[{q:'Коли західний стрінг PV2 дає більше за східний PV1?',type:'choice',opts:['Вранці','Опівдні','Після полудня'],ans:2}],
    concl:'Кожен схил генерує у свою половину дня. Окремі MPPT дозволяють обом стрінгам працювати в своїй точці максимальної потужності. Графік генерації ширший — більше енергії йде одразу в будинок.'},
   {id:'black',code:'НІЧ-01',t:'5. Блекаут увечері',set:{month:11,t:17,clouds:60,ta:2,inv:'h8',grid:false,nb:2,soc:70,minSoc:20,auto:true},
    goal:'Визначити, скільки годин будинок протримається на батареї.',
    cond:'Листопад, 17:00, хмарно, мережі немає. Батарея 10,2 кВт·год заряджена на 70 %. Прилади вмикаються за типовим розкладом вечора.',
-   steps:[{do:'Натисніть угорі швидкість «1 год/с».',watch:'.seg [data-speed="60"]',check:()=>speed===60&&playing},
-     {do:'Стежте за батареєю на схемі. Дочекайтеся, коли будинок знеструмиться — з’явиться червоний рядок.',watch:'#sld',check:o=>o.black}],
+   steps:[{exp:'Годинник побіжить швидко: година за секунду.',do:'Натисніть угорі швидкість «1 год/с».',watch:'.seg [data-speed="60"]',check:()=>speed===60&&playing},
+     {exp:'Батарея розряджається, вмикаються вечірні прилади. Коли заряд дійде до мінімуму, з’явиться червоний рядок «Будинок знеструмлено». Запам’ятайте час на годиннику.',do:'Стежте за батареєю на схемі. Дочекайтеся, коли будинок знеструмиться — з’явиться червоний рядок.',watch:'#sld',check:o=>o.black}],
    qs:[{q:'О котрій годині будинок знеструмився? Введіть час, наприклад 23:30.',type:'time',ans:()=>LAB&&LAB.rec.blackT,tol:0.75,hint:'Час видно в журналі подій (режим «Інженерний») або на годиннику в момент знеструмлення.'}],
    concl:'Резерв = (SOC − мін. SOC) × ємність ÷ навантаження. Вечірні піки — світло, чайник, ТВ — з’їдають найбільше. Щоб протриматися довше: третій модуль, менше навантаження або нижчий мін. SOC.'},
   {id:'surge',code:'ПУСК-82',t:'6. Пусковий струм насоса',set:{month:5,t:12,clouds:30,ta:18,inv:'h5',grid:false,soc:80,auto:false,feeds:{lv:true,fr:true,bg:true,li:false,tv:true,pu:false,kt:true,bo:false,ac:true,wm:false}},
    goal:'Зрозуміти, чому інвертор вимикається на пуску двигуна.',
    cond:'Мережі немає. Інвертор 5 кВт, пікова потужність 8 кВт. Працюють чайник 2 кВт і кондиціонер 1,2 кВт.',
-   steps:[{do:'Увімкніть «Насос свердловини» у списку приладів ліворуч.',watch:'#quick [data-feed="pu"]',check:()=>!!trip},
-     {do:'Натисніть «Скинути аварію», вимкніть «Кухня» і знову увімкніть насос.',watch:'#quick',check:()=>!trip&&S.feeds.pu&&!S.feeds.kt}],
+   steps:[{exp:'Інвертор аварійно вимкнеться, а ліворуч з’явиться кнопка «Скинути аварію».',do:'Увімкніть «Насос свердловини» у списку приладів ліворуч.',watch:'#quick [data-feed="pu"]',check:()=>!!trip},
+     {exp:'Насос запуститься без аварії: без чайника пусковий пік вкладається в можливості інвертора.',do:'Натисніть «Скинути аварію», вимкніть «Кухня» і знову увімкніть насос.',watch:'#quick',check:()=>!trip&&S.feeds.pu&&!S.feeds.kt}],
    qs:[{q:'Чому інвертор вимкнувся, хоча насос споживає лише 1,1 кВт?',type:'choice',opts:['Насос потужніший за інвертор','Пусковий пік насоса (×4) разом з іншими приладами перевищив пікову потужність інвертора','Розрядилась батарея'],ans:1}],
    concl:'На пуску двигун бере в 3–5 разів більше. 3,8 кВт навантаження + 1,1 × 4 = 8,2 кВт > 8 кВт піку. Рішення: не вмикати важкі прилади разом з пуском, плавний пуск насоса або більший інвертор.'},
   {id:'fuse',code:'ЗАХИСТ-125',t:'7. Запобіжник батареї',pro:true,set:{month:3,t:19,clouds:50,ta:5,inv:'h8',grid:false,nb:2,soc:80,fuse:80,auto:false,feeds:{lv:true,fr:true,bg:true,li:true,tv:true,pu:false,kt:true,bo:true,ac:false,wm:false}},
    goal:'Підібрати номінал запобіжника між батареєю та інвертором.',
    cond:'Вечір, мережі немає. Увімкнені бойлер і чайник — разом близько 4,8 кВт. Запобіжник FU1 80 А.',
-   steps:[{do:'Час іде. Стежте за струмом батареї на схемі (під підписом «розряд»).',watch:'#sld',check:()=>fuseBlown},
-     {do:'Ліворуч оберіть «Запобіжник АКБ» 125 А і натисніть «Скинути аварію».',watch:'#fuse',check:()=>!fuseBlown&&S.fuse>=125}],
+   steps:[{exp:'Струм батареї дійде до ≈ 90 А, і запобіжник 80 А перегорить — будинок знеструмиться.',do:'Час іде. Стежте за струмом батареї на схемі (під підписом «розряд»).',watch:'#sld',check:()=>fuseBlown},
+     {exp:'Батарея знову живить будинок, червоні рядки зникнуть.',do:'Ліворуч оберіть «Запобіжник АКБ» 125 А і натисніть «Скинути аварію».',watch:'#fuse',check:()=>!fuseBlown&&S.fuse>=125}],
    qs:[{q:'Струм розряду ≈ 90 А. Який мінімальний стандартний номінал запобіжника?',type:'choice',opts:['100 А','125 А','250 А'],ans:1}],
    concl:'Запобіжник обирають ≥ 1,25 × робочого струму: 90 × 1,25 = 112 А → найближчий стандартний 125 А. Кабель має тримати більше, ніж номінал запобіжника.'},
   {id:'ongrid',code:'ОСТРІВ-0',t:'8. Мережевий інвертор у блекаут',set:{month:6,t:12,clouds:0,ta:24,inv:'g10',grid:true,m1:{n:12,s:1,tilt:30,az:0},m2:{n:12,s:1,tilt:30,az:0}},
    goal:'Показати клієнту різницю між мережевою і гібридною станцією.',
    cond:'Червень, полудень. Мережева станція 13 кВт без батареї.',
-   steps:[{do:'Подивіться на схему: надлишок іде в мережу (синя лінія).',watch:'#sld'},
-     {do:'Вимкніть мережу кнопкою ліворуч.',watch:'#qGrid',check:()=>!S.grid},
-     {do:'Змініть інвертор на «Гібрид 12 кВт · 3ф · LV».',watch:'#q-inv',check:()=>S.inv==='h12'}],
+   steps:[{exp:'Синя лінія біжить до мережі: станція віддає надлишок.',do:'Подивіться на схему: надлишок іде в мережу (синя лінія).',watch:'#sld'},
+     {exp:'Інвертор зупиниться, будинок без світла, хоча сонце світить.',do:'Вимкніть мережу кнопкою ліворуч.',watch:'#qGrid',check:()=>!S.grid},
+     {exp:'Гібрид підхопить будинок від панелей і батареї — світло повернеться.',do:'Змініть інвертор на «Гібрид 12 кВт · 3ф · LV».',watch:'#q-inv',check:()=>S.inv==='h12'}],
    qs:[{q:'Чому мережевий інвертор зупинився, хоча сонце світить?',type:'choice',opts:['Захист від острівного режиму: без мережі він не має права працювати','Панелі перестали генерувати','Перегорів запобіжник'],ans:0}],
    concl:'Мережевий інвертор вимикається без мережі, щоб не подати напругу на лінію, де працюють електрики. Сонце є — світла немає. Для резерву потрібен гібрид з батареєю.'},
   {id:'frost',code:'BMS-0C',t:'9. Батарея в морозному гаражі',pro:true,set:{month:1,t:11,clouds:10,ta:-12,inv:'h8',batPlace:'cold',soc:30,m1:{n:8,s:1,tilt:45,az:0},m2:{n:8,s:1,tilt:45,az:0}},
    goal:'Побачити заборону заряду LiFePO₄ на морозі.',
    cond:'Січень, −12 °C, сонячно. Батарея стоїть у неопалюваному гаражі, заряд 30 %.',
-   steps:[{do:'Подивіться на батарею на схемі і рядок стану: сонце є, а заряду немає.',watch:'#alarms'},
-     {do:'Ліворуч змініть «Розміщення» на «Опалюване приміщення».',watch:'#batPlace',check:o=>S.batPlace==='warm'&&o.chg>0.05}],
+   steps:[{exp:'Жовтий рядок «заряд заборонено BMS»: батарея не заряджається, хоч сонце є.',do:'Подивіться на батарею на схемі і рядок стану: сонце є, а заряду немає.',watch:'#alarms'},
+     {exp:'Зелена лінія до батареї оживе — почнеться заряд.',do:'Ліворуч змініть «Розміщення» на «Опалюване приміщення».',watch:'#batPlace',check:o=>S.batPlace==='warm'&&o.chg>0.05}],
    qs:[{q:'Чому батарея не заряджалась?',type:'choice',opts:['BMS забороняє заряд LiFePO₄ нижче 0 °C','Сонця замало','Батарея повна'],ans:0}],
    concl:'Заряд LiFePO₄ нижче 0 °C пошкоджує комірки, тому BMS його блокує. Рішення — тепле приміщення або батарея з підігрівом.'},
   {id:'hv',code:'ВОЛЬТ-500',t:'10. HV проти LV',set:{month:7,t:12,clouds:0,ta:28,inv:'h20',nb:5,fuse:63,grid:false,m1:{n:16,s:1,tilt:30,az:0},m2:{n:16,s:1,tilt:30,az:0},auto:false,feeds:{lv:true,fr:true,bg:true,li:false,tv:true,pu:true,kt:true,bo:true,ac:true,wm:true}},
    goal:'Порівняти струм батареї в HV- і LV-системі.',
    cond:'Комерційний об’єкт, мережі немає, навантаження ≈ 9 кВт. HV-батарея з 5 модулів, ≈ 500 В.',
-   steps:[{do:'Знайдіть на схемі біля батареї напругу і струм. Натисніть «Пуск» угорі.',watch:'#sld',check:o=>playing&&o.dis>0.5},
-     {do:'Змініть інвертор на «Гібрид 12 кВт · 3ф · LV» і подивіться струм батареї знову.',watch:'#q-inv',check:o=>S.inv==='h12'&&o.dis>0.5}],
+   steps:[{exp:'Біля батареї: напруга близько 500 В, струм — десятки ампер.',do:'Знайдіть на схемі біля батареї напругу і струм. Натисніть «Пуск» угорі.',watch:'#sld',check:o=>playing&&o.dis>0.5},
+     {exp:'Біля батареї: напруга близько 52 В, а струм — сотні ампер.',do:'Змініть інвертор на «Гібрид 12 кВт · 3ф · LV» і подивіться струм батареї знову.',watch:'#q-inv',check:o=>S.inv==='h12'&&o.dis>0.5}],
    qs:[{q:'У скільки разів більший струм батареї в LV-системі при тій самій потужності?',type:'choice',opts:['Приблизно однаковий','У 2 рази','Приблизно в 10 разів'],ans:2}],
    concl:'Струм = потужність ÷ напруга. 500 В проти 50 В — це в 10 разів менший струм: тонші кабелі, менші запобіжники, менші втрати. Тому великі системи будують на HV.'}
 ];
@@ -845,11 +866,16 @@ function startExp(id){
 }
 function stopLab(){ LAB=null; renderGuide(); $('#taskL').textContent='Вільний режим'; $('#taskQ').textContent='Змінюйте що завгодно. Щоб пройти роботу крок за кроком, оберіть її праворуч.'; $('#expSel').value=''; }
 function hl(sel){ document.querySelectorAll('.hl').forEach(x=>x.classList.remove('hl')); if(!sel) return; document.querySelectorAll(sel).forEach(x=>{ if(x.offsetParent!==null||x instanceof SVGElement) x.classList.add('hl'); }); }
+function nowBar(){ const nb=$('#nowBar'); if(!LAB){ nb.hidden=true; return; } const e=LAB.e;
+  let t; if(LAB.state==='steps'){ const st=e.steps[LAB.step]; t=`<b>Крок ${LAB.step+1} з ${e.steps.length}:</b> ${st.do}`; } else if(LAB.state==='q') t='<b>Усі кроки виконано.</b> Дайте відповідь на питання вгорі.'; else t='<b>Роботу виконано.</b> Запишіть код і переходьте до наступної.';
+  nb.innerHTML=`<span class="nbT">${e.t}</span><span class="nbS">${t}</span><button class="btn small" data-g="top">↑ До завдання</button>`;
+  const r=$('#guide').getBoundingClientRect(); nb.hidden=r.bottom>60; }
+window.addEventListener('scroll',()=>{ if(LAB) nowBar(); },{passive:true});
 function renderGuide(){
-  const g=$('#guide'); if(!LAB){ g.hidden=true; hl(null); renderProg(); return; }
+  const g=$('#guide'); if(!LAB){ g.hidden=true; hl(null); renderProg(); nowBar(); return; }
   const e=LAB.e; g.hidden=false;
   const steps=e.steps.map((s,i)=>{ const st=i<LAB.step||LAB.state!=='steps'?'done':i===LAB.step?'cur':'next';
-    return `<li class="gs ${st}"><span class="n">${st==='done'?'✓':i+1}</span><div><p>${s.do}</p>${st==='cur'&&!s.check?`<button class="btn small" data-g="next">Готово, далі →</button>`:''}${st==='cur'&&s.check?'<p class="wait">Чекаю, поки ви це зробите…</p>':''}</div></li>`; }).join('');
+    return `<li class="gs ${st}"><span class="n">${st==='done'?'✓':i+1}</span><div>${st==='cur'?`<p class="lbl2">Що зробити</p><p class="doT">${s.do}</p><p class="lbl2">Що має статися</p><p class="expT">${s.exp}</p>`:`<p>${s.do}</p>`}${st==='cur'&&!s.check?`<button class="btn small" data-g="next">Готово, далі →</button>`:''}${st==='cur'&&s.check?'<p class="wait">⏳ Крок зарахується сам, щойно ви це зробите</p>':''}</div></li>`; }).join('');
   let right='';
   if(LAB.state==='steps') right=`<p class="gh">Питання з’явиться після кроків</p><p class="muted">${e.qs.length} ${e.qs.length>1?'питання':'питання'} в кінці роботи.</p>`;
   else if(LAB.state==='q'){ const q=e.qs[LAB.qi];
@@ -859,7 +885,7 @@ function renderGuide(){
       `<button class="btn primary" data-g="check">Перевірити</button>${LAB.msg?`<p class="fb ${LAB.ok?'ok':'bad'}">${LAB.msg}</p>`:''}`; }
   else{ markDone(e.id); right=`<p class="gh ok">Роботу виконано ✓ · зараховано ${DONE.length} з ${EXPS.length}</p><p class="gq">Висновок</p><p>${e.concl}</p><div class="codebox">Код роботи для тесту в Kwiga: <b>${e.code}</b><span>Запишіть його — у підсумковому тесті курсу треба буде обрати цей код.</span></div><div class="actions">${nextExp()?`<button class="btn primary" data-g="nextExp">Наступна робота →</button>`:''}<button class="btn" data-g="again">Пройти ще раз</button><button class="btn" data-g="exit">Вільний режим</button></div>`; }
   g.innerHTML=`<div class="gcol"><p class="gh">Умови</p><p>${e.cond}</p><p class="gh" style="margin-top:6px">Кроки</p><ol class="gsteps">${steps}</ol></div><div class="gcol gq-col">${right}</div><button class="gx btn" data-g="exit" aria-label="Закрити роботу">×</button>`;
-  hl(LAB.state==='steps'?e.steps[LAB.step].watch:null); renderProg();
+  hl(LAB.state==='steps'?e.steps[LAB.step].watch:null); renderProg(); nowBar();
 }
 function nextExp(){ const i=EXPS.findIndex(x=>x===LAB.e); return EXPS[i+1]; }
 function parseAns(v,type){ v=String(v).trim().replace(',','.'); if(type==='time'){ const m=v.match(/^(\d{1,2})[:.](\d{1,2})$/); if(m) return +m[1]+ +m[2]/60; } const n=parseFloat(v); return isFinite(n)?n:NaN; }
@@ -871,6 +897,7 @@ function labTick(o){
 function advance(){ LAB.step++; if(LAB.step>=LAB.e.steps.length){ LAB.state='q'; LAB.qi=0; LAB.msg=''; } renderGuide(); }
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-g]'); if(!b||!LAB&&b.dataset.g!=='exit') return; const a=b.dataset.g;
+  if(a==='top'){ $('#guide').scrollIntoView({behavior:'smooth',block:'start'}); return; }
   if(a==='next') advance();
   else if(a==='exit') stopLab();
   else if(a==='again') startExp(LAB.e.id);
@@ -974,6 +1001,21 @@ function buildDoc(){
   </article></div>`;
 }
 
+const TOUR=[
+ {sel:'.bar',t:'Керування часом',p:'Тут годинник моделі і кнопка «▶ Пуск». Швидкість: 1 хвилина, 10 хвилин або 1 година за секунду. Поки стоїть пауза, над схемою жовта плашка.'},
+ {sel:'#quick',t:'Ваша станція',p:'Ліворуч — з чого зібрана система: інвертор, кількість панелей, батарея, кут нахилу, мережа. Тут же можна додати свій прилад.'},
+ {sel:'.sld',t:'Жива схема',p:'Центр екрана. Панелі → інвертор → батарея, мережа і щит з приладами. Точки біжать туди, куди йде енергія: жовті — сонце, зелені — батарея, сині — мережа, помаранчеві — будинок. Під схемою одне речення пояснює, що відбувається, а червоні й жовті рядки — що не так і як виправити.'},
+ {sel:'.envcol .panel',t:'Сонце і погода',p:'Праворуч — час доби, місяць, хмарність і мороз або спека. Змініть, наприклад, місяць на грудень і подивіться, що станеться з генерацією.'},
+ {sel:'#task',t:'Лабораторні роботи',p:'Тут обирається робота. Після вибору з’являється панель з умовами і кроками: «Що зробити» і «Що має статися». Потрібна кнопка чи поле підсвічується помаранчевою рамкою.'},
+ {sel:'#prog',t:'Прогрес і коди',p:'10 квадратиків — ваші роботи. Після кожної ви отримуєте код, усі коди — в кнопці «Мої коди для тесту». З ними йдете на тест у Kwiga за сертифікатом.'}];
+let TI=-1;
+function tour(i){ document.querySelectorAll('.tour-on').forEach(x=>x.classList.remove('tour-on')); const tip=$('#tourTip');
+  if(i<0||i>=TOUR.length){ TI=-1; tip.hidden=true; if(i>=TOUR.length){ const nx=EXPS.find(e=>!DONE.includes(e.id)); if(nx) startExp(nx.id);} return; }
+  TI=i; const st=TOUR[i], el=document.querySelector(st.sel); if(el){ el.classList.add('tour-on'); el.scrollIntoView({behavior:'smooth',block:'center'}); }
+  tip.hidden=false; const last=i===TOUR.length-1;
+  tip.innerHTML=`<span class="tn">Знайомство з екраном · ${i+1}/${TOUR.length}</span><h3>${st.t}</h3><p>${st.p}</p><div class="row"><button class="btn" data-tour="skip">Пропустити</button>${i?'<button class="btn" data-tour="prev">← Назад</button>':''}<button class="btn primary" data-tour="next">${last?'Почати роботу 1 →':'Далі →'}</button></div>`; }
+document.addEventListener('click',e=>{ const b=e.target.closest('[data-tour]'); if(!b) return; const a=b.dataset.tour; if(a==='skip') tour(-1); else if(a==='prev') tour(TI-1); else tour(TI+1); });
+document.addEventListener('keydown',e=>{ if(TI>=0&&e.key==='Escape') tour(-1); });
 function showWelcome(on){
   document.body.classList.toggle('welcoming',on); $('#welcome').hidden=!on;
   if(on){ const nx=EXPS.find(e=>!DONE.includes(e.id)), n=EXPS.filter(e=>DONE.includes(e.id)).length;
@@ -984,6 +1026,7 @@ function showWelcome(on){
 document.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return;
   if(b.id==='helpBtn'){ showWelcome(true); return; }
   if(b.id==='wFree'){ showWelcome(false); setMode(true); setTimeout(drawChart,0); return; }
+  if(b.id==='wTour'){ showWelcome(false); setMode(true); stopLab(); setTimeout(()=>tour(0),150); return; }
   if(b.id==='wStart'){ showWelcome(false); const nx=EXPS.find(e=>!DONE.includes(e.id)); if(nx) startExp(nx.id); else renderCert(); setTimeout(drawChart,0); return; }
 });
 renderProg();
