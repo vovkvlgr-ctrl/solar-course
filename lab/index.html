@@ -127,6 +127,23 @@ canvas{width:100%;height:230px;display:block}
 .lab dd{margin:0;color:#C9D0D9}
 .foot{font-size:12px;color:var(--dim);text-align:center}
 [hidden]{display:none!important}
+body.welcoming #viewLab{display:none!important}
+.welcome{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:22px;background:var(--panel);border:1px solid var(--accent);border-radius:12px;padding:26px 28px}
+.welcome h2{font-size:clamp(20px,2.3vw,28px);line-height:1.25;margin:6px 0 10px}
+.wlead{font-size:15.5px;color:#C9D0D9;max-width:70ch}
+.wsteps{margin:16px 0 0;padding:0;list-style:none;counter-reset:w;display:flex;flex-direction:column;gap:10px}
+.wsteps li{counter-increment:w;display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;font-size:15px;color:#C9D0D9}
+.wsteps li::before{content:counter(w);width:30px;height:30px;border-radius:15px;background:var(--accent);color:#111;display:grid;place-items:center;font:700 14px var(--mono)}
+.wsteps b{color:var(--ink)}
+.wact{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.btn.big{font-size:15px;padding:11px 18px}
+.wr{border-left:1px solid var(--line);padding-left:22px;display:flex;flex-direction:column;gap:8px}
+.legendL{list-style:none;margin:4px 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.legendL li{display:flex;gap:10px;align-items:center;font-size:14px;color:#C9D0D9}
+.legendL i{width:28px;height:5px;border-radius:3px;flex-shrink:0}
+.legendL b{color:var(--ink)}
+#helpBtn{border-color:var(--accent);color:var(--accent)}
+@media (max-width:860px){.welcome{grid-template-columns:1fr}.wr{border-left:none;padding-left:0;border-top:1px solid var(--line);padding-top:14px}}
 .sld{position:relative}
 .pauseB{position:absolute;left:50%;top:52px;transform:translateX(-50%);z-index:2;font:600 13px var(--mono);letter-spacing:.04em;color:#111;background:var(--warn);border:none;border-radius:6px;padding:7px 14px;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.45);white-space:nowrap;max-width:calc(100% - 24px);overflow:hidden;text-overflow:ellipsis}
 body.paused #sld{filter:saturate(.35) brightness(.85)}
@@ -206,16 +223,43 @@ body.simple .meters .m:nth-child(n+4){display:none}
 @media (max-width:520px){.meters{grid-template-columns:repeat(2,minmax(0,1fr))}.art{padding:16px}.lab dl{grid-template-columns:1fr}}
 </style>
 
-</head><body>
 <div class="wrap">
   <div class="bar">
     <div class="brand"><span class="e">Viatec Academy · Курс О4</span><h1>Сонячна лабораторія: гібридна СЕС</h1></div>
+    <button class="btn" id="helpBtn" type="button">? Що це і що робити</button>
     <div class="seg" aria-label="Режим"><button id="mSimple" aria-pressed="true">Простий</button><button id="mPro" aria-pressed="false">Інженерний</button></div>
     <div class="seg" role="tablist" aria-label="Розділ"><button role="tab" id="tabLab" aria-selected="true">Лабораторія</button><button role="tab" id="tabDoc" aria-selected="false">Інструкція</button></div>
     <div style="display:flex;flex-direction:column;align-items:flex-end"><span class="clock" id="clock">10:00</span><span class="date" id="dateL">15.04 · широта 50,4°</span></div>
     <div class="seg" aria-label="Швидкість часу"><button id="play" aria-pressed="false">▶ Пуск</button><button data-speed="1" aria-pressed="false">1 хв/с</button><button data-speed="10" aria-pressed="true">10 хв/с</button><button data-speed="60" aria-pressed="false">1 год/с</button></div>
   </div>
 
+  </head><body>
+<section class="welcome" id="welcome" hidden aria-labelledby="wT">
+    <div class="wl">
+      <p class="gh">Вітаємо в лабораторії</p>
+      <h2 id="wT">Це віртуальна сонячна електростанція. Тут ви вчитеся на помилках, які на реальному об’єкті коштують інвертора.</h2>
+      <p class="wlead">Перед вами жива схема гібридної СЕС: панелі, інвертор, батарея, мережа і будинок. Ви змінюєте погоду, кількість панелей, вимикаєте мережу — і бачите, що відбувається з системою.</p>
+      <ol class="wsteps">
+        <li><span><b>Пройдіть 10 лабораторних робіт по черзі.</b> Кожна займає 5–10 хвилин. Лабораторія сама підказує кожен крок і підсвічує, куди натиснути.</span></li>
+        <li><span><b>Після кожної роботи запишіть код</b> — наприклад «КРИГА-58». Усі коди зберігаються в кнопці «Мої коди для тесту».</span></li>
+        <li><span><b>Поверніться в курс на Kwiga і пройдіть тест</b> «Лабораторний практикум», обираючи свої коди. Після тесту Kwiga видасть сертифікат.</span></li>
+      </ol>
+      <div class="wact"><button class="btn primary big" id="wStart" type="button"></button><button class="btn big" id="wFree" type="button">Спершу просто подивитися схему</button></div>
+      <p class="muted" id="wProg"></p>
+    </div>
+    <div class="wr">
+      <p class="gh">Як читати схему</p>
+      <ul class="legendL">
+        <li><i style="background:var(--pv)"></i><span><b>Жовта лінія</b> — енергія від сонячних панелей</span></li>
+        <li><i style="background:var(--bat)"></i><span><b>Зелена</b> — батарея: заряд або розряд</span></li>
+        <li><i style="background:var(--grid)"></i><span><b>Синя</b> — мережа: беремо або віддаємо</span></li>
+        <li><i style="background:var(--load)"></i><span><b>Помаранчева</b> — будинок, що споживає</span></li>
+      </ul>
+      <p class="muted">Чим товща лінія і швидше біжать точки — тим більша потужність. Під схемою одне речення пояснює, що відбувається, а рядки нижче — проблеми і що з ними робити.</p>
+      <p class="gh" style="margin-top:8px">Порада</p>
+      <p class="muted">Працюйте з комп’ютера. Не очищайте дані браузера, поки не пройдете всі роботи: прогрес зберігається у вашому браузері.</p>
+    </div>
+  </section>
   <div id="viewLab" style="display:flex;flex-direction:column;gap:12px">
   <div class="task" id="task"><span class="l" id="taskL">Вільний режим</span><p id="taskQ">Зберіть систему ліворуч, задайте погоду праворуч і натисніть «Пуск». Повний опис можливостей і лабораторних робіт — у вкладці «Інструкція».</p><div style="display:flex;gap:6px;flex-wrap:wrap"><select id="expSel" aria-label="Лабораторна робота" style="width:auto"></select><button class="btn" id="resetAll">Скинути</button></div></div>
   <div class="prog" id="prog"></div>
@@ -495,7 +539,7 @@ document.addEventListener('click',e=>{
   if(b.id==='play'){ playing=!playing; setPlay(); return; }
   if(b.dataset.speed){ speed=+b.dataset.speed; document.querySelectorAll('[data-speed]').forEach(x=>x.setAttribute('aria-pressed',x===b)); playing=true; setPlay(); return; }
   if(b.id==='resetAll'){ reset(); return; }
-  if(b.id==='tabLab'||b.id==='tabDoc'){ const doc=b.id==='tabDoc'; $('#tabLab').setAttribute('aria-selected',!doc); $('#tabDoc').setAttribute('aria-selected',doc); $('#viewLab').hidden=doc; $('#viewDoc').hidden=!doc; if(!doc) setTimeout(drawChart,0); window.scrollTo({top:0}); return; }
+  if(b.id==='tabLab'||b.id==='tabDoc'){ const doc=b.id==='tabDoc'; document.body.classList.remove('welcoming'); $('#welcome').hidden=true; $('#tabLab').setAttribute('aria-selected',!doc); $('#tabDoc').setAttribute('aria-selected',doc); $('#viewLab').hidden=doc; $('#viewDoc').hidden=!doc; if(!doc) setTimeout(drawChart,0); window.scrollTo({top:0}); return; }
   if(b.dataset.go){ $('#tabLab').click(); startExp(b.dataset.go); return; }
 });
 function setPlay(){ const b=$('#play'); b.setAttribute('aria-pressed',playing); b.textContent=playing?'❚❚ Пауза':'▶ Пуск'; }
@@ -916,9 +960,21 @@ function buildDoc(){
   </article></div>`;
 }
 
+function showWelcome(on){
+  document.body.classList.toggle('welcoming',on); $('#welcome').hidden=!on;
+  if(on){ const nx=EXPS.find(e=>!DONE.includes(e.id)), n=EXPS.filter(e=>DONE.includes(e.id)).length;
+    $('#wStart').textContent=n===0?'Почати з роботи 1 →':nx?`Продовжити: ${nx.t} →`:'Усі роботи виконано — мої коди →';
+    $('#wProg').textContent=n?`Виконано ${n} з ${EXPS.length} робіт.`:'';
+    if(playing){ playing=false; setPlay(); } window.scrollTo({top:0}); }
+}
+document.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return;
+  if(b.id==='helpBtn'){ showWelcome(true); return; }
+  if(b.id==='wFree'){ showWelcome(false); setMode(true); setTimeout(drawChart,0); return; }
+  if(b.id==='wStart'){ showWelcome(false); const nx=EXPS.find(e=>!DONE.includes(e.id)); if(nx) startExp(nx.id); else renderCert(); setTimeout(drawChart,0); return; }
+});
 renderProg();
 let md='s'; try{md=localStorage.getItem('o4lab-mode')||'s'}catch(e){} setMode(md==='s');
-buildCfg(); buildEnvCtl(); buildSld(); buildDoc(); drawSunPath(true); setPlay();
+buildCfg(); buildEnvCtl(); buildSld(); buildDoc(); drawSunPath(true); setPlay(); showWelcome(true);
 addLog('i','Лабораторію готово: квітень, 10:00, гібрид 8 кВт, мережа є. Натисніть «Пуск».');
 requestAnimationFrame(frame);
 })();
