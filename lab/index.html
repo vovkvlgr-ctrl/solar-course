@@ -127,6 +127,8 @@ canvas{width:100%;height:230px;display:block}
 .lab dd{margin:0;color:#2A4250}
 .foot{font-size:12px;color:var(--dim);text-align:center}
 [hidden]{display:none!important}
+.bar #fsBtn{background:#5895A7;border-color:#5895A7;color:#fff}
+:fullscreen{background:var(--bg);overflow:auto}
 .lbl2{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-top:2px}
 .doT{font-weight:600;color:var(--ink);font-size:15px}
 .expT{color:var(--ink);font-size:14px;background:var(--panel);border-left:3px solid var(--ok);padding:5px 9px;border-radius:4px}
@@ -257,6 +259,7 @@ body.simple .meters .m:nth-child(n+4){display:none}
 <div class="wrap">
   <div class="bar">
     <div class="brand"><span class="e">Viatec Academy · Курс О4</span><h1>Сонячна лабораторія: гібридна СЕС</h1></div>
+    <button class="btn" id="fsBtn" type="button" title="Відкрити лабораторію на весь екран">⛶ На весь екран</button>
     <button class="btn" id="helpBtn" type="button">? Що це і що робити</button>
     <div class="seg" aria-label="Режим"><button id="mSimple" aria-pressed="true">Простий</button><button id="mPro" aria-pressed="false">Інженерний</button></div>
     <div class="seg" role="tablist" aria-label="Розділ"><button role="tab" id="tabLab" aria-selected="true">Лабораторія</button><button role="tab" id="tabDoc" aria-selected="false">Інструкція</button></div>
@@ -1014,6 +1017,16 @@ function tour(i){ document.querySelectorAll('.tour-on').forEach(x=>x.classList.r
   tip.innerHTML=`<span class="tn">Знайомство з екраном · ${i+1}/${TOUR.length}</span><h3>${st.t}</h3><p>${st.p}</p><div class="row"><button class="btn" data-tour="skip">Пропустити</button>${i?'<button class="btn" data-tour="prev">← Назад</button>':''}<button class="btn primary" data-tour="next">${last?'Почати роботу 1 →':'Далі →'}</button></div>`; }
 document.addEventListener('click',e=>{ const b=e.target.closest('[data-tour]'); if(!b) return; const a=b.dataset.tour; if(a==='skip') tour(-1); else if(a==='prev') tour(TI-1); else tour(TI+1); });
 document.addEventListener('keydown',e=>{ if(TI>=0&&e.key==='Escape') tour(-1); });
+function fsToggle(){
+  const d=document, el=d.documentElement;
+  if(d.fullscreenElement||d.webkitFullscreenElement){ (d.exitFullscreen||d.webkitExitFullscreen).call(d); return; }
+  const req=el.requestFullscreen||el.webkitRequestFullscreen;
+  if(req&&(d.fullscreenEnabled||d.webkitFullscreenEnabled)){ try{ const p=req.call(el); if(p&&p.catch) p.catch(()=>openTab()); }catch(e){ openTab(); } }
+  else openTab();
+}
+function openTab(){ const a=document.createElement('a'); a.href=location.href; a.target='_blank'; a.rel='noopener'; document.body.appendChild(a); a.click(); a.remove(); }
+document.addEventListener('fullscreenchange',()=>{ const b=$('#fsBtn'); if(b) b.textContent=document.fullscreenElement?'✕ Вийти з повного екрана':'⛶ На весь екран'; setTimeout(drawChart,50); });
+document.addEventListener('click',e=>{ if(e.target.closest('#fsBtn')) fsToggle(); });
 function showWelcome(on){
   document.body.classList.toggle('welcoming',on); $('#welcome').hidden=!on;
   if(on){ const nx=EXPS.find(e=>!DONE.includes(e.id)), n=EXPS.filter(e=>DONE.includes(e.id)).length;
