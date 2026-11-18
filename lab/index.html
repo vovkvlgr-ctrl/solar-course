@@ -127,6 +127,11 @@ canvas{width:100%;height:230px;display:block}
 .lab dd{margin:0;color:#2A4250}
 .foot{font-size:12px;color:var(--dim);text-align:center}
 [hidden]{display:none!important}
+.tries{display:flex;gap:6px;align-items:center;font-size:12.5px;color:var(--muted);margin-top:6px}
+.tries i{width:12px;height:12px;border-radius:6px;background:var(--ok);display:inline-block}
+.tries i.used{background:var(--line2)}
+.reread{background:#FBF0D9;border:1px solid #E5C98A;border-radius:8px;padding:9px 11px;font-size:13.5px;margin-top:6px;color:var(--ink)}
+.note{font-size:13px;color:var(--ok);margin-top:4px}
 .goalT{font-weight:600;font-size:15px}
 .theory{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin-top:4px}
 .theory summary{cursor:pointer;font-weight:700;color:var(--accent-ink);font-size:13.5px}
@@ -557,12 +562,12 @@ document.addEventListener('change',e=>{
   const id=e.target.id, v=e.target.value;
   if(id==='inv'){ S.inv=v; const inv=INVS[v]; S.nb=inv.bus==='HV'?4:2; S.fuse=inv.bus==='HV'?63:250; trip=null; fuseBlown=false; if(inv.type!=='hyb') S.offgrid=false; buildCfg(); buildSld(); }
   else if(id==='panel'){ S.panel=v; buildSld(); }
-  else if(/^m[12]-(n|s)$/.test(id)){ const [k,f]=id.split('-'); S[k][f]=+v; buildSld(); }
+  else if(/^m[12]-(n|s)$/.test(id)){ const [k,f]=id.split('-'); S[k][f]=+v; buildSld(); if(f==='n') setTimeout(()=>labAttempt('n'),30); }
   else if(id==='nb'||id==='fuse'){ S[id]=+v; buildSld(); }
   else if(id==='mode'||id==='batPlace'){ S[id]=v; }
   else if(id==='expSel'){ if(v) startExp(v); }
   else if(id==='q-inv'){ $('#inv').value=v; $('#inv').dispatchEvent(new Event('change',{bubbles:true})); }
-  else if(id==='q-n'){ S.m1.n=+v; S.m2.n=+v; S.m1.s=1; S.m2.s=1; buildCfg(); buildSld(); }
+  else if(id==='q-n'){ S.m1.n=+v; S.m2.n=+v; S.m1.s=1; S.m2.s=1; buildCfg(); buildSld(); setTimeout(()=>labAttempt('n'),30); }
   else if(id==='q-nb'){ S.nb=+v; buildCfg(); buildSld(); }
 });
 document.addEventListener('click',e=>{
@@ -796,20 +801,32 @@ function frame(now){
 window.addEventListener('resize',drawChart);
 
 const EXPS=[
-  {id:'cold',theory:'Напруга холостого ходу Voc зростає, коли панель холодна: приблизно на 0,27 % на кожен градус нижче +25 °C. Найвища напруга стрінга буває морозного сонячного ранку. Сума Voc усіх панелей стрінга при мінімальній температурі регіону (для України −25 °C) не має перевищувати максимальну вхідну напругу інвертора — інакше інвертор пошкоджується.',lessons:[4, 5],code:'КРИГА-58',t:'1. Мороз і Voc',set:{month:1,t:11.5,clouds:0,ta:-25,inv:'h8',m1:{n:11,s:1,tilt:45,az:0},m2:{n:11,s:1,tilt:45,az:0}},
-   goal:'Знайти максимальну кількість панелей у стрінгу для морозу −25 °C.',
-   cond:'Січень, 11:30, ясно, −25 °C. Інвертор 8 кВт, межа напруги 500 В. У кожному стрінгу 11 панелей 550 Вт.',
-   steps:[{exp:'Ви бачите дві червоні аварії MPPT1 і MPPT2, а генерація панелей — нуль: інвертор відключив вхід.',do:'Прочитайте рядки стану під схемою. Рамки PV1 і PV2 блимають червоним, на дисплеї інвертора — «PV ПЕРЕНАПРУГА».',watch:'#alarms'},
-     {exp:'На 8 панелях червоні рядки зникнуть, а від панелей знову побіжить жовта лінія.',do:'Зменшуйте «Панелі» ліворуч на одну, поки червона аварія не зникне.',watch:'#q-n',check:o=>o.M[0].on&&!o.M.some(m=>m.state==='over')}],
-   qs:[{q:'Скільки панелей максимум можна ставити в один стрінг?',type:'num',ans:8,tol:0,unit:'шт',hint:'Подивіться, за якої кількості аварія зникла.'}],
+  {id:'cold',theory:'Напруга холостого ходу Voc зростає, коли панель холодна: приблизно на 0,27 % на кожен градус нижче +25 °C. Найвища напруга стрінга буває морозного сонячного ранку. Сума Voc усіх панелей стрінга при мінімальній температурі регіону (для України −25 °C) не має перевищувати максимальну вхідну напругу інвертора — інакше інвертор пошкоджується.<br><br><b>Як рахувати:</b> Voc на морозі = Voc × (1 + 0,0027 × (25 − t)). Для панелі 550 Вт (Voc 49,9 В) при −25 °C: 49,9 × (1 + 0,0027 × 50) ≈ 56,6 В. Максимум панелей = межа інвертора ÷ Voc на морозі, округлити вниз.',lessons:[4, 5],code:'КРИГА-58',t:'1. Мороз і Voc',set:{month:1,t:11.5,clouds:0,ta:-25,inv:'h8',m1:{n:11,s:1,tilt:45,az:0},m2:{n:11,s:1,tilt:45,az:0}},
+   goal:'Зрозуміти, як мороз піднімає напругу панелей, і розрахувати максимальну кількість панелей у стрінгу.',
+   cond:'Січень, 11:30, ясно, −25 °C. Інвертор 8 кВт, максимальна напруга входу 500 В. У кожному стрінгу 11 панелей 550 Вт (Voc 49,9 В).',
+   steps:[{exp:'Дві червоні аварії MPPT1 і MPPT2, генерація — нуль: інвертор відключив вхід, щоб не згоріти.',do:'Подивіться на схему і рядки під нею. Рамки PV1 і PV2 блимають червоним, на дисплеї інвертора — «PV ПЕРЕНАПРУГА».',watch:'#alarms'},
+     {exp:'При +5 °C панелі «спокійніші»: напруга менша, і аварія може зникнути навіть з 11 панелями.',do:'Підніміть «Температура повітря» праворуч до +5 °C і подивіться на напругу біля PV1.',watch:'#ta',check:o=>S.ta>=5},
+     {exp:'Аварія повертається: розраховувати треба на найхолодніший ранок, а не на середню погоду.',do:'Поверніть температуру на −25 °C — це розрахунковий мінімум для України.',watch:'#ta',check:o=>S.ta<=-24},
+     {exp:'Правильне число прибере аварію і залишить максимум панелей.',do:'Розрахуйте максимум панелей для −25 °C (формула — у «Що треба знати») і встановіть це число в «Панелі» ліворуч. Не підбирайте навмання: у вас 3 спроби.',watch:'#q-n',
+      attempts:{max:3,on:'n',eval:o=>{ const n=S.m1.n, over=o.M.some(m=>m.state==='over'); if(S.ta>-24) return {skip:'Спочатку поверніть температуру на −25 °C.'};
+        if(over) return {msg:`Забагато: Voc стрінга ${Math.round(Math.max(o.M[0].voc,o.M[1].voc))} В більше за 500 В — аварія лишилась.`};
+        if(n<8) return {msg:`Аварії немає, але це не максимум: ${n} панелей дають запас, а більше панелей у стрінгу — менше кабелю і дешевший монтаж. Спробуйте більше.`};
+        return {ok:true}; }, reveal:()=>{S.m1.n=8;S.m2.n=8;}, answer:'8 панелей: 500 ÷ 56,6 ≈ 8,8 → округлюємо вниз до 8.'}}],
+   qs:[{q:'Чому кількість панелей у стрінгу обмежують саме з розрахунку на мороз?',type:'choice',opts:['На морозі панелі дають більший струм','На морозі напруга панелі зростає, і стрінг може перевищити межу інвертора','Взимку менше сонця, тому панелей треба менше'],ans:1}],
    concl:'На морозі напруга панелі зростає: Voc = 49,9 × (1 + 0,0027 × 50) ≈ 56,6 В. 500 ÷ 56,6 ≈ 8,8 → максимум 8 панелей. Більше — пошкодження інвертора в перший морозний ранок.'},
-  {id:'hot',theory:'Робоча напруга Vmp падає, коли панель гріється, а влітку вона буває на 25–35 °C гарячіша за повітря. MPPT-трекер інвертора працює лише у своєму вікні напруг. Якщо Vmp стрінга в спеку опускається нижче нижньої межі вікна, інвертор не може відібрати потужність, хоча сонце світить.',lessons:[4, 5],code:'СПЕКА-35',t:'2. Спека і вікно MPPT',set:{month:7,t:13,clouds:0,ta:38,inv:'h8',m1:{n:4,s:1,tilt:30,az:0},m2:{n:4,s:1,tilt:30,az:0}},
-   goal:'Знайти мінімальну кількість панелей, за якої станція працює в спеку.',
-   cond:'Липень, 13:00, ясно, +38 °C. У кожному стрінгу лише 4 панелі.',
-   steps:[{exp:'Жовтий рядок «Vmp нижче вікна MPPT», а генерація майже нульова.',do:'Подивіться на показник «Панелі»: сонце яскраве, а генерація майже нульова. Прочитайте жовтий рядок стану.',watch:'#alarms'},
-     {exp:'Попередження зникне, і потужність панелей різко зросте.',do:'Додавайте «Панелі» ліворуч, поки жовте попередження «Vmp нижче вікна» не зникне.',watch:'#q-n',check:o=>o.M[0].on&&!o.M.some(m=>m.state==='low')&&o.pv>1}],
-   qs:[{q:'Яка мінімальна кількість панелей у стрінгу для спеки?',type:'num',ans:5,tol:0,unit:'шт',hint:'Подивіться, за якої кількості попередження зникло.'}],
-   concl:'У спеку панель гріється до 60–65 °C, і її Vmp падає до ≈ 35 В. 4 × 35 = 140 В — нижче вікна MPPT 150 В, трекер не працює. 5 панелей дають ≈ 177 В.'},
+  {id:'hot',theory:'Робоча напруга Vmp падає, коли панель гріється. Влітку панель на 25–30 °C гарячіша за повітря: при +38 °C на вулиці вона має 60–65 °C. MPPT-трекер інвертора працює лише у своєму вікні напруг (тут 150–425 В). Якщо Vmp стрінга в спеку опускається нижче нижньої межі, інвертор не може відібрати потужність, хоча сонце світить.<br><br><b>Як рахувати:</b> Vmp у спеку = Vmp × (1 − 0,0035 × (t панелі − 25)). Для панелі 550 Вт (Vmp 42 В) при 65 °C: 42 × (1 − 0,0035 × 40) ≈ 36 В. Мінімум панелей = нижня межа вікна MPPT ÷ Vmp у спеку, округлити вгору.',lessons:[4, 5],code:'СПЕКА-35',t:'2. Спека і вікно MPPT',set:{month:7,t:13,clouds:0,ta:38,inv:'h8',m1:{n:4,s:1,tilt:30,az:0},m2:{n:4,s:1,tilt:30,az:0}},
+   goal:'Побачити, як спека знижує напругу панелей, і розрахувати мінімальну кількість панелей у стрінгу.',
+   cond:'Липень, 13:00, ясно, +38 °C. Інвертор 8 кВт, вікно MPPT 150–425 В. У кожному стрінгу лише 4 панелі 550 Вт (Vmp 42 В).',
+   steps:[{exp:'Біля PV1 і PV2 напруга близько 140 В — нижче вікна MPPT 150 В. Генерація майже нульова, хоча сонце яскраве.',do:'Подивіться на схему: біля PV1 і PV2 написано потужність, напругу (В) і струм. Прочитайте жовтий рядок під схемою.',watch:'#sld'},
+     {exp:'Панелі охолонуть, напруга підніметься вище 150 В — генерація з’явиться навіть з 4 панелями.',do:'Зменште «Температура повітря» праворуч до +15 °C.',watch:'#ta',check:o=>S.ta<=15&&o.pv>1},
+     {exp:'Генерація знову зникне. Висновок: розраховувати треба на найгарячіший день.',do:'Поверніть температуру на +38 °C.',watch:'#ta',check:o=>S.ta>=37},
+     {exp:'Правильне число прибере попередження з найменшою кількістю панелей.',do:'Розрахуйте мінімум панелей для спеки (формула — у «Що треба знати») і встановіть це число в «Панелі» ліворуч. Не підбирайте навмання: у вас 3 спроби.',watch:'#q-n',
+      attempts:{max:3,on:'n',eval:o=>{ const n=S.m1.n, low=o.M.some(m=>m.state==='low'); if(S.ta<37) return {skip:'Спочатку поверніть температуру на +38 °C.'};
+        if(low) return {msg:`Замало: Vmp стрінга ${Math.round(o.M[0].vmp)} В нижче 150 В — генерації немає.`};
+        if(n>5) return {msg:`Генерація є, але це не мінімум. Зайві панелі в стрінгу піднімають напругу взимку ближче до межі 500 В. Спробуйте менше.`};
+        return {ok:true}; }, reveal:()=>{S.m1.n=5;S.m2.n=5;}, answer:'5 панелей: 150 ÷ 36 ≈ 4,2 → округлюємо вгору до 5.'}}],
+   qs:[{q:'Чому в спеку генерація зникла, хоча сонце світило яскраво?',type:'choice',opts:['Сонця стало менше через спеку','Гаряча панель має нижчу напругу, і стрінг вийшов з вікна MPPT','Інвертор перегрівся і вимкнувся'],ans:1}],
+   concl:'У спеку панель гріється до 60–65 °C, і її Vmp падає до ≈ 36 В. 4 × 36 = 144 В — нижче вікна MPPT 150 В, трекер не працює. 5 панелей дають ≈ 180 В. Разом з роботою 1: стрінг для цього інвертора — від 5 до 8 панелей.'},
   {id:'tilt',theory:'Панель дає найбільше, коли промені падають на неї перпендикулярно. Опівдні в грудні сонце в Україні піднімається лише на ~17°, а в червні — на ~63°. Найкращий кут приблизно дорівнює 90° мінус висота сонця. Фіксовані панелі ставлять під компромісним кутом 30–40°, щоб добре працювали весь рік.',lessons:[1, 4],code:'КУТ-70',t:'3. Оптимальний кут нахилу',set:{month:12,t:12,clouds:0,ta:-3,inv:'h8',m1:{n:8,s:1,tilt:15,az:0},m2:{n:8,s:1,tilt:15,az:0}},
    goal:'Знайти кут нахилу з максимальною генерацією взимку і влітку.',
    cond:'Грудень, полудень, ясно. Панелі нахилені на 15°.',
@@ -878,7 +895,7 @@ function startExp(id){
   if(st.inv&&!st.fuse) S.fuse=INVS[st.inv].bus==='HV'?63:250;
   clearRun(); playing=['ew','fuse','frost'].includes(id); setPlay();
   setMode(!e.pro);
-  LAB={e,step:0,qi:0,state:'steps',rec:{},msg:''};
+  LAB={e,step:0,qi:0,state:'steps',rec:{},msg:'',tries:0,qTries:0};
   $('#taskL').textContent='Лабораторна робота '+e.t.split('.')[0]; $('#taskQ').innerHTML=`<b>${e.t.replace(/^\d+\. /,'')}.</b> ${e.goal}`; $('#expSel').value=id;
   buildCfg(); buildEnvCtl(); buildSld(); drawSunPath(true); addLog('i',`Лабораторна робота «${e.t.replace(/^\d+\. /,'')}»: умови встановлено.`);
   renderGuide(); window.scrollTo({top:0,behavior:'smooth'});
@@ -894,26 +911,41 @@ function renderGuide(){
   const g=$('#guide'); if(!LAB){ g.hidden=true; hl(null); renderProg(); nowBar(); return; }
   const e=LAB.e; g.hidden=false;
   const steps=e.steps.map((s,i)=>{ const st=i<LAB.step||LAB.state!=='steps'?'done':i===LAB.step?'cur':'next';
-    return `<li class="gs ${st}"><span class="n">${st==='done'?'✓':i+1}</span><div>${st==='cur'?`<p class="lbl2">Що зробити</p><p class="doT">${s.do}</p><p class="lbl2">Що має статися</p><p class="expT">${s.exp}</p>`:`<p>${s.do}</p>`}${st==='cur'&&!s.check?`<button class="btn small" data-g="next">Готово, далі →</button>`:''}${st==='cur'&&s.check?'<p class="wait">⏳ Крок зарахується сам, щойно ви це зробите</p>':''}</div></li>`; }).join('');
+    return `<li class="gs ${st}"><span class="n">${st==='done'?'✓':i+1}</span><div>${st==='cur'?`<p class="lbl2">Що зробити</p><p class="doT">${s.do}</p><p class="lbl2">Що має статися</p><p class="expT">${s.exp}</p>`:`<p>${s.do}</p>`}${st==='cur'&&s.attempts?attemptsHTML(s):''}${st==='cur'&&!s.check&&!s.attempts?`<button class="btn small" data-g="next">Готово, далі →</button>`:''}${st==='cur'&&s.check?'<p class="wait">⏳ Крок зарахується сам, щойно ви це зробите</p>':''}${st==='done'&&i===LAB.step-1&&LAB.note?`<p class="note">${LAB.note}</p>`:''}</div></li>`; }).join('');
   let right='';
   if(LAB.state==='steps') right=`<p class="gh">Як працювати</p><ol class="howto"><li>Прочитайте мету і «Що треба знати».</li><li>Виконуйте кроки ліворуч по черзі. Потрібний елемент підсвічено помаранчевою рамкою.</li><li>Дивіться на схему і рядок під нею — там видно, що змінилося.</li><li>Після кроків тут з’явиться питання (${e.qs.length}). Відповідь ви знайдете у своєму досліді.</li></ol>`;
   else if(LAB.state==='q'){ const q=e.qs[LAB.qi];
-    right=`<p class="gh">Питання ${LAB.qi+1}/${e.qs.length}</p><p class="gq">${q.q}</p>`+
+    right=`<p class="gh">Питання ${LAB.qi+1}/${e.qs.length}</p><p class="gq">${q.q}</p><div class="tries"><span>Спроби:</span>${[0,1,2].map(i=>`<i class="${i<(LAB.qTries||0)?'used':''}"></i>`).join('')}<span class="muted">залишилось ${3-(LAB.qTries||0)}</span></div>`+
       (q.type==='choice'?`<div class="opts">${q.opts.map((o,i)=>`<label><input type="radio" name="gopt" value="${i}"> ${o}</label>`).join('')}</div>`:
        `<div class="ans"><input id="gAns" type="text" inputmode="decimal" placeholder="${q.type==='time'?'наприклад 22:15':'число'}" aria-label="Відповідь">${q.unit?`<span>${q.unit}</span>`:''}</div>`)+
       `<button class="btn primary" data-g="check">Перевірити</button>${LAB.msg?`<p class="fb ${LAB.ok?'ok':'bad'}">${LAB.msg}</p>`:''}`; }
-  else{ markDone(e.id); right=`<p class="gh ok">Роботу виконано ✓ · зараховано ${DONE.length} з ${EXPS.length}</p><p class="gq">Висновок</p><p>${e.concl}</p><div class="lessons"><span class="muted">Закріпити теорію:</span>${lessonLinks(e)}</div><div class="actions">${nextExp()?`<button class="btn primary" data-g="nextExp">Наступна робота →</button>`:''}<button class="btn" data-g="again">Пройти ще раз</button><button class="btn" data-g="exit">Вільний режим</button></div>`; }
-  g.innerHTML=`<div class="gcol"><p class="gh">Мета</p><p class="goalT">${e.goal}</p><p class="gh" style="margin-top:6px">Умови досліду</p><p>${e.cond}</p><details class="theory"${LAB.state==='steps'&&LAB.step===0?' open':''}><summary>Що треба знати перед роботою</summary><p>${e.theory}</p><div class="lessons"><span class="muted">Теорія в курсі:</span>${lessonLinks(e)}</div></details><p class="gh" style="margin-top:6px">Кроки</p><ol class="gsteps">${steps}</ol></div><div class="gcol gq-col">${right}</div><button class="gx btn" data-g="exit" aria-label="Закрити роботу">×</button>`;
+  else{ markDone(e.id); right=`<p class="gh ok">Роботу виконано ✓ · зараховано ${DONE.length} з ${EXPS.length}</p>${LAB.finalNote?`<p class="fb bad">${LAB.finalNote}</p>`:''}<p class="gq">Висновок</p><p>${e.concl}</p><div class="lessons"><span class="muted">Закріпити теорію:</span>${lessonLinks(e)}</div><div class="actions">${nextExp()?`<button class="btn primary" data-g="nextExp">Наступна робота →</button>`:''}<button class="btn" data-g="again">Пройти ще раз</button><button class="btn" data-g="exit">Вільний режим</button></div>`; }
+  g.innerHTML=`<div class="gcol"><p class="gh">Мета</p><p class="goalT">${e.goal}</p><p class="gh" style="margin-top:6px">Умови досліду</p><p>${e.cond}</p><details class="theory"${(LAB.state==='steps'&&LAB.step===0)||LAB.reread||LAB.qreread?' open':''}><summary>Що треба знати перед роботою</summary><p>${e.theory}</p><div class="lessons"><span class="muted">Теорія в курсі:</span>${lessonLinks(e)}</div></details><p class="gh" style="margin-top:6px">Кроки</p><ol class="gsteps">${steps}</ol></div><div class="gcol gq-col">${right}</div><button class="gx btn" data-g="exit" aria-label="Закрити роботу">×</button>`;
   hl(LAB.state==='steps'?e.steps[LAB.step].watch:null); renderProg(); nowBar();
 }
+function attemptsHTML(s){ const used=LAB.tries||0, max=s.attempts.max;
+  return `<div class="tries"><span>Спроби:</span>${Array.from({length:max},(_,i)=>`<i class="${i<used?'used':''}"></i>`).join('')}<span class="muted">залишилось ${max-used}</span></div>`+
+   (LAB.amsg?`<p class="fb bad">${LAB.amsg}</p>`:'')+
+   (LAB.reread?`<div class="reread"><b>⚠ Остання спроба.</b> Перед нею перечитайте «Що треба знати» вгорі — там формула з прикладом — або урок курсу:<div class="lessons">${lessonLinks(LAB.e)}</div></div>`:''); }
 function nextExp(){ const i=EXPS.findIndex(x=>x===LAB.e); return EXPS[i+1]; }
 function parseAns(v,type){ v=String(v).trim().replace(',','.'); if(type==='time'){ const m=v.match(/^(\d{1,2})[:.](\d{1,2})$/); if(m) return +m[1]+ +m[2]/60; } const n=parseFloat(v); return isFinite(n)?n:NaN; }
+function labAttempt(kind){
+  if(!LAB||LAB.state!=='steps') return; const st=LAB.e.steps[LAB.step]; if(!st.attempts||st.attempts.on!==kind) return;
+  const A=st.attempts, r=A.eval(step(0));
+  if(r.skip){ LAB.amsg=r.skip; LAB.aok=false; renderGuide(); return; }
+  if(r.ok){ LAB.amsg=''; LAB.tries=0; LAB.note='✓ Правильно, з '+((LAB.tries0||0)+1)+'-ї спроби.'; advance(); return; }
+  LAB.tries=(LAB.tries||0)+1; LAB.tries0=LAB.tries; const left=A.max-LAB.tries;
+  if(left<=0){ A.reveal(); buildCfg(); buildSld(); LAB.note='Спроби вичерпано. Правильна відповідь — '+A.answer+' Ми встановили це значення, продовжуйте.'; LAB.amsg=''; LAB.tries=0; LAB.reread=false; advance(); return; }
+  LAB.amsg=r.msg+` Залишилось спроб: ${left}.`; LAB.aok=false;
+  if(left===1){ LAB.reread=true; }
+  renderGuide();
+}
 function labTick(o){
   if(!LAB||LAB.state!=='steps') return;
   if(o.black&&LAB.rec.blackT==null) LAB.rec.blackT=S.t;
   const s=LAB.e.steps[LAB.step]; if(s.check&&s.check(o)){ advance(); }
 }
-function advance(){ LAB.step++; if(LAB.step>=LAB.e.steps.length){ LAB.state='q'; LAB.qi=0; LAB.msg=''; } renderGuide(); if(LAB.state==='q'){ const c=document.querySelector('.gq-col'); if(c){ c.classList.add('flash'); c.scrollIntoView({behavior:'smooth',block:'nearest'}); setTimeout(()=>{ const i=document.querySelector('#gAns,input[name=gopt]'); if(i) i.focus({preventScroll:true}); },400);} } }
+function advance(){ LAB.tries=0; LAB.tries0=0; LAB.amsg=''; LAB.reread=false; LAB.step++; if(LAB.step>=LAB.e.steps.length){ LAB.state='q'; LAB.qi=0; LAB.msg=''; } renderGuide(); if(LAB.state==='q'){ const c=document.querySelector('.gq-col'); if(c){ c.classList.add('flash'); c.scrollIntoView({behavior:'smooth',block:'nearest'}); setTimeout(()=>{ const i=document.querySelector('#gAns,input[name=gopt]'); if(i) i.focus({preventScroll:true}); },400);} } }
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-g]'); if(!b||!LAB&&b.dataset.g!=='exit') return; const a=b.dataset.g;
   if(a==='top'){ $('#guide').scrollIntoView({behavior:'smooth',block:'start'}); return; }
@@ -926,8 +958,11 @@ document.addEventListener('click',e=>{
     let ok=false;
     if(q.type==='choice'){ const r=document.querySelector('input[name=gopt]:checked'); if(!r){LAB.ok=false;LAB.msg='Оберіть варіант.';renderGuide();return;} ok=+r.value===q.ans; }
     else { const v=parseAns($('#gAns').value,q.type), ans=typeof q.ans==='function'?q.ans():q.ans; if(ans==null){LAB.ok=false;LAB.msg='Спочатку дочекайтеся події в кроках.';renderGuide();return;} ok=Math.abs(v-ans)<=q.tol+1e-9; }
-    if(ok){ LAB.qi++; LAB.msg=''; if(LAB.qi>=LAB.e.qs.length) LAB.state='done'; else {LAB.ok=true;LAB.msg='Правильно! Наступне питання.';} }
-    else { LAB.ok=false; LAB.msg='Не зовсім. '+(q.hint||'Спробуйте ще раз.'); }
+    const nextQ=m=>{ LAB.qi++; LAB.qTries=0; LAB.qreread=false; if(LAB.qi>=LAB.e.qs.length){ LAB.state='done'; LAB.finalNote=m||''; } else {LAB.ok=true;LAB.msg=(m||'Правильно!')+' Наступне питання.';} };
+    if(ok) nextQ('');
+    else { LAB.qTries=(LAB.qTries||0)+1; const left=3-LAB.qTries;
+      if(left<=0){ const right=q.type==='choice'?q.opts[q.ans]:(typeof q.ans==='function'?hm(q.ans()):q.ans+(q.unit?' '+q.unit:'')); nextQ('Спроби вичерпано. Правильна відповідь: «'+right+'».'); }
+      else { LAB.ok=false; LAB.qreread=left===1; LAB.msg='Не зовсім. '+(q.hint||'')+(left===1?' Залишилась остання спроба — перечитайте «Що треба знати» ліворуч (ми його розгорнули) або урок курсу.':' Залишилось спроб: '+left+'.'); } }
     renderGuide(); }
 });
 let DONE=[]; try{DONE=JSON.parse(localStorage.getItem('o4lab-done')||'[]')}catch(e){}
@@ -1014,7 +1049,7 @@ function buildDoc(){
     <li>Параметри інверторів і АКБ типові для класу, не конкретних моделей. Для проєкту — лише паспорти.</li>
     <li>Не моделюються втрати в кабелях, затінення, деградація і алгоритми конкретних виробників.</li></ul>
     <h2 id="d9">9. Прогрес</h2>
-    <p>Робота зараховується, коли пройдено всі кроки і правильно відповідено на питання. Прогрес видно над схемою: 10 квадратиків. Він зберігається в браузері учасника — якщо очистити дані браузера або перейти на інший пристрій, роботи доведеться пройти знову.</p>
+    <p>Робота зараховується, коли пройдено всі кроки і дано відповідь на питання. На розрахункові кроки і на кожне питання — 3 спроби; перед останньою лабораторія пропонує перечитати теорію. Якщо спроби вичерпано, вона показує правильну відповідь і пояснення. Прогрес видно над схемою: 10 квадратиків. Він зберігається в браузері учасника — якщо очистити дані браузера або перейти на інший пристрій, роботи доведеться пройти знову.</p>
   </article></div>`;
 }
 
