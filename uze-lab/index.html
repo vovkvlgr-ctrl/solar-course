@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Лабораторія УЗЕ Viatec</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: технічний аркуш — шапка з ключовими цифрами, далі креслення (план, однолінійна схема), потім таблиці */
+:root{
+  --bg:#D9E3E8; --panel:#F7FAFB; --ink:#1F3B4D; --muted:#55707F; --line:#B9CBD4;
+  --teal:#5895A7; --teal-soft:#DCEBF0; --terra:#DA532C; --terra-soft:#F6DDD3;
+  --ok:#3F8A5C; --concrete:#E4E7E8; --grass:#E3EEDF;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#13222C; --panel:#1B2E3A; --ink:#E3EDF2; --muted:#9AB3C0; --line:#35505F;
+  --teal:#7DB5C6; --teal-soft:#21404D; --terra:#EE7650; --terra-soft:#4A2A20;
+  --ok:#6BBE8A; --concrete:#2A3B45; --grass:#1E3328; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#13222C; --panel:#1B2E3A; --ink:#E3EDF2; --muted:#9AB3C0; --line:#35505F;
+  --teal:#7DB5C6; --teal-soft:#21404D; --terra:#EE7650; --terra-soft:#4A2A20;
+  --ok:#6BBE8A; --concrete:#2A3B45; --grass:#1E3328; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55}
+.wrap{max-width:1120px;margin:0 auto;padding-block:28px 60px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,4vw,34px);font-weight:700}
+h2{font-size:20px;font-weight:600;display:flex;align-items:baseline;gap:10px}
+h2 .no{font-family:var(--mono);font-size:13px;color:var(--teal);font-weight:600}
+p{margin:0;max-width:70ch}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal)}
+.head{display:flex;flex-direction:column;gap:10px}
+.lead{color:var(--muted);font-size:16px}
+.sheet{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.kpi{background:var(--panel);padding:14px 16px;display:flex;flex-direction:column;gap:2px}
+.kpi b{font-family:var(--mono);font-size:22px;font-weight:600;font-variant-numeric:tabular-nums}
+.kpi span{font-size:13px;color:var(--muted)}
+.kpi.hot b{color:var(--terra)}
+.draw{overflow-x:auto;border:1px solid var(--line);border-radius:4px;background:var(--bg)}
+.draw svg{display:block;width:100%;min-width:760px;height:auto}
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .t-s{font-size:11px;fill:var(--muted)}
+svg .t-m{font-family:var(--mono);font-size:11px}
+svg .t-b{font-size:13px;font-weight:600}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:14px;height:14px;border-radius:2px;vertical-align:-2px;margin-right:6px;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+.tbl{overflow-x:auto}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
+td.q{font-family:var(--mono);white-space:nowrap;font-variant-numeric:tabular-nums}
+tr.grp td{background:var(--teal-soft);font-weight:600;font-size:13px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px}
+.cols>*{min-width:0}
+.people{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.st{border:1px solid var(--line);border-radius:4px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.st .who{display:flex;gap:3px;flex-wrap:wrap}
+.st .who i{width:12px;height:12px;border-radius:50%;background:var(--teal)}
+.st .who i.ins{background:var(--terra)}
+.st h3{font-size:15px}
+.st p{font-size:13.5px;color:var(--muted)}
+.time{display:grid;grid-template-columns:88px 1fr;gap:0;border-top:1px solid var(--line)}
+.time>div{padding:9px 10px;border-bottom:1px solid var(--line);font-size:14px}
+.time .h{font-family:var(--mono);color:var(--teal);font-variant-numeric:tabular-nums}
+ol.works{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:8px}
+ol.works li b{display:block}
+ol.works li span{color:var(--muted);font-size:13.5px}
+ul.rules{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.warn{border-left:3px solid var(--terra);background:var(--terra-soft);padding:12px 14px;border-radius:0 4px 4px 0;font-size:14px}
+.ask{border:1px dashed var(--teal);border-radius:4px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.ask ol{margin:0;padding-left:20px}
+@media (max-width:520px){.time{grid-template-columns:70px 1fr}.sheet{padding:14px}}
+</style>
+
+</head><body>
+<div class="wrap">
+
+<header class="head">
+  <div class="eyebrow">Viatec Academy · концепт лабораторії · аркуш 1</div>
+  <h1>Лабораторія УЗЕ з реальною шафою Deye MS-G215</h1>
+  <p class="lead">Справжня промислова шафа на вулиці, а в аудиторії щит, навантаження і пульт EMS. Студенти вмикають, налаштовують і «ламають» систему руками, а не в симуляторі.</p>
+</header>
+
+<section class="kpis" aria-label="Ключові цифри">
+  <div class="kpi"><b>100 кВт / 215 кВт·год</b><span>шафа MS-G215, LFP, 1 шт.</span></div>
+  <div class="kpi hot"><b>30 кВт</b><span>ліміт потужності в EMS для навчання</span></div>
+  <div class="kpi"><b>63 А · 3ф</b><span>ввід від ВРЩ (для повних 100 кВт — 160 А)</span></div>
+  <div class="kpi"><b>≈43 кВт·год</b><span>за заняття: ~20 % SOC, ~1,5 год роботи</span></div>
+  <div class="kpi"><b>≈400–500 грн</b><span>електроенергія на одне заняття</span></div>
+  <div class="kpi hot"><b>12 людей</b><span>макс. група: 3 станції × 4 (з 2 тренерами)</span></div>
+</section>
+
+<!-- ПЛАН -->
+<section class="sheet">
+  <h2><span class="no">01</span>План майданчика і аудиторії (вигляд зверху)</h2>
+  <p>Шафа стоїть надворі на окремому бетонному майданчику за огорожею. Кабель іде в траншеї до корпусу. Уся «гра» з режимами відбувається в аудиторії, біля шафи працює лише підгрупа з тренером.</p>
+  <div class="draw">
+  <svg viewBox="0 0 1000 560" role="img" aria-label="План: огороджений майданчик із шафою, траншея, аудиторія 8 на 6 метрів">
+    <defs>
+      <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--concrete)"/><line x1="0" y1="0" x2="0" y2="6" stroke="var(--line)" stroke-width="1.5"/></pattern>
+      <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/></marker>
+    </defs>
+    <!-- ground -->
+    <rect x="10" y="10" width="980" height="540" fill="var(--bg)"/>
+    <rect x="20" y="40" width="330" height="440" fill="var(--grass)" rx="4"/>
+    <text x="32" y="62" class="t-b">ВУЛИЦЯ</text>
+    <text x="32" y="78" class="t-s">масштаб ≈ 1 м = 40 px</text>
+
+    <!-- fence 6x6 m -->
+    <rect x="55" y="110" width="240" height="240" fill="none" stroke="var(--ink)" stroke-width="2" stroke-dasharray="8 5"/>
+    <text x="175" y="102" text-anchor="middle" class="t-s">огорожа 6 × 6 м, сітка 2 м, замок</text>
+    <!-- gate -->
+    <rect x="145" y="346" width="60" height="8" fill="var(--panel)" stroke="var(--ink)"/>
+    <text x="175" y="372" text-anchor="middle" class="t-s">хвіртка 1 м</text>
+
+    <!-- pad 3x3 -->
+    <rect x="115" y="150" width="120" height="120" fill="url(#hatch)" stroke="var(--muted)"/>
+    <text x="175" y="145" text-anchor="middle" class="t-s">бетон 3 × 3 м, h 200 мм</text>
+    <!-- cabinet -->
+    <rect x="145" y="172" width="60" height="44" fill="var(--teal)" stroke="var(--ink)" stroke-width="1.5" rx="2"/>
+    <text x="175" y="192" text-anchor="middle" class="t-b" style="fill:#fff">MS-G215</text>
+    <text x="175" y="207" text-anchor="middle" style="fill:#fff;font-size:10px">100 кВт / 215</text>
+    <!-- door swing / service zone -->
+    <rect x="135" y="216" width="80" height="48" fill="var(--teal-soft)" stroke="var(--teal)" stroke-dasharray="4 3"/>
+    <text x="175" y="244" text-anchor="middle" class="t-s">зона обслуг. ≥1 м</text>
+    <!-- extinguisher -->
+    <circle cx="80" cy="325" r="9" fill="var(--terra)"/><text x="80" y="329" text-anchor="middle" style="fill:#fff;font-size:10px;font-weight:600">В</text>
+    <text x="95" y="329" class="t-s">вогнегасник</text>
+    <!-- sign -->
+    <path d="M262 318 l12 20 h-24 z" fill="#F2C230" stroke="var(--ink)"/><text x="262" y="334" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#1F3B4D">!</text>
+    <text x="240" y="300" class="t-s">знаки, табличка</text>
+    <!-- camera -->
+    <rect x="283" y="112" width="14" height="10" fill="var(--ink)"/><path d="M297 114 l8 -4 v14 l-8 -4z" fill="var(--ink)"/>
+    <text x="250" y="138" class="t-s">камера</text>
+    <!-- people waiting outside fence -->
+    <g fill="var(--teal)"><circle cx="110" cy="400" r="7"/><circle cx="130" cy="400" r="7"/><circle cx="150" cy="400" r="7"/><circle cx="170" cy="400" r="7"/></g>
+    <circle cx="195" cy="400" r="7" fill="var(--terra)"/>
+    <text x="100" y="428" class="t-s">підгрупа 4 + тренер</text>
+    <text x="100" y="443" class="t-s">в огорожу заходять тільки з тренером</text>
+
+    <!-- trench -->
+    <path d="M235 205 H330" stroke="var(--terra)" stroke-width="5"/>
+    <path d="M330 205 l10 -12 l10 24 l10 -12" fill="none" stroke="var(--terra)" stroke-width="3"/>
+    <path d="M360 205 H455" stroke="var(--terra)" stroke-width="5"/>
+    <text x="345" y="186" text-anchor="middle" class="t-b" style="fill:var(--terra)">траншея ≈15–25 м</text>
+    <text x="345" y="232" text-anchor="middle" class="t-s">силовий кабель + Ethernet</text>
+    <text x="345" y="246" text-anchor="middle" class="t-s">у трубі, глибина 0,7 м</text>
+
+    <!-- building -->
+    <rect x="455" y="40" width="525" height="480" fill="var(--panel)" stroke="var(--ink)" stroke-width="4"/>
+    <text x="470" y="64" class="t-b">КОРПУС (НУБіП / КАІ)</text>
+    <!-- VRSh -->
+    <rect x="470" y="180" width="40" height="70" fill="var(--concrete)" stroke="var(--ink)" stroke-width="1.5"/>
+    <text x="490" y="210" text-anchor="middle" class="t-b">ВРЩ</text>
+    <text x="490" y="226" text-anchor="middle" class="t-s">QF1</text>
+    <text x="490" y="240" text-anchor="middle" class="t-s">63 А</text>
+    <text x="470" y="270" class="t-s">коридор</text>
+
+    <!-- lab room 8x6 -->
+    <rect x="560" y="110" width="320" height="240" fill="var(--bg)" stroke="var(--ink)" stroke-width="2.5"/>
+    <text x="720" y="102" text-anchor="middle" class="t-s">аудиторія 8 × 6 м ≈ 48 м²</text>
+    <path d="M510 215 H570" stroke="var(--terra)" stroke-width="3"/>
+    <!-- door -->
+    <rect x="690" y="346" width="50" height="8" fill="var(--panel)" stroke="var(--ink)"/>
+    <path d="M690 350 a50 50 0 0 1 50 50" fill="none" stroke="var(--muted)" stroke-dasharray="3 3"/>
+    <text x="755" y="372" class="t-s">вхід, двері назовні</text>
+
+    <!-- control board -->
+    <rect x="570" y="160" width="32" height="110" fill="var(--teal-soft)" stroke="var(--ink)" stroke-width="1.5"/>
+    <text x="586" y="182" text-anchor="middle" class="t-b">ЩЛ</text>
+    <text x="610" y="178" class="t-s">щит лаб.:</text>
+    <text x="610" y="192" class="t-s">лічильник,</text>
+    <text x="610" y="206" class="t-s">KM1, QF</text>
+    <circle cx="586" cy="252" r="8" fill="var(--terra)" stroke="var(--ink)"/>
+    <text x="600" y="240" class="t-s">аварійна</text>
+
+    <!-- load bank -->
+    <rect x="570" y="285" width="60" height="55" fill="var(--terra-soft)" stroke="var(--terra)" stroke-width="1.5"/>
+    <text x="600" y="308" text-anchor="middle" class="t-b" style="fill:var(--terra)">НАВ</text>
+    <text x="600" y="324" text-anchor="middle" class="t-s">3×10 кВт</text>
+    <path d="M575 280 h50" stroke="var(--terra)" stroke-dasharray="2 3"/>
+    <text x="640" y="300" class="t-s">навантаж. блок,</text>
+    <text x="640" y="314" class="t-s">витяжка назовні</text>
+    <!-- motor -->
+    <circle cx="660" cy="330" r="11" fill="var(--panel)" stroke="var(--ink)" stroke-width="1.5"/>
+    <text x="660" y="334" text-anchor="middle" style="font-size:10px;font-weight:700">M</text>
+    <text x="676" y="334" class="t-s">5,5 кВт</text>
+
+    <!-- instructor + screen -->
+    <rect x="720" y="114" width="120" height="8" fill="var(--ink)"/>
+    <text x="780" y="138" text-anchor="middle" class="t-s">екран 75″ (EMS онлайн)</text>
+    <rect x="745" y="148" width="70" height="26" fill="var(--terra-soft)" stroke="var(--terra)" rx="2"/>
+    <text x="780" y="166" text-anchor="middle" style="font-size:11px;font-weight:600;fill:var(--terra)">пульт тренера</text>
+    <circle cx="780" cy="186" r="7" fill="var(--terra)"/>
+
+    <!-- 3 stations -->
+    <g>
+      <rect x="725" y="225" width="70" height="30" fill="var(--panel)" stroke="var(--teal)" stroke-width="1.5" rx="2"/>
+      <text x="760" y="245" text-anchor="middle" class="t-m">С1 EMS</text>
+      <g fill="var(--teal)"><circle cx="735" cy="266" r="6"/><circle cx="751" cy="266" r="6"/><circle cx="767" cy="266" r="6"/><circle cx="783" cy="266" r="6"/></g>
+      <rect x="805" y="225" width="70" height="30" fill="var(--panel)" stroke="var(--teal)" stroke-width="1.5" rx="2"/>
+      <text x="840" y="245" text-anchor="middle" class="t-m">С2 Аналіз</text>
+      <g fill="var(--teal)"><circle cx="815" cy="266" r="6"/><circle cx="831" cy="266" r="6"/><circle cx="847" cy="266" r="6"/><circle cx="863" cy="266" r="6"/></g>
+      <text x="775" y="298" class="t-s">С3 — біля щита</text>
+      <text x="775" y="312" class="t-s">або біля шафи</text>
+    </g>
+
+    <!-- router -->
+    <rect x="845" y="322" width="28" height="16" fill="var(--panel)" stroke="var(--ink)"/>
+    <text x="859" y="334" text-anchor="middle" style="font-size:9px">4G</text>
+    <text x="840" y="334" class="t-s" text-anchor="end">роутер</text>
+
+    <!-- notes -->
+    <text x="470" y="420" class="t-b">Вимоги до приміщення</text>
+    <text x="470" y="440" class="t-s">• ввід 3ф 63 А (запас траси під 160 А)  • окрема лінія розеток для ПК</text>
+    <text x="470" y="456" class="t-s">• витяжка від навантаж. блоку ≈30 кВт тепла  • двері назовні, аварійне світло</text>
+    <text x="470" y="472" class="t-s">• Ethernet від шафи до роутера  • доступ до ВРЩ для енергетика корпусу</text>
+
+    <!-- north + scale -->
+    <g transform="translate(940 470)"><path d="M0 -24 L8 0 L0 -6 L-8 0 Z" fill="var(--ink)"/><text x="0" y="16" text-anchor="middle" class="t-s">Пн</text></g>
+    <g transform="translate(40 510)"><rect width="40" height="6" fill="var(--ink)"/><rect x="40" width="40" height="6" fill="var(--panel)" stroke="var(--ink)"/><text x="0" y="22" class="t-s">0</text><text x="40" y="22" class="t-s" text-anchor="middle">1</text><text x="80" y="22" class="t-s" text-anchor="middle">2 м</text></g>
+  </svg>
+  </div>
+  <div class="legend">
+    <span><i style="background:var(--teal)"></i>шафа УЗЕ</span>
+    <span><i style="background:var(--terra-soft);border-color:var(--terra)"></i>навантаження / зона тепла</span>
+    <span><i style="background:var(--terra)"></i>силовий кабель · тренер</span>
+    <span><i style="background:var(--teal);border-radius:50%"></i>студент</span>
+  </div>
+</section>
+
+<!-- SLD -->
+<section class="sheet">
+  <h2><span class="no">02</span>Однолінійна схема</h2>
+  <p>Мережа корпусу живить шину лабораторії через лічильник. Контактор KM1 на пульті тренера — це «вимикач мережі»: розімкнули, і шафа має сама перейти в острівний режим та тримати навантаження.</p>
+  <div class="draw">
+  <svg viewBox="0 0 1000 440" role="img" aria-label="Однолінійна схема лабораторії">
+    <rect width="1000" height="440" fill="var(--bg)"/>
+    <!-- main chain -->
+    <g stroke="var(--ink)" stroke-width="2.5" fill="none">
+      <path d="M90 90 H200"/><path d="M240 90 H330"/><path d="M380 90 H470"/><path d="M520 90 H560 V180"/>
+    </g>
+    <rect x="20" y="62" width="70" height="56" fill="var(--concrete)" stroke="var(--ink)" stroke-width="1.5"/>
+    <text x="55" y="86" text-anchor="middle" class="t-b">ВРЩ</text><text x="55" y="104" text-anchor="middle" class="t-s">0,4 кВ</text>
+    <!-- QF1 breaker symbol -->
+    <g stroke="var(--ink)" stroke-width="2.5" fill="none"><path d="M200 90 L236 74"/><path d="M232 82 l8 8 m0 -8 l-8 8"/></g>
+    <text x="220" y="60" text-anchor="middle" class="t-b">QF1</text><text x="220" y="122" text-anchor="middle" class="t-m">63 А, C</text>
+    <!-- meter -->
+    <circle cx="355" cy="90" r="24" fill="var(--panel)" stroke="var(--ink)" stroke-width="2"/>
+    <text x="355" y="95" text-anchor="middle" class="t-b">kWh</text>
+    <text x="386" y="62" class="t-b">PM</text><text x="355" y="134" text-anchor="middle" class="t-s">лічильник CT 100/5</text><text x="355" y="148" text-anchor="middle" class="t-s">RS485 → EMS</text>
+    <!-- KM1 -->
+    <g stroke="var(--terra)" stroke-width="3" fill="none"><path d="M470 90 L512 72"/><path d="M512 90 h8"/></g>
+    <circle cx="470" cy="90" r="3" fill="var(--terra)"/>
+    <text x="495" y="56" text-anchor="middle" class="t-b" style="fill:var(--terra)">KM1 «Блекаут»</text><text x="495" y="122" text-anchor="middle" class="t-m">80 А, AC-1</text><text x="495" y="136" text-anchor="middle" class="t-s">кнопка на пульті</text>
+
+    <!-- bus -->
+    <path d="M110 180 H960" stroke="var(--ink)" stroke-width="6"/>
+    <text x="960" y="170" text-anchor="end" class="t-b">Шина лабораторії 0,4 кВ, 3ф</text>
+
+    <!-- drops -->
+    <g stroke="var(--ink)" stroke-width="2.5" fill="none">
+      <path d="M170 180 V240"/><path d="M170 272 V320"/>
+      <path d="M380 180 V240"/><path d="M380 272 V320"/>
+      <path d="M530 180 V240"/><path d="M530 272 V320"/>
+      <path d="M680 180 V240"/><path d="M680 272 V320"/>
+      <path d="M850 180 V240"/><path d="M850 272 V310"/>
+    </g>
+    <!-- breaker symbols on drops -->
+    <g stroke="var(--ink)" stroke-width="2.5" fill="none">
+      <path d="M170 240 L186 270"/><path d="M380 240 L396 270"/><path d="M530 240 L546 270"/><path d="M680 240 L696 270"/><path d="M850 240 L866 270"/>
+    </g>
+    <text x="196" y="258" class="t-m">QF2 80 А</text>
+    <text x="406" y="258" class="t-m">QF3 25 А</text>
+    <text x="556" y="258" class="t-m">QF4 25 А</text>
+    <text x="706" y="258" class="t-m">QF5 25 А</text>
+    <text x="876" y="258" class="t-m">QF6 + KM</text>
+
+    <!-- trench mark on cabinet line -->
+    <path d="M170 300 l-10 -6 l20 -6 l-10 -6" fill="none" stroke="var(--terra)" stroke-width="2"/>
+    <text x="196" y="300" class="t-s" style="fill:var(--terra)">кабель у траншеї</text>
+
+    <!-- cabinet -->
+    <rect x="75" y="320" width="190" height="86" fill="var(--teal)" stroke="var(--ink)" stroke-width="1.5" rx="3"/>
+    <text x="170" y="344" text-anchor="middle" class="t-b" style="fill:#fff">Шафа MS-G215</text>
+    <text x="170" y="362" text-anchor="middle" style="fill:#fff;font-size:11px">PCS 100 кВт · LFP 215 кВт·год</text>
+    <text x="170" y="380" text-anchor="middle" style="fill:#fff;font-size:11px">BMS · EMS · пожежогасіння</text>
+    <text x="170" y="397" text-anchor="middle" style="fill:#fff;font-size:11px">вулиця</text>
+
+    <!-- load steps -->
+    <g>
+      <rect x="330" y="320" width="100" height="56" fill="var(--terra-soft)" stroke="var(--terra)" stroke-width="1.5"/>
+      <text x="380" y="344" text-anchor="middle" class="t-b">Ступінь 1</text><text x="380" y="362" text-anchor="middle" class="t-m">10 кВт</text>
+      <rect x="480" y="320" width="100" height="56" fill="var(--terra-soft)" stroke="var(--terra)" stroke-width="1.5"/>
+      <text x="530" y="344" text-anchor="middle" class="t-b">Ступінь 2</text><text x="530" y="362" text-anchor="middle" class="t-m">10 кВт</text>
+      <rect x="630" y="320" width="100" height="56" fill="var(--terra-soft)" stroke="var(--terra)" stroke-width="1.5"/>
+      <text x="680" y="344" text-anchor="middle" class="t-b">Ступінь 3</text><text x="680" y="362" text-anchor="middle" class="t-m">10 кВт</text>
+      <text x="530" y="398" text-anchor="middle" class="t-s">навантажувальний блок 30 кВт (ТЕНи, вентилятор)</text>
+    </g>
+    <!-- motor -->
+    <circle cx="850" cy="334" r="26" fill="var(--panel)" stroke="var(--ink)" stroke-width="2"/>
+    <text x="850" y="340" text-anchor="middle" class="t-b">M</text>
+    <text x="850" y="380" text-anchor="middle" class="t-m">5,5 кВт</text>
+    <text x="850" y="396" text-anchor="middle" class="t-s">прямий пуск, Iпуск ≈ 6–7×</text>
+
+    <!-- comms -->
+    <g stroke="var(--teal)" stroke-width="1.8" fill="none" stroke-dasharray="6 4">
+      <path d="M355 66 V36 H760"/>
+    </g>
+    <rect x="760" y="22" width="200" height="40" fill="var(--panel)" stroke="var(--teal)" rx="3"/>
+    <text x="860" y="40" text-anchor="middle" class="t-b">EMS шафи · роутер 4G</text>
+    <text x="860" y="55" text-anchor="middle" class="t-s">екран тренера · ноутбуки студентів</text>
+    <path d="M860 62 V100 H990 V430 H40 V363 H75" stroke="var(--teal)" stroke-width="1.8" fill="none" stroke-dasharray="6 4"/>
+    <text x="640" y="420" class="t-s" style="fill:var(--teal)">Ethernet / Modbus TCP (пунктир)</text>
+  </svg>
+  </div>
+  <div class="warn"><b>Перевірити до закупівлі:</b> чи вміє PCS шафи сам переходити в острів (on/off-grid) і на скільки мілісекунд. Якщо ні, у схему додається зовнішній ATS/STS між KM1 і шиною. Ліміт 30 кВт виставляється в EMS, а QF1 63 А захищає ввід, якщо ліміт хтось змінить.</div>
+</section>
+
+<!-- people -->
+<section class="sheet">
+  <h2><span class="no">03</span>Скільки людей і як вони рухаються</h2>
+  <div class="people">
+    <div class="st">
+      <div class="who"><i></i><i></i><i></i><i></i></div>
+      <h3>С1 · Налаштування EMS</h3>
+      <p>Ноутбук + екран. Режими: арбітраж, пік-шейвінг, резерв. Розклад, SOC-межі, ліміт мережі.</p>
+    </div>
+    <div class="st">
+      <div class="who"><i></i><i></i><i></i><i></i><i class="ins"></i></div>
+      <h3>С2 · Щит і навантаження</h3>
+      <p>Вмикають ступені, пускають двигун, тиснуть «Блекаут». Дивляться струми на лічильнику.</p>
+    </div>
+    <div class="st">
+      <div class="who"><i></i><i></i><i></i><i></i><i class="ins"></i></div>
+      <h3>С3 · Огляд шафи (вулиця)</h3>
+      <p>Тільки з тренером. Огляд, маркування, BMS, термокамера, пожежна система, протокол пуску.</p>
+    </div>
+  </div>
+  <div class="cols">
+    <table>
+      <tr><th>Сценарій</th><th>Макс.</th></tr>
+      <tr><td>2 тренери, 3 станції</td><td class="q">12</td></tr>
+      <tr><td>1 тренер, станції С1 + С2 (без вулиці)</td><td class="q">8</td></tr>
+      <tr><td>Біля шафи в огорожі одночасно</td><td class="q">4 + 1</td></tr>
+      <tr><td>Вебінар з трансляцією екрана EMS</td><td class="q">без ліміту</td></tr>
+    </table>
+    <p style="color:var(--muted);font-size:14px">Тренерів мало, тому базовий варіант — 8 людей з одним тренером, а вулична станція йде окремим 30-хвилинним блоком на початку дня для всієї групи по черзі.</p>
+  </div>
+</section>
+
+<!-- day -->
+<div class="cols">
+<section class="sheet">
+  <h2><span class="no">04</span>Офлайн-день (6 год)</h2>
+  <div class="time">
+    <div class="h">09:30</div><div>Інструктаж з охорони праці, тест допуску (10 питань). Без допуску на станції не пускаємо.</div>
+    <div class="h">10:00</div><div>Огляд шафи на вулиці підгрупами по 4. Пусконалагоджувальний протокол.</div>
+    <div class="h">10:45</div><div>Заняття 1: 3 станції по 25 хв з ротацією. Перший пуск, арбітраж.</div>
+    <div class="h">12:15</div><div>Обід. Шафа заряджається з мережі за розкладом, який склала група.</div>
+    <div class="h">13:00</div><div>Заняття 2: пік-шейвінг з двигуном, блекаут, аварії.</div>
+    <div class="h">14:45</div><div>Розбір логів EMS, підсумковий кейс, сертифікат.</div>
+  </div>
+</section>
+
+<section class="sheet">
+  <h2><span class="no">05</span>Лабораторні роботи</h2>
+  <ol class="works">
+    <li><b>Пуск шафи за протоколом</b><span>Огляд, ізоляція, BMS, автомати в правильному порядку.</span></li>
+    <li><b>Ліміт мережі і договірна потужність</b><span>Виставити 30 кВт, перевірити по лічильнику.</span></li>
+    <li><b>Арбітраж за тарифом</b><span>Скласти розклад заряд/розряд, порахувати економію.</span></li>
+    <li><b>Пік-шейвінг</b><span>Увімкнути 3 ступені + двигун, шафа зрізає пік.</span></li>
+    <li><b>Блекаут</b><span>KM1 розімкнено: перехід в острів, час, що відключилось.</span></li>
+    <li><b>Аварії</b><span>Перегрів, низький SOC, зв'язок з EMS втрачено. Що робить система.</span></li>
+    <li><b>Логи і звіт клієнту</b><span>Вивантажити дані, скласти звіт за день.</span></li>
+  </ol>
+</section>
+</div>
+
+<!-- equipment -->
+<section class="sheet">
+  <h2><span class="no">06</span>Що потрібно</h2>
+  <div class="tbl">
+  <table>
+    <thead><tr><th>Позиція</th><th>К-сть</th><th>Примітка</th></tr></thead>
+    <tbody>
+      <tr class="grp"><td colspan="3">Обладнання УЗЕ</td></tr>
+      <tr><td>Шафа УЗЕ Deye MS-G215 (100 кВт / 215 кВт·год, LFP)</td><td class="q">1</td><td>Питати Deye про демо-шафу або співфінансування</td></tr>
+      <tr><td>Лічильник 3ф з трансформаторами струму 100/5, RS485</td><td class="q">1</td><td>Для EMS (ліміт мережі)</td></tr>
+      <tr><td>Роутер 4G / Ethernet-комутатор</td><td class="q">1</td><td>Віддалений моніторинг, доступ студентів</td></tr>
+      <tr class="grp"><td colspan="3">Щит лабораторії ЩЛ</td></tr>
+      <tr><td>Автомат вводу QF1 63 А, 3P</td><td class="q">1</td><td>У ВРЩ корпусу</td></tr>
+      <tr><td>Автомат шафи QF2 80 А, 3P</td><td class="q">1</td><td></td></tr>
+      <tr><td>Контактор KM1 «Блекаут» 80 А, AC-1</td><td class="q">1</td><td>Кнопка на пульті тренера</td></tr>
+      <tr><td>Автомати ступенів навантаження 25 А, 3P</td><td class="q">3</td><td></td></tr>
+      <tr><td>Автомат + контактор двигуна</td><td class="q">1</td><td>Прямий пуск</td></tr>
+      <tr><td>Аварійна кнопка «грибок»</td><td class="q">2</td><td>На щиті і на пульті</td></tr>
+      <tr class="grp"><td colspan="3">Навантаження</td></tr>
+      <tr><td>Навантажувальний блок 30 кВт (3 × 10 кВт), з вентилятором</td><td class="q">1</td><td>Витяжка назовні</td></tr>
+      <tr><td>Асинхронний двигун 5,5 кВт на рамі (з маховиком або вентилятором)</td><td class="q">1</td><td>Показує пускові струми</td></tr>
+      <tr class="grp"><td colspan="3">Майданчик і кабелі</td></tr>
+      <tr><td>Бетонний майданчик 3 × 3 м</td><td class="q">1</td><td>Під масу шафи з паспорта</td></tr>
+      <tr><td>Огорожа 6 × 6 м з хвірткою</td><td class="q">1</td><td>Замок, ключ у тренера</td></tr>
+      <tr><td>Силовий кабель у траншеї</td><td class="q">15–25 м</td><td>Переріз під 160 А, на майбутнє</td></tr>
+      <tr><td>Кабель Ethernet у трубі</td><td class="q">15–25 м</td><td></td></tr>
+      <tr><td>Контур заземлення біля шафи</td><td class="q">1</td><td>Протокол вимірів</td></tr>
+      <tr class="grp"><td colspan="3">Аудиторія і безпека</td></tr>
+      <tr><td>Екран 75″ + ПК тренера</td><td class="q">1</td><td>EMS онлайн для всієї групи</td></tr>
+      <tr><td>Ноутбуки студентів</td><td class="q">2–3</td><td>По одному на станцію</td></tr>
+      <tr><td>Термокамера</td><td class="q">1</td><td>Огляд з'єднань</td></tr>
+      <tr><td>ЗІЗ: діелектричні рукавиці, щиток, килимки</td><td class="q">4 к-ти</td><td></td></tr>
+      <tr><td>Вогнегасники, знаки, аптечка, аварійне світло</td><td class="q">к-т</td><td></td></tr>
+      <tr><td>Камера на майданчик</td><td class="q">1</td><td>Трансляція огляду на вебінар</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- safety -->
+<section class="sheet">
+  <h2><span class="no">07</span>Правила безпеки</h2>
+  <ul class="rules">
+    <li>В огорожу заходять тільки з тренером, не більше 4 студентів.</li>
+    <li>Двері шафи відкриває лише тренер. Студенти дивляться, працюють через EMS і щит.</li>
+    <li>Перед кожним заняттям: перевірити ліміт 30 кВт в EMS і стан аварійних кнопок.</li>
+    <li>Навантажувальний блок гарячий. Огородження і табличка «Гаряча поверхня».</li>
+    <li>Після блекауту KM1 повертає тільки тренер.</li>
+    <li>Інструкція з охорони праці і журнал допуску погоджуються з відділом ОП університету.</li>
+  </ul>
+  <div class="ask">
+    <b>Щоб порахувати бюджет, мені потрібно:</b>
+    <ol>
+      <li>Скільки потужності реально є на вводі корпусу в НУБіП / КАІ (63 А є?)</li>
+      <li>Чи є MS-G215 або інша шафа УЗЕ в портфелі Viatec.</li>
+      <li>Де можна поставити майданчик 6 × 6 м і яка відстань до корпусу.</li>
+    </ol>
+  </div>
+  <p style="color:var(--muted);font-size:13px">Розміри, відстані й перерізи орієнтовні. Остаточно — за паспортом шафи, ПУЕ, ДБН і проєктом електрика.</p>
+</section>
+
+</div>
+
+</body></html>
