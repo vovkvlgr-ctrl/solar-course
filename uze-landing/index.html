@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Академія УЗЕ Viatec</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: лендінг — темний hero з 3D-сценою, далі «три шляхи» і чотири розділи-смуги, що чергують світлий і туманний фон */
+:root{
+  --navy:#1F3B4D; --navy2:#17303F; --teal:#5895A7; --teal-dk:#3E7487; --terra:#DA532C;
+  --bg:#EEF3F5; --mist:#D9E3E8; --card:#F8FAFB; --ink:#1A2E3B; --muted:#51697A; --line:#C3D3DB;
+  --on-dark:#EAF1F4; --on-dark-2:#B6CCD6;
+  --display:"Rubik",Arial,sans-serif; --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#132530;--mist:#182D3A;--card:#1E3542;--ink:#E3EDF2;--muted:#9DB5C2;--line:#30495A;--teal-dk:#7DB5C6;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#132530;--mist:#182D3A;--card:#1E3542;--ink:#E3EDF2;--muted:#9DB5C2;--line:#30495A;--teal-dk:#7DB5C6;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--navy2)}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.12;text-wrap:balance}
+p{margin:0}
+a{color:inherit}
+.in{max-width:1180px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--terra)}
+
+/* nav */
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--navy2);color:var(--on-dark)}
+nav .in{display:flex;align-items:center;gap:22px;height:58px;overflow-x:auto;white-space:nowrap;scrollbar-width:none}
+nav .brand{font-family:var(--display);font-weight:600;font-size:17px;margin-right:auto}
+nav .brand span{color:var(--terra)}
+nav a{text-decoration:none;font-size:15px;color:var(--on-dark-2)}
+nav a:hover,nav a:focus-visible{color:#fff}
+
+/* hero */
+.hero{background:var(--navy);color:var(--on-dark);margin-top:calc(-1 * env(safe-area-inset-top,0px));padding-top:env(safe-area-inset-top,0px)}
+.hero .in{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center;padding-block:64px 72px}
+.hero h1{font-size:clamp(32px,4.2vw,48px);font-weight:700;color:#fff}
+.hero h1 em{font-style:normal;color:#F08A63}
+.hero .lead{font-size:19px;color:var(--on-dark-2);max-width:56ch}
+.hero .txt{display:flex;flex-direction:column;gap:22px;min-width:0}
+.cta{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-block;text-decoration:none;font-weight:600;font-size:16px;padding:13px 20px;border-radius:6px;border:1.5px solid transparent}
+.btn.p{background:var(--terra);color:#fff}
+.btn.s{border-color:#4D6C7E;color:var(--on-dark)}
+.btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.hero figure{margin:0;position:relative;min-width:0}
+.hero figure img{display:block;width:100%;border-radius:10px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.hero figure figcaption{position:absolute;left:14px;bottom:14px;background:rgba(23,48,63,.88);color:#fff;font-size:13px;padding:6px 10px;border-radius:4px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#33566A;border-top:1px solid #33566A}
+.stats div{background:var(--navy);padding:18px 20px;display:flex;flex-direction:column}
+.stats b{font-family:var(--mono);font-size:24px;color:#fff;font-variant-numeric:tabular-nums}
+.stats span{font-size:14px;color:var(--on-dark-2)}
+
+/* bands */
+.band{padding-block:80px}
+.band.mist{background:var(--mist)}
+.band .head{display:flex;flex-direction:column;gap:12px;margin-bottom:36px;max-width:780px}
+.band h2{font-size:clamp(28px,3.6vw,42px);font-weight:600}
+.band .lead{color:var(--muted);font-size:18px}
+.num{font-family:var(--display);font-weight:700;color:var(--terra)}
+
+/* paths */
+.paths{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.path{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:28px;display:flex;flex-direction:column;gap:12px;text-decoration:none;min-width:0;transition:transform .2s,border-color .2s}
+.path:hover,.path:focus-visible{transform:translateY(-3px);border-color:var(--teal)}
+.path .num{font-size:44px;line-height:1}
+.path h3{font-size:23px}
+.path p{color:var(--muted);font-size:16px}
+.path .meta{margin-top:auto;font-family:var(--mono);font-size:13px;color:var(--teal-dk)}
+.path.hot{background:var(--navy);border-color:var(--navy);color:var(--on-dark)}
+.path.hot p{color:var(--on-dark-2)} .path.hot .meta{color:#F08A63}
+.flow{display:flex;align-items:center;gap:10px;margin-top:22px;font-size:15px;color:var(--muted);flex-wrap:wrap}
+.flow i{font-style:normal;color:var(--teal-dk)}
+
+/* why */
+.why{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.why div{border-top:3px solid var(--teal);padding-top:16px;display:flex;flex-direction:column;gap:8px}
+.why h3{font-size:20px}
+.why p{color:var(--muted);font-size:16px}
+
+/* list rows */
+.rows{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.rows .r{display:grid;grid-template-columns:64px 1fr 1fr;gap:20px;padding:16px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.rows .r .n{font-family:var(--mono);color:var(--terra);font-size:15px}
+.rows .r b{font-weight:600}
+.rows .r span{color:var(--muted)}
+.note{margin-top:20px;color:var(--muted);font-size:15px}
+
+/* courses */
+.courses{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.course{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.course .code{font-family:var(--mono);font-size:13px;color:var(--teal-dk)}
+.course h3{font-size:19px}
+.course p{color:var(--muted);font-size:15px}
+.course.key{border-color:var(--terra)}
+.course.key .code{color:var(--terra)}
+.sim{margin-top:24px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;background:var(--card);border:1px dashed var(--teal);border-radius:10px;padding:18px 22px}
+.sim p{flex:1;min-width:240px;color:var(--muted)}
+.sim a{color:var(--teal-dk);font-weight:600}
+
+/* offline */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.two>*{min-width:0}
+.day{border-top:1px solid var(--line)}
+.day div{display:grid;grid-template-columns:72px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
+.day .t{font-family:var(--mono);color:var(--teal-dk);font-variant-numeric:tabular-nums}
+ol.works{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px}
+ol.works li span{display:block;color:var(--muted);font-size:15px}
+h3.sub{font-size:20px;margin-bottom:14px}
+
+/* gallery */
+.gal{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start}
+.gal>*{min-width:0}
+.stage{margin:0;background:var(--navy);border-radius:10px;overflow:hidden}
+.stage img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+.stage figcaption{padding:14px 18px;color:var(--on-dark);display:flex;flex-direction:column;gap:4px}
+.stage figcaption b{font-family:var(--display);font-weight:600;font-size:18px}
+.stage figcaption span{color:var(--on-dark-2);font-size:15px}
+.thumbs{display:flex;flex-direction:column;gap:8px}
+.thumbs button{all:unset;cursor:pointer;display:grid;grid-template-columns:84px 1fr;gap:12px;align-items:center;padding:6px;border-radius:8px;border:1.5px solid transparent;background:var(--card)}
+.thumbs button img{width:84px;height:48px;object-fit:cover;border-radius:4px;display:block}
+.thumbs button span{font-size:15px;font-weight:500}
+.thumbs button[aria-pressed="true"]{border-color:var(--terra)}
+.thumbs button:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.links{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.links a{font-weight:600;color:var(--teal-dk)}
+
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:40px}
+.facts div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:4px}
+.facts b{font-family:var(--mono);font-size:22px;color:var(--terra);font-variant-numeric:tabular-nums}
+.facts span{color:var(--muted);font-size:14px}
+
+table{border-collapse:collapse;width:100%;font-size:16px}
+.tbl{overflow-x:auto}
+th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
+td.q{font-family:var(--mono);white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums}
+tr.tot td{font-weight:600;border-top:2px solid var(--ink)}
+.stages{display:grid;grid-template-columns:repeat(4,1fr);gap:0;counter-reset:st}
+.stages div{padding:18px 18px 18px 0;border-top:3px solid var(--teal);display:flex;flex-direction:column;gap:6px;margin-right:12px}
+.stages div:last-child{border-color:var(--terra)}
+.stages b{font-family:var(--display);font-size:17px}
+.stages span{color:var(--muted);font-size:15px}
+.ask{margin-top:36px;background:var(--navy);color:var(--on-dark);border-radius:10px;padding:28px;display:grid;grid-template-columns:1fr 1.4fr;gap:24px}
+.ask h3{font-size:24px;color:#fff}
+.ask ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;color:var(--on-dark-2)}
+.ask>*{min-width:0}
+
+footer{background:var(--navy2);color:var(--on-dark-2);padding-block:36px;font-size:14px}
+footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+@media (max-width:900px){
+ .hero .in,.two,.gal,.ask{grid-template-columns:1fr}
+ .paths,.why{grid-template-columns:1fr}
+ .courses,.facts,.stats{grid-template-columns:1fr 1fr}
+ .stages{grid-template-columns:1fr 1fr;row-gap:16px}
+ .thumbs{flex-direction:row;overflow-x:auto}
+ .thumbs button{grid-template-columns:1fr;min-width:120px}
+ .thumbs button img{width:100%;height:60px}
+ .rows .r{grid-template-columns:44px 1fr}.rows .r span{grid-column:2}
+}
+@media (max-width:480px){.courses,.facts,.stats{grid-template-columns:1fr}}
+</style>
+
+</head><body>
+<nav aria-label="Розділи">
+  <div class="in">
+    <span class="brand">Академія <span>УЗЕ</span></span>
+    <a href="#paths">Шляхи</a>
+    <a href="#webinars">Вебінари</a>
+    <a href="#online">Онлайн О9</a>
+    <a href="#offline">Офлайн</a>
+    <a href="#lab">Лабораторія</a>
+    <a href="#project">Проєкт</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="in">
+    <div class="txt">
+      <p class="eyebrow" style="color:#F08A63">Viatec Academy · новий напрям</p>
+      <h1>Системи накопичення енергії: від вебінару до <em>запуску реальної шафи</em></h1>
+      <p class="lead">Вчимо продавати, проєктувати, монтувати і запускати промислові шафи УЗЕ. Спершу безкоштовні вебінари, потім онлайн-курси на Kwiga, а на фінал — день на справжній шафі 100 кВт / 215 кВт·год.</p>
+      <div class="cta">
+        <a class="btn p" href="#paths">Обрати свій шлях</a>
+        <a class="btn s" href="#lab">Подивитись лабораторію</a>
+      </div>
+    </div>
+    <figure>
+      <img src="img/1-overview.jpg" alt="3D-модель лабораторії: шафа УЗЕ за огорожею, траншея і аудиторія">
+      <figcaption>3D-модель лабораторії УЗЕ</figcaption>
+    </figure>
+  </div>
+  <div class="stats">
+    <div><b>6</b><span>вебінарів у серії</span></div>
+    <div><b>4</b><span>онлайн-курси О9</span></div>
+    <div><b>1 день</b><span>офлайн на реальній шафі</span></div>
+    <div><b>12</b><span>людей у групі, макс.</span></div>
+  </div>
+</header>
+
+<section class="band" aria-labelledby="why-h">
+  <div class="in">
+    <div class="head">
+      <p class="eyebrow">Чому зараз</p>
+      <h2 id="why-h">Клієнти питають про шафи УЗЕ. Ринку бракує людей, які вміють на це відповісти.</h2>
+    </div>
+    <div class="why">
+      <div><h3>Блекаути</h3><p>Підприємствам потрібен резерв без генератора і без зупинки виробництва.</p></div>
+      <div><h3>Тарифи</h3><p>Заряд уночі, розряд у пік. Шафа заробляє на різниці цін.</p></div>
+      <div><h3>Договірна потужність</h3><p>Шафа зрізає піки, і підприємство не платить за перевищення.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band mist" id="paths" aria-labelledby="paths-h">
+  <div class="in">
+    <div class="head">
+      <p class="eyebrow">Три шляхи</p>
+      <h2 id="paths-h">Обирайте рівень. Кожен веде на наступний.</h2>
+    </div>
+    <div class="paths">
+      <a class="path" href="#webinars"><span class="num">01</span><h3>Серія вебінарів</h3><p>Шість тем по 60 хвилин: від «що це за шафа» до трансляції з лабораторії.</p><span class="meta">безкоштовно · онлайн · без ліміту</span></a>
+      <a class="path" href="#online"><span class="num">02</span><h3>Онлайн-серія О9</h3><p>Чотири курси на Kwiga з лабораторними в симуляторі, тестами і сертифікатом.</p><span class="meta">самостійно · у своєму темпі</span></a>
+      <a class="path hot" href="#offline"><span class="num">03</span><h3>Офлайн + лабораторія</h3><p>День на реальній шафі в НУБіП або КАІ. Пуск, режими, блекаут, аварії.</p><span class="meta">до 12 людей · після О9</span></a>
+    </div>
+    <p class="flow">Вебінар <i>→</i> О9.1–О9.4 <i>→</i> тест допуску <i>→</i> офлайн-день <i>→</i> сертифікат Viatec</p>
+  </div>
+</section>
+
+<section class="band" id="webinars" aria-labelledby="web-h">
+  <div class="in">
+    <div class="head">
+      <p class="eyebrow">Шлях 01</p>
+      <h2 id="web-h">Серія вебінарів «УЗЕ для бізнесу»</h2>
+      <p class="lead">Раз на два тижні, 60 хвилин. Запис іде в Kwiga як вхід у курс. Кожен вебінар закінчується посиланням на відповідний модуль О9.</p>
+    </div>
+    <div class="rows">
+      <div class="r"><span class="n">1</span><b>Що таке УЗЕ і навіщо бізнесу</b><span>Шафа зсередини: інвертор, батарея LFP, BMS, EMS</span></div>
+      <div class="r"><span class="n">2</span><b>Як порахувати окупність</b><span>Наживо в симуляторі «Доба підприємства»</span></div>
+      <div class="r"><span class="n">3</span><b>Пік-шейвінг і договірна потужність</b><span>Як шафа зрізає пік від пуску двигуна</span></div>
+      <div class="r"><span class="n">4</span><b>Блекаут і резерв</b><span>Острівний режим, ATS, що відключиться, а що ні</span></div>
+      <div class="r"><span class="n">5</span><b>Як вибрати шафу</b><span>Виробники, паралельне з'єднання, нарощування системи</span></div>
+      <div class="r"><span class="n">6</span><b>Безпека і пусконалагодження</b><span>Трансляція з лабораторії, біля реальної шафи</span></div>
+    </div>
+    <p class="note">Для: продажників Viatec і партнерів, енергетиків підприємств, усіх, хто вперше чує про УЗЕ.</p>
+  </div>
+</section>
+
+<section class="band mist" id="online" aria-labelledby="on-h">
+  <div class="in">
+    <div class="head">
+      <p class="eyebrow">Шлях 02</p>
+      <h2 id="on-h">Онлайн-серія О9 на Kwiga</h2>
+      <p class="lead">Формат як у О1 «Старт у сонячній енергетиці»: уроки, вбудовані лабораторні, тест і сертифікат у Kwiga. О9.4 відкриває допуск на офлайн.</p>
+    </div>
+    <div class="courses">
+      <div class="course"><span class="code">О9.1</span><h3>Основи УЗЕ</h3><p>Будова шафи, LFP, BMS, термінологія, виробники.</p></div>
+      <div class="course"><span class="code">О9.2</span><h3>EMS і режими</h3><p>Арбітраж, пік-шейвінг, резерв. Лабораторні в симуляторі.</p></div>
+      <div class="course"><span class="code">О9.3</span><h3>Розрахунок і проєкт</h3><p>Потужність, ємність, ввід, окупність, кілька шаф паралельно.</p></div>
+      <div class="course key"><span class="code">О9.4 · допуск</span><h3>Монтаж і безпека</h3><p>Майданчик, кабелі, пожежна безпека, протокол пуску.</p></div>
+    </div>
+    <div class="sim">
+      <p><b>Симулятор уже є.</b> «Доба підприємства: шафа УЗЕ» рахує добу погодинно: тариф, навантаження, блекаут, кількість шаф і окупність.</p>
+      <a href="../uze/" target="_blank" rel="noopener">Відкрити симулятор →</a>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="offline" aria-labelledby="off-h">
+  <div class="in">
+    <div class="head">
+      <p class="eyebrow">Шлях 03</p>
+      <h2 id="off-h">Офлайн-день на реальній шафі</h2>
+      <p class="lead">Тільки після О9. Три станції, ротація підгрупами по 4, двоє тренерів. З одним тренером — до 8 людей без вуличної станції.</p>
+    </div>
+    <div class="two">
+      <div>
+        <h3 class="sub">Розклад дня</h3>
+        <div class="day">
+          <div><span class="t">09:30</span><span>Інструктаж з охорони праці, тест допуску</span></div>
+          <div><span class="t">10:00</span><span>Огляд шафи надворі підгрупами по 4, протокол пуску</span></div>
+          <div><span class="t">10:45</span><span>Заняття 1: перший пуск, ліміт мережі, арбітраж</span></div>
+          <div><span class="t">12:15</span><span>Обід. Шафа заряджається за розкладом групи</span></div>
+          <div><span class="t">13:00</span><span>Заняття 2: пік-шейвінг з двигуном, блекаут, аварії</span></div>
+          <div><span class="t">14:45</span><span>Розбір логів EMS, кейс, сертифікат Viatec</span></div>
+        </div>
+      </div>
+      <div>
+        <h3 class="sub">Лабораторні роботи</h3>
+        <ol class="works">
+          <li>Пуск шафи за протоколом<span>Огляд, ізоляція, BMS, порядок автоматів</span></li>
+          <li>Ліміт мережі<span>Виставити 30 кВт і перевірити по лічильнику</span></li>
+          <li>Арбітраж за тарифом<span>Розклад заряду і розряду, економія за добу</span></li>
+          <li>Пік-шейвінг<span>Три ступені навантаження + пуск двигуна</span></li>
+          <li>Блекаут<span>KM1 розімкнено: перехід в острів, час, що відключилось</span></li>
+          <li>Аварії<span>Перегрів, низький SOC, втрата зв'язку з EMS</span></li>
+          <li>Логи і звіт клієнту<span>Вивантажити дані, скласти звіт за день</span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band mist" id="lab" aria-labelledby="lab-h">
+  <div class="in">
+    <div class="head">
+      <p class="eyebrow">Лабораторія</p>
+      <h2 id="lab-h">Як вона виглядає з різних боків</h2>
+      <p class="lead">Шафа Deye MS-G215 надворі за огорожею, кабель у траншеї, аудиторія 8 × 6 м зі щитом, навантаженням і робочими місцями. Оберіть ракурс.</p>
+    </div>
+    <div class="gal">
+      <figure class="stage">
+        <img id="gImg" src="img/1-overview.jpg" alt="Загальний вигляд лабораторії">
+        <figcaption><b id="gT">Загальний вигляд</b><span id="gP">Майданчик із шафою зліва, траншея, корпус з аудиторією справа.</span></figcaption>
+      </figure>
+      <div class="thumbs" id="thumbs" role="group" aria-label="Ракурси"></div>
+    </div>
+    <div class="links">
+      <a href="../uze-3d/" target="_blank" rel="noopener">Покрутити 3D-модель →</a>
+      <a href="../uze-lab/" target="_blank" rel="noopener">План, схема і перелік обладнання →</a>
+    </div>
+    <div class="facts">
+      <div><b>100 / 215</b><span>кВт / кВт·год, шафа MS-G215</span></div>
+      <div><b>30 кВт</b><span>ліміт в EMS для навчання</span></div>
+      <div><b>63 А</b><span>ввід 3ф (під 100 кВт — 160 А)</span></div>
+      <div><b>≈43 кВт·год</b><span>≈400–500 грн за заняття</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="project" aria-labelledby="pr-h">
+  <div class="in">
+    <div class="head">
+      <p class="eyebrow">Лабораторія як проєкт</p>
+      <h2 id="pr-h">Бюджет, фінансування і етапи</h2>
+      <p class="lead">Цифри орієнтовні. Шафа — найбільша стаття, тому головне завдання проєкту — домовитися з виробником.</p>
+    </div>
+    <div class="two">
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Стаття</th><th style="text-align:right">тис. грн</th></tr></thead>
+          <tbody>
+            <tr><td>Шафа 100 кВт / 215 кВт·год</td><td class="q">2 500–3 500</td></tr>
+            <tr><td>Майданчик, огорожа, заземлення</td><td class="q">80–150</td></tr>
+            <tr><td>Кабель під 160 А, траншея, монтаж</td><td class="q">100–200</td></tr>
+            <tr><td>Щит, лічильник, контактор «Блекаут»</td><td class="q">60–100</td></tr>
+            <tr><td>Навантаження 30 кВт, двигун 5,5 кВт</td><td class="q">110–200</td></tr>
+            <tr><td>Екран, ПК, ноутбуки, роутер</td><td class="q">120–180</td></tr>
+            <tr><td>Засоби захисту, вогнегасники, термокамера</td><td class="q">30–60</td></tr>
+            <tr><td>Проєкт, погодження, пусконалагодження</td><td class="q">50–100</td></tr>
+            <tr class="tot"><td>Без шафи</td><td class="q">≈550–1 000</td></tr>
+            <tr class="tot"><td>З шафою</td><td class="q">≈3 000–4 500</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3 class="sub">Хто що дає</h3>
+        <div class="rows">
+          <div class="r"><span class="n">Deye</span><b>Демо-шафа</b><span>Безкоштовно або зі співфінансуванням. Натомість — навчені монтажники і продажі.</span></div>
+          <div class="r"><span class="n">ВНЗ</span><b>Майданчик і ввід</b><span>НУБіП або КАІ: місце, лінія 63 А, аудиторія.</span></div>
+          <div class="r"><span class="n">Viatec</span><b>Інфраструктура і програма</b><span>Щит, навантаження, курси О9, тренери.</span></div>
+          <div class="r"><span class="n">Клієнти</span><b>Платні офлайн-дні</b><span>Окупають електроенергію і роботу тренерів.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub" style="margin-top:48px">Етапи</h3>
+    <div class="stages">
+      <div><b>1. Вебінари</b><span>Запуск серії, перші записи в Kwiga</span></div>
+      <div><b>2. Онлайн О9</b><span>Курси О9.1–О9.4 і лабораторні в симуляторі</span></div>
+      <div><b>3. Домовленості</b><span>Виробник шафи, університет, проєкт електрика</span></div>
+      <div><b>4. Лабораторія</b><span>Монтаж, пусконалагодження, перший офлайн-день</span></div>
+    </div>
+
+    <div class="ask">
+      <h3>Що треба з'ясувати, щоб рухатися далі</h3>
+      <ol>
+        <li>Скільки вільної потужності на вводі корпусу в НУБіП або КАІ — головний енергетик університету.</li>
+        <li>Чи готовий Deye або інший виробник дати демо-шафу.</li>
+        <li>Де поставити майданчик 6 × 6 м і як далеко він від корпусу.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="in">
+    <span>Viatec Academy · напрям «Енергетика»</span>
+    <span>Розміри і ціни орієнтовні, остаточно — за паспортом шафи, ПУЕ і проєктом</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const V=[
+    ['1-overview','Загальний вигляд','Майданчик із шафою зліва, траншея, корпус з аудиторією справа.'],
+    ['2-cabinet','Шафа надворі','Огорожа 6 × 6 м, бетон 3 × 3 м, зона обслуговування. Підгрупа 4 + тренер.'],
+    ['3-room','Аудиторія','Щит, навантаження 30 кВт, двигун, екран EMS, дві станції по 4 людини.'],
+    ['4-top','Зверху','План: шафа, траншея ≈15–25 м, ВРЩ, аудиторія 8 × 6 м.'],
+    ['5-room-side','Аудиторія збоку','Інший ракурс: щит і навантаження біля стіни, станції в центрі.'],
+    ['7-blackout','Режим «Блекаут»','KM1 розімкнено: шафа переходить в острів, на екрані EMS «ОСТРІВ».']
+  ];
+  const T=document.getElementById('thumbs'),I=document.getElementById('gImg'),GT=document.getElementById('gT'),GP=document.getElementById('gP');
+  V.forEach((v,i)=>{const b=document.createElement('button');b.setAttribute('aria-pressed',i===0);
+    b.innerHTML='<img src="img/'+v[0]+'.jpg" alt=""><span>'+v[1]+'</span>';
+    b.onclick=()=>{I.src='img/'+v[0]+'.jpg';I.alt=v[1];GT.textContent=v[1];GP.textContent=v[2];
+      T.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b))};
+    T.appendChild(b)});
+})();
+</script>
+
+</body></html>
