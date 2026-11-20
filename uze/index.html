@@ -121,7 +121,7 @@ table.hours th.cur{background:var(--accent);color:#fff}
   </div>
 
   <section class="panel"><div class="ph"><h2>Погодинно</h2><span>кВт · грн/кВт·год</span></div><div class="pb tw" id="table"></div></section>
-  <p class="foot">Прототип навчальної лабораторії курсу О9. Профілі споживання, ціни і вартість шафи умовні — для навчання. Шафа: 100 кВт / 215 кВт·год, ККД заряду-розряду 90 %.</p>
+  <p class="foot">Прототип навчальної лабораторії курсу О9. Профілі споживання, ціни і вартість шафи умовні — для навчання. Шафа: 100 кВт / 215 кВт·год, ККД заряду-розряду 90 %. Модель: одна типова доба × 365; не враховано плату за потужність, вихідні, сезонність цін, знос і обслуговування.</p>
 </div>
 
 <script>
@@ -156,12 +156,13 @@ function simulate(st){
   st=st||S.strat;
   const L=OBJ[S.obj].p.slice(), price=TAR[S.tar].p, P=CAB.P*S.n, Emax=CAB.E*S.n*S.socMax/100, Emin=CAB.E*S.n*S.socMin/100, eta=Math.sqrt(CAB.eff);
   let soc=st==='res'?Emax:Emin;
+  const Pc=contractP();
   const ord=[...Array(24).keys()].sort((a,b)=>price[a]-price[b]||a-b);
   const usable=Emax-Emin;
   let chargeH=new Set(), disH=new Set();
   if(st==='arb'){
     const lo=price[ord[0]], hi=price[ord[23]];
-    if(hi*CAB.eff>lo){ let need=usable/eta, i=0; while(need>0&&i<24){ chargeH.add(ord[i]); need-=P; i++; }
+    if(hi*CAB.eff>lo){ let need=usable/eta, i=0; while(need>0&&i<24){ const cap=Math.min(P,Math.max(0,Pc-L[ord[i]])); if(cap>0){ chargeH.add(ord[i]); need-=cap; } i++; }
       let give=usable*eta, j=23; while(give>0&&j>=0){ const h=ord[j]; if(!chargeH.has(h)&&price[h]*CAB.eff>lo){ disH.add(h); give-=Math.min(P,L[h]); } j--; } }
   }
   const out=[]; let unserved=0;
@@ -169,26 +170,28 @@ function simulate(st){
     const isOut=S.out&&((h-S.outFrom+24)%24)<S.outLen;
     let ch=0, dis=0, grid=L[h], lost=0;
     if(isOut){
-      if(st!=='none'){ dis=Math.min(P,L[h],(soc-Emin*0)*eta); soc-=dis/eta; }
+      if(st!=='none'){ dis=Math.max(0,Math.min(P,L[h],(soc-Emin)*eta)); soc-=dis/eta; }
       lost=L[h]-dis; grid=0; unserved+=lost;
     } else if(st==='arb'){
-      if(chargeH.has(h)){ ch=Math.min(P,(Emax-soc)/eta); soc+=ch*eta; }
+      if(chargeH.has(h)){ ch=Math.max(0,Math.min(P,Pc-L[h],(Emax-soc)/eta)); soc+=ch*eta; }
       else if(disH.has(h)){ dis=Math.min(P,L[h],(soc-Emin)*eta); soc-=dis/eta; }
     } else if(st==='peak'){
       if(L[h]>S.peakLim){ dis=Math.min(P,L[h]-S.peakLim,(soc-Emin)*eta); soc-=dis/eta; }
       else { const room=S.peakLim-L[h]; const cheap=price[h]<=price[ord[11]]; if(cheap||soc<Emin+usable*0.5){ ch=Math.min(P,room,(Emax-soc)/eta); soc+=ch*eta; } }
     } else if(st==='res'){
-      if(soc<Emax){ ch=Math.min(P,(Emax-soc)/eta); soc+=ch*eta; }
+      if(soc<Emax){ ch=Math.max(0,Math.min(P,Pc-L[h],(Emax-soc)/eta)); soc+=ch*eta; }
     }
     if(!isOut) grid=L[h]+ch-dis;
     out.push({h,load:L[h],price:price[h],ch,dis,grid,soc,socPct:soc/(CAB.E*S.n)*100,isOut,lost});
   }
-  const costBase=L.reduce((t,l,h)=>t+l*price[h],0), cost=out.reduce((t,o)=>t+o.grid*price[o.h],0);
+  const costBase=out.reduce((t,o)=>t+(o.isOut?0:o.load*o.price),0), cost=out.reduce((t,o)=>t+o.grid*o.price,0);
+  const savedOut=out.reduce((t,o)=>t+(o.isOut?o.dis:0),0);
   const peakBase=Math.max(...L), peakGrid=Math.max(...out.filter(o=>!o.isOut).map(o=>o.grid));
   const disTot=out.reduce((t,o)=>t+o.dis,0);
-  return {out,costBase,cost,save:costBase-cost,peakBase,peakGrid,cycles:disTot/(CAB.E*S.n),unserved,disTot};
+  return {out,costBase,cost,save:costBase-cost,peakBase,peakGrid,cycles:S.n?disTot/(CAB.E*S.n):0,unserved,disTot,savedOut,Pc};
 }
 
+function contractP(){ return Math.ceil(Math.max(...OBJ[S.obj].p)*1.1/5)*5; }
 function chips(k,vals,cur,u){ return `<div class="chipset">${vals.map(v=>`<button data-set="${k}" data-v="${v}" aria-pressed="${cur===v}">${v}${u}</button>`).join('')}</div>`; }
 function cfgHTML(){
   const opt=(o,v)=>Object.entries(o).map(([k,x])=>`<option value="${k}"${k===v?' selected':''}>${x.n}</option>`).join('');
@@ -242,15 +245,16 @@ function chartSVG(r){
 function results(){
   const r=R, base=simulate('none');
   const yr=r.save*365, cap=S.capex*S.n, pay=yr>0?cap/yr:Infinity;
+  const outNote=S.out&&S.n?`<p class="hint" style="color:var(--ink)"><b>Сьогодні з блекаутом:</b> шафа не заробляє, а тримає бізнес — віддала ${fmt(r.savedOut)} кВт·год у години без мережі. Окупність рахуйте за звичайною добою (вимкніть блекаут), а резерв — це окрема цінність: збережені продажі, продукти, обладнання.</p>`:'';
   $('#money').innerHTML=`<div class="big"><span class="k">Економія за добу</span><span class="v ${r.save>=0?'pos':'neg'}">${fmt(r.save)} грн</span><span class="s">за місяць ≈ ${fmt(r.save*30)} грн · за рік ≈ ${fmt(yr)} грн</span></div>
     <div class="cmp"><div><span class="k">Без УЗЕ</span><br><span class="v">${fmt(r.costBase)} грн</span></div><div><span class="k">З УЗЕ</span><br><span class="v">${fmt(r.cost)} грн</span></div></div>
     <div class="kv"><span>Вкладення (${S.n} ${S.n===1?'шафа':S.n<5?'шафи':'шаф'})</span><span>${fmt(cap)} грн</span><span>Окупність</span><span style="color:${pay<6?'var(--ok)':pay<10?'var(--warn)':'var(--err)'}">${S.n&&isFinite(pay)?fmt(pay,1)+' р.':'—'}</span></div>
-    <p class="hint">${S.n===0?'Додайте шафу, щоб побачити ефект.':pay<6?'Окупається швидко — сильний аргумент для клієнта.':pay<10?'Окупність середня: шукайте кращу стратегію або тариф.':'Довго окупається. Спробуйте арбітраж на погодинних цінах або менше шаф.'}</p>`;
+    ${outNote}<p class="hint">${S.out?'':S.n===0?'Додайте шафу, щоб побачити ефект.':pay<6?'Окупається швидко — сильний аргумент для клієнта.':pay<10?'Окупність середня: шукайте кращу стратегію або тариф.':'Довго окупається. Спробуйте арбітраж на погодинних цінах або менше шаф.'}</p>`;
   const usable=CAB.E*S.n*(S.socMax-S.socMin)/100;
-  $('#tech').innerHTML=`<div class="kv"><span>Пік з мережі без УЗЕ</span><span>${fmt(r.peakBase)} кВт</span><span>Пік з мережі з УЗЕ</span><span style="color:${r.peakGrid<r.peakBase?'var(--ok)':'var(--ink)'}">${fmt(r.peakGrid)} кВт</span>
+  $('#tech').innerHTML=`<div class="kv"><span>Договірна потужність</span><span>${fmt(r.Pc)} кВт</span><span>Пік з мережі без УЗЕ</span><span>${fmt(r.peakBase)} кВт</span><span>Пік з мережі з УЗЕ</span><span style="color:${r.peakGrid<r.peakBase?'var(--ok)':'var(--ink)'}">${fmt(r.peakGrid)} кВт</span>
     <span>Віддала шафа за добу</span><span>${fmt(r.disTot)} кВт·год</span><span>Цикли за добу</span><span>${fmt(r.cycles,2)}</span><span>Корисна ємність</span><span>${fmt(usable)} кВт·год</span>
-    ${S.out?`<span>Без живлення в блекаут</span><span style="color:${r.unserved>0.5?'var(--err)':'var(--ok)'}">${fmt(r.unserved)} кВт·год</span>`:''}</div>
-    <p class="hint">${r.cycles>1.1?'Понад 1 цикл на добу — ресурс шафи витрачається швидше, врахуйте в окупності.':'Ресурс LiFePO₄ — тисячі циклів, тож 1 цикл на добу — нормальний режим.'}</p>`;
+    ${S.out?`<span>Шафа віддала в блекаут</span><span style="color:var(--ok)">${fmt(r.savedOut)} кВт·год</span><span>Без живлення в блекаут</span><span style="color:${r.unserved>0.5?'var(--err)':'var(--ok)'}">${fmt(r.unserved)} кВт·год</span>`:''}</div>
+    <p class="hint">Заряд шафи обмежено договірною потужністю: імпорт з мережі не перевищує ${fmt(r.Pc)} кВт. </p><p class="hint">${r.cycles>1.1?'Понад 1 цикл на добу — ресурс шафи витрачається швидше, врахуйте в окупності.':'Ресурс LiFePO₄ — тисячі циклів, тож 1 цикл на добу — нормальний режим.'}</p>`;
   const cols=r.out.map(o=>o.h);
   const row=(n,f,cl)=>`<tr><td>${n}</td>${r.out.map(o=>`<td class="${o.h===Math.floor(H)?'cur':''}"${cl?` style="color:${cl(o)}"`:''}>${f(o)}</td>`).join('')}</tr>`;
   $('#table').innerHTML=`<table class="hours"><thead><tr><th>Година</th>${cols.map(h=>`<th class="${h===Math.floor(H)?'cur':''}">${String(h).padStart(2,'0')}</th>`).join('')}</tr></thead><tbody>
