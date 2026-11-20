@@ -52,6 +52,20 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:0}
 .strat button small{font-weight:400;color:var(--muted);font-size:11.5px;line-height:1.3}
 .strat button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
 .hint{font-size:12px;color:var(--muted)}
+.lbl{font-size:12.5px;color:var(--muted)}
+.cabs{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+.cabs button{font:inherit;background:var(--panel2);border:1px solid var(--line2);border-radius:8px;padding:6px 2px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:58px;justify-content:flex-end;color:var(--ink)}
+.cabs button i{display:block;width:16px;height:7px;border-radius:2px;background:#9DB3BE;margin-bottom:-1px}
+.cabs button em{font-style:normal;font-size:11px;color:var(--muted);margin-bottom:auto;margin-top:6px}
+.cabs button b{font-family:var(--mono);font-size:13px}
+.cabs button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.cabs button[aria-pressed="true"] i{background:var(--bat)}
+.chipset{display:flex;flex-wrap:wrap;gap:5px}
+.chipset button{font:600 13px var(--mono);background:var(--panel2);border:1px solid var(--line2);border-radius:7px;padding:6px 10px;cursor:pointer;color:var(--ink)}
+.chipset button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.stepper{display:flex;align-items:center;border:1px solid var(--line2);border-radius:8px;overflow:hidden;background:var(--panel2)}
+.stepper button{font:600 20px var(--mono);width:44px;height:38px;border:none;background:var(--teal);color:#fff;cursor:pointer}
+.stepper span{flex:1;text-align:center;font-family:var(--mono);font-size:15px}
 .flow svg,.chart svg{display:block;width:100%;height:auto}
 .flow text,.chart text{font-family:var(--mono)}
 .story{padding:12px 14px;border-top:1px solid var(--line);font-size:15.5px}
@@ -175,17 +189,19 @@ function simulate(st){
   return {out,costBase,cost,save:costBase-cost,peakBase,peakGrid,cycles:disTot/(CAB.E*S.n),unserved,disTot};
 }
 
+function chips(k,vals,cur,u){ return `<div class="chipset">${vals.map(v=>`<button data-set="${k}" data-v="${v}" aria-pressed="${cur===v}">${v}${u}</button>`).join('')}</div>`; }
 function cfgHTML(){
   const opt=(o,v)=>Object.entries(o).map(([k,x])=>`<option value="${k}"${k===v?' selected':''}>${x.n}</option>`).join('');
   const rng=(id,l,min,max,st,v,u)=>`<label class="sl"><span class="r">${l}<output id="o-${id}">${v} ${u}</output></span><input type="range" id="${id}" min="${min}" max="${max}" step="${st}" value="${v}"></label>`;
   $('#cfg').innerHTML=`<div class="grp"><h3>Об’єкт</h3><label class="sel">Тип бізнесу<select id="obj">${opt(OBJ,S.obj)}</select></label><label class="sel">Ціна електроенергії<select id="tar">${opt(TAR,S.tar)}</select></label></div>
-   <div class="grp"><h3>Шафи УЗЕ · 100 кВт / 215 кВт·год</h3>${rng('n','Кількість шаф',0,4,1,S.n,'шт')}
-     <div class="kv"><span>Потужність</span><span id="kP">${S.n*100} кВт</span><span>Ємність</span><span id="kE">${S.n*215} кВт·год</span></div>
-     ${rng('socMin','Мінімальний заряд',5,30,5,S.socMin,'%')}</div>
+   <div class="grp"><h3>Шафи УЗЕ · 100 кВт / 215 кВт·год</h3><span class="lbl">Кількість шаф</span>
+     <div class="cabs">${[0,1,2,3,4].map(k=>`<button data-set="n" data-v="${k}" aria-pressed="${S.n===k}" title="${k} шаф">${k?Array.from({length:k},()=>'<i></i>').join(''):'<em>без</em>'}<b>${k}</b></button>`).join('')}</div>
+     <div class="kv"><span>Разом потужність</span><span id="kP">${S.n*100} кВт</span><span>Разом ємність</span><span id="kE">${S.n*215} кВт·год</span></div>
+     <span class="lbl">Мінімальний заряд (запас, нижче якого шафа не розряджається)</span>${chips('socMin',[5,10,15,20,30],S.socMin,'%')}</div>
    <div class="grp"><h3>Стратегія EMS</h3><div class="strat">${Object.entries(STRAT).map(([k,v])=>`<button data-st="${k}" aria-pressed="${S.strat===k}">${v[0]}<small>${v[1]}</small></button>`).join('')}</div>
-     ${S.strat==='peak'?rng('peakLim','Межа імпорту з мережі',10,200,5,S.peakLim,'кВт'):''}</div>
+     ${S.strat==='peak'?`<span class="lbl">Межа імпорту з мережі</span><div class="stepper"><button data-step="peakLim" data-d="-5" aria-label="Менше">−</button><span><b>${S.peakLim}</b> кВт</span><button data-step="peakLim" data-d="5" aria-label="Більше">+</button></div><p class="hint">Пік об’єкта — ${Math.max(...OBJ[S.obj].p)} кВт. Шафа «зрізає» все, що вище межі.</p>`:''}</div>
    <div class="grp"><h3>Відключення мережі</h3><label class="sl" style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" id="out" ${S.out?'checked':''} style="accent-color:var(--accent);width:18px;height:18px"> <span>Блекаут сьогодні</span></label>
-     ${S.out?rng('outFrom','Початок',0,23,1,S.outFrom,':00')+rng('outLen','Тривалість',1,8,1,S.outLen,'год'):''}</div>
+     ${S.out?`<label class="sel">Початок відключення<select id="outFrom">${Array.from({length:24},(_,h)=>`<option value="${h}"${h===S.outFrom?' selected':''}>${String(h).padStart(2,'0')}:00</option>`).join('')}</select></label><span class="lbl">Тривалість</span>${chips('outLen',[1,2,3,4,6,8],S.outLen,' год')}`:''}</div>
    <div class="grp"><h3>Вартість</h3><label class="sel">Шафа під ключ, грн (приклад)<input type="number" id="capex" min="100000" step="50000" value="${S.capex}"></label></div>`;
 }
 
@@ -269,9 +285,11 @@ function setPlay(){ const b=$('#play'); b.setAttribute('aria-pressed',playing); 
 document.addEventListener('input',e=>{ const id=e.target.id; if(!id) return;
   if(['n','socMin','peakLim','outFrom','outLen'].includes(id)){ S[id]=+e.target.value; const o=$('#o-'+id); if(o) o.textContent=e.target.value+' '+({n:'шт',socMin:'%',peakLim:'кВт',outFrom:':00',outLen:'год'}[id]); if(id==='n'){ $('#kP').textContent=S.n*100+' кВт'; $('#kE').textContent=S.n*215+' кВт·год'; } full(); }
   if(id==='capex'){ S.capex=Math.max(0,+e.target.value||0); results(); } });
-document.addEventListener('change',e=>{ const id=e.target.id; if(id==='obj'||id==='tar'){ S[id]=e.target.value; if(id==='obj') S.peakLim=Math.round(Math.max(...OBJ[S.obj].p)*0.75/5)*5; cfgHTML(); full(); } if(id==='out'){ S.out=e.target.checked; cfgHTML(); full(); } });
+document.addEventListener('change',e=>{ const id=e.target.id; if(id==='outFrom'){ S.outFrom=+e.target.value; full(); return; } if(id==='obj'||id==='tar'){ S[id]=e.target.value; if(id==='obj') S.peakLim=Math.round(Math.max(...OBJ[S.obj].p)*0.75/5)*5; cfgHTML(); full(); } if(id==='out'){ S.out=e.target.checked; cfgHTML(); full(); } });
 document.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return;
   if(b.dataset.st){ S.strat=b.dataset.st; cfgHTML(); full(); }
+  if(b.dataset.set){ S[b.dataset.set]=+b.dataset.v; cfgHTML(); full(); }
+  if(b.dataset.step){ const k=b.dataset.step; S[k]=clamp(S[k]+(+b.dataset.d),10,300); cfgHTML(); full(); }
   if(b.id==='play'){ if(H>=23.99) H=0; playing=!playing; setPlay(); }
   if(b.dataset.sp){ speed=+b.dataset.sp; document.querySelectorAll('[data-sp]').forEach(x=>x.setAttribute('aria-pressed',x===b)); if(!playing){ if(H>=23.99) H=0; playing=true; setPlay(); } } });
 H=18; cfgHTML(); full(); setPlay(); requestAnimationFrame(loop);
