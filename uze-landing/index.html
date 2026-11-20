@@ -2,17 +2,18 @@
 <html lang="uk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Академія УЗЕ Viatec</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <style>
-/* Layout: лендінг — темний hero з 3D-сценою, далі «три шляхи» і чотири розділи-смуги, що чергують світлий і туманний фон */
+[hidden]{display:none!important}
+/* Layout: живий hero — 3D-лабораторія, де минає доба; далі живий графік доби підприємства, три шляхи, розділи; 3D з керуванням у розділі «Лабораторія» */
 :root{
-  --navy:#1F3B4D; --navy2:#17303F; --teal:#5895A7; --teal-dk:#3E7487; --terra:#DA532C;
-  --bg:#EEF3F5; --mist:#D9E3E8; --card:#F8FAFB; --ink:#1A2E3B; --muted:#51697A; --line:#C3D3DB;
-  --on-dark:#EAF1F4; --on-dark-2:#B6CCD6;
+  --navy:#1F3B4D; --navy2:#162D3B; --teal:#5895A7; --teal-dk:#3E7487; --terra:#DA532C; --terra-l:#F08A63; --ok:#3FA36B;
+  --bg:#EEF3F5; --mist:#DCE6EB; --card:#F9FBFC; --ink:#1A2E3B; --muted:#51697A; --line:#C6D5DC;
+  --on-dark:#EAF1F4; --on-dark-2:#B3CAD5;
   --display:"Rubik",Arial,sans-serif; --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#132530;--mist:#182D3A;--card:#1E3542;--ink:#E3EDF2;--muted:#9DB5C2;--line:#30495A;--teal-dk:#7DB5C6;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#132530;--mist:#182D3A;--card:#1E3542;--ink:#E3EDF2;--muted:#9DB5C2;--line:#30495A;--teal-dk:#7DB5C6;color-scheme:dark}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#122430;--mist:#172C39;--card:#1D3442;--ink:#E3EDF2;--muted:#9DB5C2;--line:#2F485A;--teal-dk:#7DB5C6;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#122430;--mist:#172C39;--card:#1D3442;--ink:#E3EDF2;--muted:#9DB5C2;--line:#2F485A;--teal-dk:#7DB5C6;color-scheme:dark}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
@@ -20,86 +21,116 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17p
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--navy2)}
 h1,h2,h3{font-family:var(--display);margin:0;line-height:1.12;text-wrap:balance}
 p{margin:0}
-a{color:inherit}
 .in{max-width:1180px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
 .eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--terra)}
 
-/* nav */
-nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--navy2);color:var(--on-dark)}
-nav .in{display:flex;align-items:center;gap:22px;height:58px;overflow-x:auto;white-space:nowrap;scrollbar-width:none}
-nav .brand{font-family:var(--display);font-weight:600;font-size:17px;margin-right:auto}
-nav .brand span{color:var(--terra)}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--navy2);color:var(--on-dark);border-bottom:1px solid #26445A}
+nav .in{display:flex;align-items:center;gap:22px;height:56px;overflow-x:auto;white-space:nowrap;scrollbar-width:none}
+nav .brand{font-family:var(--display);font-weight:600;font-size:17px;margin-right:auto;display:flex;align-items:center;gap:8px}
+nav .brand i{width:9px;height:9px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 rgba(63,163,107,.6);animation:ping 2s infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(63,163,107,.6)}80%,100%{box-shadow:0 0 0 9px rgba(63,163,107,0)}}
 nav a{text-decoration:none;font-size:15px;color:var(--on-dark-2)}
 nav a:hover,nav a:focus-visible{color:#fff}
 
-/* hero */
-.hero{background:var(--navy);color:var(--on-dark);margin-top:calc(-1 * env(safe-area-inset-top,0px));padding-top:env(safe-area-inset-top,0px)}
-.hero .in{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center;padding-block:64px 72px}
-.hero h1{font-size:clamp(32px,4.2vw,48px);font-weight:700;color:#fff}
-.hero h1 em{font-style:normal;color:#F08A63}
-.hero .lead{font-size:19px;color:var(--on-dark-2);max-width:56ch}
-.hero .txt{display:flex;flex-direction:column;gap:22px;min-width:0}
+/* HERO */
+.hero{position:relative;background:#14232e;color:var(--on-dark);overflow:hidden}
+.hero canvas{display:block;width:100%;height:min(88vh,780px);min-height:520px;touch-action:pan-y}
+.hero .shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,35,46,.92) 0%,rgba(20,35,46,.72) 34%,rgba(20,35,46,0) 62%);pointer-events:none}
+.hero .txt{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;align-items:center;pointer-events:none}
+.hero .txt .in{width:100%}
+.hero .copy{max-width:540px;display:flex;flex-direction:column;gap:20px;pointer-events:auto}
+.hero h1{font-size:clamp(32px,4.2vw,52px);font-weight:700;color:#fff}
+.hero h1 em{font-style:normal;color:var(--terra-l)}
+.hero .lead{font-size:18.5px;color:var(--on-dark-2)}
 .cta{display:flex;flex-wrap:wrap;gap:12px}
-.btn{display:inline-block;text-decoration:none;font-weight:600;font-size:16px;padding:13px 20px;border-radius:6px;border:1.5px solid transparent}
+.btn{display:inline-block;text-decoration:none;font-weight:600;font-size:16px;padding:13px 20px;border-radius:6px;border:1.5px solid transparent;cursor:pointer;font-family:inherit}
 .btn.p{background:var(--terra);color:#fff}
-.btn.s{border-color:#4D6C7E;color:var(--on-dark)}
+.btn.p:hover{background:#c4471f}
+.btn.s{border-color:#5A7B8E;color:var(--on-dark);background:rgba(20,35,46,.4)}
 .btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
-.hero figure{margin:0;position:relative;min-width:0}
-.hero figure img{display:block;width:100%;border-radius:10px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
-.hero figure figcaption{position:absolute;left:14px;bottom:14px;background:rgba(23,48,63,.88);color:#fff;font-size:13px;padding:6px 10px;border-radius:4px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#33566A;border-top:1px solid #33566A}
-.stats div{background:var(--navy);padding:18px 20px;display:flex;flex-direction:column}
-.stats b{font-family:var(--mono);font-size:24px;color:#fff;font-variant-numeric:tabular-nums}
-.stats span{font-size:14px;color:var(--on-dark-2)}
+.hud{position:absolute;right:max(20px,env(safe-area-inset-right,0px));bottom:22px;width:300px;background:rgba(18,33,44,.86);backdrop-filter:blur(6px);border:1px solid #2E4C60;border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;font-size:14px}
+.hud .top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.hud .clock{font-family:var(--mono);font-size:26px;font-weight:600;color:#fff;font-variant-numeric:tabular-nums}
+.hud .mode{font-weight:600;padding:3px 9px;border-radius:999px;font-size:13px;background:#2A4A5D;color:#CFE3EB;transition:background .3s}
+.hud .mode.in{background:#2B6E57;color:#D5F2E2}.hud .mode.out{background:#8F3A20;color:#FFE1D5}.hud .mode.bo{background:#C0392B;color:#fff}
+.hud .row{display:flex;justify-content:space-between;color:var(--on-dark-2)}
+.hud .row b{font-family:var(--mono);color:#fff;font-variant-numeric:tabular-nums}
+.soc{height:8px;border-radius:4px;background:#2A4252;overflow:hidden}
+.soc i{display:block;height:100%;width:50%;background:linear-gradient(90deg,var(--teal),#7FD1A5);transition:width .2s linear}
+.hud .say{color:#DCE9EF;min-height:42px}
+.hud button{all:unset;cursor:pointer;font-size:13px;color:var(--on-dark-2);text-decoration:underline}
+.hud button:focus-visible{outline:2px solid #fff}
+.fallback{display:block;width:100%;height:100%;object-fit:cover}
 
 /* bands */
-.band{padding-block:80px}
+.band{padding-block:84px}
 .band.mist{background:var(--mist)}
-.band .head{display:flex;flex-direction:column;gap:12px;margin-bottom:36px;max-width:780px}
+.band .head{display:flex;flex-direction:column;gap:12px;margin-bottom:36px;max-width:800px}
 .band h2{font-size:clamp(28px,3.6vw,42px);font-weight:600}
 .band .lead{color:var(--muted);font-size:18px}
-.num{font-family:var(--display);font-weight:700;color:var(--terra)}
+
+/* live day chart */
+.daywrap{display:grid;grid-template-columns:1fr 320px;gap:24px;align-items:stretch}
+.daywrap>*{min-width:0}
+.chartbox{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 16px 10px}
+.chartbox canvas{display:block;width:100%;height:340px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;color:var(--muted);padding:6px 4px 0}
+.legend i{display:inline-block;width:18px;height:4px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.tabs button{font:inherit;font-size:15px;font-weight:600;padding:9px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+.tabs button:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.story{background:var(--navy);color:var(--on-dark);border-radius:12px;padding:22px;display:flex;flex-direction:column;gap:12px}
+.story h3{font-size:22px;color:#fff}
+.story p{color:var(--on-dark-2);font-size:16px}
+.story .now{margin-top:auto;border-top:1px solid #2E4C60;padding-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.story .now div{display:flex;flex-direction:column}
+.story .now b{font-family:var(--mono);font-size:20px;color:#fff;font-variant-numeric:tabular-nums}
+.story .now span{font-size:13px;color:var(--on-dark-2)}
+.talk{margin-top:28px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.talk div{border-left:3px solid var(--teal);padding:4px 0 4px 14px;display:flex;flex-direction:column;gap:4px}
+.talk b{font-family:var(--display);font-weight:600}
+.talk span{color:var(--muted);font-size:15.5px}
 
 /* paths */
 .paths{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.path{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:28px;display:flex;flex-direction:column;gap:12px;text-decoration:none;min-width:0;transition:transform .2s,border-color .2s}
-.path:hover,.path:focus-visible{transform:translateY(-3px);border-color:var(--teal)}
-.path .num{font-size:44px;line-height:1}
+.path{position:relative;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:28px;display:flex;flex-direction:column;gap:12px;text-decoration:none;color:inherit;min-width:0;transition:transform .25s,box-shadow .25s,border-color .25s;overflow:hidden}
+.path:hover,.path:focus-visible{transform:translateY(-4px);box-shadow:0 14px 30px rgba(31,59,77,.14);border-color:var(--teal)}
+.path .num{font-family:var(--display);font-weight:700;font-size:46px;line-height:1;color:var(--terra)}
 .path h3{font-size:23px}
 .path p{color:var(--muted);font-size:16px}
 .path .meta{margin-top:auto;font-family:var(--mono);font-size:13px;color:var(--teal-dk)}
 .path.hot{background:var(--navy);border-color:var(--navy);color:var(--on-dark)}
-.path.hot p{color:var(--on-dark-2)} .path.hot .meta{color:#F08A63}
-.flow{display:flex;align-items:center;gap:10px;margin-top:22px;font-size:15px;color:var(--muted);flex-wrap:wrap}
-.flow i{font-style:normal;color:var(--teal-dk)}
+.path.hot h3{color:#fff}.path.hot p{color:var(--on-dark-2)}.path.hot .meta{color:var(--terra-l)}
+.path .bar{position:absolute;left:0;bottom:0;height:3px;width:0;background:var(--terra);transition:width .4s}
+.path:hover .bar{width:100%}
+.route{margin-top:26px;display:flex;align-items:center;gap:0;flex-wrap:wrap}
+.route span{font-size:14.5px;font-weight:600;padding:8px 14px;background:var(--card);border:1px solid var(--line);border-radius:999px}
+.route i{width:28px;height:2px;background:var(--teal);position:relative;overflow:hidden}
+.route i::after{content:"";position:absolute;inset:0;width:10px;background:var(--terra);animation:flow 1.6s linear infinite}
+@keyframes flow{from{transform:translateX(-10px)}to{transform:translateX(30px)}}
+@media (prefers-reduced-motion:reduce){.route i::after,nav .brand i{animation:none}}
 
-/* why */
-.why{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.why div{border-top:3px solid var(--teal);padding-top:16px;display:flex;flex-direction:column;gap:8px}
-.why h3{font-size:20px}
-.why p{color:var(--muted);font-size:16px}
-
-/* list rows */
+/* rows */
 .rows{display:flex;flex-direction:column;border-top:1px solid var(--line)}
-.rows .r{display:grid;grid-template-columns:64px 1fr 1fr;gap:20px;padding:16px 0;border-bottom:1px solid var(--line);align-items:baseline}
-.rows .r .n{font-family:var(--mono);color:var(--terra);font-size:15px}
+.rows .r{display:grid;grid-template-columns:64px 1fr 1fr;gap:20px;padding:16px 0;border-bottom:1px solid var(--line);align-items:baseline;transition:background .2s}
+.rows .r:hover{background:var(--card)}
+.rows .r .n{font-family:var(--mono);color:var(--terra);font-size:15px;padding-left:6px}
 .rows .r b{font-weight:600}
 .rows .r span{color:var(--muted)}
 .note{margin-top:20px;color:var(--muted);font-size:15px}
 
-/* courses */
 .courses{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.course{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.course{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;display:flex;flex-direction:column;gap:8px;min-width:0}
 .course .code{font-family:var(--mono);font-size:13px;color:var(--teal-dk)}
 .course h3{font-size:19px}
 .course p{color:var(--muted);font-size:15px}
 .course.key{border-color:var(--terra)}
 .course.key .code{color:var(--terra)}
-.sim{margin-top:24px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;background:var(--card);border:1px dashed var(--teal);border-radius:10px;padding:18px 22px}
+.sim{margin-top:24px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;background:var(--card);border:1px dashed var(--teal);border-radius:12px;padding:18px 22px}
 .sim p{flex:1;min-width:240px;color:var(--muted)}
 .sim a{color:var(--teal-dk);font-weight:600}
 
-/* offline */
 .two{display:grid;grid-template-columns:1fr 1fr;gap:40px}
 .two>*{min-width:0}
 .day{border-top:1px solid var(--line)}
@@ -109,27 +140,32 @@ ol.works{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px}
 ol.works li span{display:block;color:var(--muted);font-size:15px}
 h3.sub{font-size:20px;margin-bottom:14px}
 
-/* gallery */
-.gal{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start}
-.gal>*{min-width:0}
-.stage{margin:0;background:var(--navy);border-radius:10px;overflow:hidden}
-.stage img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
-.stage figcaption{padding:14px 18px;color:var(--on-dark);display:flex;flex-direction:column;gap:4px}
-.stage figcaption b{font-family:var(--display);font-weight:600;font-size:18px}
-.stage figcaption span{color:var(--on-dark-2);font-size:15px}
-.thumbs{display:flex;flex-direction:column;gap:8px}
-.thumbs button{all:unset;cursor:pointer;display:grid;grid-template-columns:84px 1fr;gap:12px;align-items:center;padding:6px;border-radius:8px;border:1.5px solid transparent;background:var(--card)}
-.thumbs button img{width:84px;height:48px;object-fit:cover;border-radius:4px;display:block}
-.thumbs button span{font-size:15px;font-weight:500}
-.thumbs button[aria-pressed="true"]{border-color:var(--terra)}
-.thumbs button:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
-.links{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
-.links a{font-weight:600;color:var(--teal-dk)}
-
-.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:40px}
-.facts div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:4px}
+/* lab 3d */
+.lab3d{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#cfdde4}
+.lab3d canvas{display:block;width:100%;height:min(74vh,640px);min-height:420px;touch-action:none}
+.lab3d .bar3{position:absolute;left:12px;top:12px;right:12px;display:flex;flex-wrap:wrap;gap:6px;pointer-events:none}
+.lab3d .bar3 button{pointer-events:auto;font:inherit;font-size:14px;font-weight:500;border:1px solid #B9CBD4;background:#F7FAFB;color:#1F3B4D;padding:7px 12px;border-radius:6px;cursor:pointer}
+.lab3d .bar3 button[aria-pressed="true"]{background:#1F3B4D;color:#fff;border-color:#1F3B4D}
+.lab3d .bar3 .bo{border-color:#DA532C;color:#DA532C}
+.lab3d .bar3 .bo[aria-pressed="true"]{background:#DA532C;color:#fff}
+.lab3d .bar3 .sp{flex:1}
+.lbl{position:absolute;transform:translate(-50%,-100%);font-size:12px;font-weight:600;background:#F7FAFB;color:#1F3B4D;border:1px solid #B9CBD4;padding:3px 8px;border-radius:3px;white-space:nowrap;cursor:pointer;box-shadow:0 2px 6px rgba(31,59,77,.15)}
+.lbl::after{content:"";position:absolute;left:50%;top:100%;width:1px;height:9px;background:#55707F}
+.lbl.hot{border-color:#DA532C;color:#DA532C}
+.lbl.on{background:#1F3B4D;color:#fff;border-color:#1F3B4D}
+.info{position:absolute;right:12px;bottom:12px;width:min(330px,calc(100% - 24px));background:#F7FAFB;color:#1F3B4D;border:1px solid #B9CBD4;border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;box-shadow:0 6px 18px rgba(31,59,77,.18)}
+.info[hidden],.lbl[hidden]{display:none}
+.info h3{font-size:16px}
+.info p{font-size:14px;color:#55707F}
+.info dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:13px}
+.info dt{color:#55707F}.info dd{margin:0;font-family:var(--mono);font-size:12.5px}
+.hint3{position:absolute;left:12px;bottom:12px;font-size:12px;color:#1F3B4D;background:rgba(247,250,251,.85);padding:4px 8px;border-radius:3px}
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:24px}
+.facts div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:4px}
 .facts b{font-family:var(--mono);font-size:22px;color:var(--terra);font-variant-numeric:tabular-nums}
 .facts span{color:var(--muted);font-size:14px}
+.links{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px}
+.links a{font-weight:600;color:var(--teal-dk)}
 
 table{border-collapse:collapse;width:100%;font-size:16px}
 .tbl{overflow-x:auto}
@@ -137,79 +173,106 @@ th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vert
 th{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
 td.q{font-family:var(--mono);white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums}
 tr.tot td{font-weight:600;border-top:2px solid var(--ink)}
-.stages{display:grid;grid-template-columns:repeat(4,1fr);gap:0;counter-reset:st}
+.stages{display:grid;grid-template-columns:repeat(4,1fr)}
 .stages div{padding:18px 18px 18px 0;border-top:3px solid var(--teal);display:flex;flex-direction:column;gap:6px;margin-right:12px}
 .stages div:last-child{border-color:var(--terra)}
 .stages b{font-family:var(--display);font-size:17px}
 .stages span{color:var(--muted);font-size:15px}
-.ask{margin-top:36px;background:var(--navy);color:var(--on-dark);border-radius:10px;padding:28px;display:grid;grid-template-columns:1fr 1.4fr;gap:24px}
+.ask{margin-top:36px;background:var(--navy);color:var(--on-dark);border-radius:12px;padding:28px;display:grid;grid-template-columns:1fr 1.4fr;gap:24px}
 .ask h3{font-size:24px;color:#fff}
 .ask ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;color:var(--on-dark-2)}
 .ask>*{min-width:0}
-
 footer{background:var(--navy2);color:var(--on-dark-2);padding-block:36px;font-size:14px}
 footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 
 @media (max-width:900px){
- .hero .in,.two,.gal,.ask{grid-template-columns:1fr}
- .paths,.why{grid-template-columns:1fr}
- .courses,.facts,.stats{grid-template-columns:1fr 1fr}
+ .hero canvas{height:62vh;min-height:380px}
+ .hero .shade{background:linear-gradient(180deg,rgba(20,35,46,0) 50%,rgba(20,35,46,.6) 100%)}
+ .hero .txt{position:static;display:block;background:var(--navy);padding-block:32px}
+ .hud{position:static;width:auto;margin:0 max(20px,env(safe-area-inset-right,0px)) 24px max(20px,env(safe-area-inset-left,0px))}
+ .two,.ask,.daywrap{grid-template-columns:1fr}
+ .paths,.talk{grid-template-columns:1fr}
+ .courses,.facts{grid-template-columns:1fr 1fr}
  .stages{grid-template-columns:1fr 1fr;row-gap:16px}
- .thumbs{flex-direction:row;overflow-x:auto}
- .thumbs button{grid-template-columns:1fr;min-width:120px}
- .thumbs button img{width:100%;height:60px}
  .rows .r{grid-template-columns:44px 1fr}.rows .r span{grid-column:2}
+ .info{position:static;width:auto;margin:10px}
 }
-@media (max-width:480px){.courses,.facts,.stats{grid-template-columns:1fr}}
+@media (max-width:480px){.courses,.facts{grid-template-columns:1fr}.chartbox canvas{height:260px}}
 </style>
 
 </head><body>
 <nav aria-label="Розділи">
   <div class="in">
-    <span class="brand">Академія <span>УЗЕ</span></span>
+    <span class="brand"><i aria-hidden="true"></i>Академія УЗЕ</span>
+    <a href="#day">Доба</a>
     <a href="#paths">Шляхи</a>
     <a href="#webinars">Вебінари</a>
-    <a href="#online">Онлайн О9</a>
+    <a href="#online">Онлайн-курси</a>
     <a href="#offline">Офлайн</a>
     <a href="#lab">Лабораторія</a>
     <a href="#project">Проєкт</a>
   </div>
 </nav>
 
-<header class="hero">
-  <div class="in">
-    <div class="txt">
-      <p class="eyebrow" style="color:#F08A63">Viatec Academy · новий напрям</p>
-      <h1>Системи накопичення енергії: від вебінару до <em>запуску реальної шафи</em></h1>
-      <p class="lead">Вчимо продавати, проєктувати, монтувати і запускати промислові шафи УЗЕ. Спершу безкоштовні вебінари, потім онлайн-курси на Kwiga, а на фінал — день на справжній шафі 100 кВт / 215 кВт·год.</p>
-      <div class="cta">
-        <a class="btn p" href="#paths">Обрати свій шлях</a>
-        <a class="btn s" href="#lab">Подивитись лабораторію</a>
+<header class="hero" id="hero">
+  <canvas id="heroCv" aria-label="Жива 3D-модель лабораторії: минає доба, шафа заряджається і розряджається"></canvas>
+  <div class="shade"></div>
+  <div class="txt">
+    <div class="in">
+      <div class="copy">
+        <p class="eyebrow" style="color:var(--terra-l)">Viatec Academy · напрям «Енергетика»</p>
+        <h1>Навчимо запускати <em>шафи УЗЕ</em>, а не тільки продавати їх</h1>
+        <p class="lead">Онлайн-курси на Kwiga, серія вебінарів і день на справжній шафі 100 кВт / 215 кВт·год. Праворуч — та сама лабораторія: за хвилину минає доба, шафа вночі заряджається, у пік віддає енергію, а в блекаут тримає аудиторію.</p>
+        <div class="cta">
+          <a class="btn p" href="#paths">Обрати свій шлях</a>
+          <a class="btn s" href="#lab">Покрутити лабораторію</a>
+        </div>
       </div>
     </div>
-    <figure>
-      <img src="img/1-overview.jpg" alt="3D-модель лабораторії: шафа УЗЕ за огорожею, траншея і аудиторія">
-      <figcaption>3D-модель лабораторії УЗЕ</figcaption>
-    </figure>
   </div>
-  <div class="stats">
-    <div><b>6</b><span>вебінарів у серії</span></div>
-    <div><b>4</b><span>онлайн-курси О9</span></div>
-    <div><b>1 день</b><span>офлайн на реальній шафі</span></div>
-    <div><b>12</b><span>людей у групі, макс.</span></div>
+  <div class="hud" aria-live="polite">
+    <div class="top"><span class="clock" id="hClock">00:00</span><span class="mode" id="hMode">Заряд</span></div>
+    <div class="row"><span>Заряд шафи</span><b id="hSoc">50%</b></div>
+    <div class="soc"><i id="hSocBar"></i></div>
+    <div class="row"><span>Потік</span><b id="hFlow">0 кВт</b></div>
+    <p class="say" id="hSay">Вночі енергія дешева, шафа набирає заряд.</p>
+    <button id="hPause">Пауза</button>
   </div>
 </header>
 
-<section class="band" aria-labelledby="why-h">
+<section class="band" id="day" aria-labelledby="day-h">
   <div class="in">
     <div class="head">
-      <p class="eyebrow">Чому зараз</p>
-      <h2 id="why-h">Клієнти питають про шафи УЗЕ. Ринку бракує людей, які вміють на це відповісти.</h2>
+      <p class="eyebrow">Навіщо підприємству шафа</p>
+      <h2 id="day-h">Одна доба заводу. Подивіться, що робить шафа.</h2>
+      <p class="lead">Оберіть сценарій. Лінія навантаження — те, що споживає завод. Теракотова площа — що реально йде з мережі. Різницю закриває шафа. Цифри — приклад, на курсі рахуємо свої.</p>
     </div>
-    <div class="why">
-      <div><h3>Блекаути</h3><p>Підприємствам потрібен резерв без генератора і без зупинки виробництва.</p></div>
-      <div><h3>Тарифи</h3><p>Заряд уночі, розряд у пік. Шафа заробляє на різниці цін.</p></div>
-      <div><h3>Договірна потужність</h3><p>Шафа зрізає піки, і підприємство не платить за перевищення.</p></div>
+    <div class="tabs" role="group" aria-label="Сценарій">
+      <button data-s="none" aria-pressed="false">Без шафи</button>
+      <button data-s="arb" aria-pressed="true">Нічний тариф</button>
+      <button data-s="peak" aria-pressed="false">Зрізаємо піки</button>
+      <button data-s="bo" aria-pressed="false">Блекаут о 14:00</button>
+    </div>
+    <div class="daywrap">
+      <div class="chartbox">
+        <canvas id="dayCv" aria-label="Графік доби: навантаження, мережа, заряд шафи"></canvas>
+        <div class="legend"><span><i style="background:#1F3B4D"></i>Навантаження заводу</span><span><i style="background:#DA532C"></i>З мережі</span><span><i style="background:#5895A7"></i>Заряд шафи, %</span><span><i style="background:#E9EEF0;height:10px"></i>Нічний тариф</span></div>
+      </div>
+      <div class="story">
+        <h3 id="sT">Нічний тариф</h3>
+        <p id="sP">Шафа заряджається вночі по дешевому тарифу, а вдень віддає енергію. Завод купує менше дорогої денної енергії.</p>
+        <div class="now">
+          <div><b id="nH">00:00</b><span>година</span></div>
+          <div><b id="nL">0 кВт</b><span>завод</span></div>
+          <div><b id="nG">0 кВт</b><span>мережа</span></div>
+          <div><b id="nS">0%</b><span>шафа</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="talk">
+      <div><b>Клієнт питає: «Коли окупиться?»</b><span>Після курсу «Розрахунок і проєкт» ви рахуєте це разом з ним у симуляторі, на його тарифі.</span></div>
+      <div><b>Енергетик питає: «А пуск компресора?»</b><span>Після курсу «EMS і режими» ви показуєте, як EMS зрізає пік.</span></div>
+      <div><b>Директор питає: «А блекаут?»</b><span>Після офлайн-дня ви це вже робили руками на реальній шафі.</span></div>
     </div>
   </div>
 </section>
@@ -218,14 +281,14 @@ footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
   <div class="in">
     <div class="head">
       <p class="eyebrow">Три шляхи</p>
-      <h2 id="paths-h">Обирайте рівень. Кожен веде на наступний.</h2>
+      <h2 id="paths-h">Починайте з будь-якого. Кожен веде на наступний.</h2>
     </div>
     <div class="paths">
-      <a class="path" href="#webinars"><span class="num">01</span><h3>Серія вебінарів</h3><p>Шість тем по 60 хвилин: від «що це за шафа» до трансляції з лабораторії.</p><span class="meta">безкоштовно · онлайн · без ліміту</span></a>
-      <a class="path" href="#online"><span class="num">02</span><h3>Онлайн-серія О9</h3><p>Чотири курси на Kwiga з лабораторними в симуляторі, тестами і сертифікатом.</p><span class="meta">самостійно · у своєму темпі</span></a>
-      <a class="path hot" href="#offline"><span class="num">03</span><h3>Офлайн + лабораторія</h3><p>День на реальній шафі в НУБіП або КАІ. Пуск, режими, блекаут, аварії.</p><span class="meta">до 12 людей · після О9</span></a>
+      <a class="path" href="#webinars"><span class="num">01</span><h3>Серія вебінарів</h3><p>Шість зустрічей по годині. Від «що там усередині шафи» до трансляції з лабораторії.</p><span class="meta">безкоштовно · онлайн · без ліміту</span><span class="bar"></span></a>
+      <a class="path" href="#online"><span class="num">02</span><h3>Онлайн-курси</h3><p>Чотири курси на Kwiga. Лабораторні в симуляторі, тести, сертифікат.</p><span class="meta">самостійно · у своєму темпі</span><span class="bar"></span></a>
+      <a class="path hot" href="#offline"><span class="num">03</span><h3>Офлайн + лабораторія</h3><p>Один день на реальній шафі в НУБіП або КАІ. Пуск, режими, блекаут, аварії.</p><span class="meta">до 12 людей · після онлайн-курсів</span><span class="bar"></span></a>
     </div>
-    <p class="flow">Вебінар <i>→</i> О9.1–О9.4 <i>→</i> тест допуску <i>→</i> офлайн-день <i>→</i> сертифікат Viatec</p>
+    <div class="route" aria-label="Маршрут навчання"><span>Вебінар</span><i></i><span>3 онлайн-курси</span><i></i><span>Курс безпеки · допуск</span><i></i><span>Офлайн-день</span><i></i><span>Сертифікат Viatec</span></div>
   </div>
 </section>
 
@@ -234,17 +297,17 @@ footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     <div class="head">
       <p class="eyebrow">Шлях 01</p>
       <h2 id="web-h">Серія вебінарів «УЗЕ для бізнесу»</h2>
-      <p class="lead">Раз на два тижні, 60 хвилин. Запис іде в Kwiga як вхід у курс. Кожен вебінар закінчується посиланням на відповідний модуль О9.</p>
+      <p class="lead">Раз на два тижні, 60 хвилин, з питаннями в кінці. Запис лягає в Kwiga, а кожна тема веде у свій онлайн-курс.</p>
     </div>
     <div class="rows">
-      <div class="r"><span class="n">1</span><b>Що таке УЗЕ і навіщо бізнесу</b><span>Шафа зсередини: інвертор, батарея LFP, BMS, EMS</span></div>
-      <div class="r"><span class="n">2</span><b>Як порахувати окупність</b><span>Наживо в симуляторі «Доба підприємства»</span></div>
-      <div class="r"><span class="n">3</span><b>Пік-шейвінг і договірна потужність</b><span>Як шафа зрізає пік від пуску двигуна</span></div>
+      <div class="r"><span class="n">1</span><b>Що таке УЗЕ і навіщо бізнесу</b><span>Відкриваємо шафу: інвертор, батарея LFP, BMS, EMS</span></div>
+      <div class="r"><span class="n">2</span><b>Як порахувати окупність</b><span>Наживо в симуляторі, на тарифі слухача</span></div>
+      <div class="r"><span class="n">3</span><b>Пік-шейвінг і договірна потужність</b><span>Як шафа ловить пуск двигуна</span></div>
       <div class="r"><span class="n">4</span><b>Блекаут і резерв</b><span>Острівний режим, ATS, що відключиться, а що ні</span></div>
-      <div class="r"><span class="n">5</span><b>Як вибрати шафу</b><span>Виробники, паралельне з'єднання, нарощування системи</span></div>
-      <div class="r"><span class="n">6</span><b>Безпека і пусконалагодження</b><span>Трансляція з лабораторії, біля реальної шафи</span></div>
+      <div class="r"><span class="n">5</span><b>Як вибрати шафу</b><span>Виробники, кілька шаф паралельно, нарощування</span></div>
+      <div class="r"><span class="n">6</span><b>Безпека і пусконалагодження</b><span>Пряма трансляція біля реальної шафи</span></div>
     </div>
-    <p class="note">Для: продажників Viatec і партнерів, енергетиків підприємств, усіх, хто вперше чує про УЗЕ.</p>
+    <p class="note">Для продажників Viatec і партнерів, енергетиків підприємств і всіх, хто вперше чує про УЗЕ.</p>
   </div>
 </section>
 
@@ -252,17 +315,17 @@ footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
   <div class="in">
     <div class="head">
       <p class="eyebrow">Шлях 02</p>
-      <h2 id="on-h">Онлайн-серія О9 на Kwiga</h2>
-      <p class="lead">Формат як у О1 «Старт у сонячній енергетиці»: уроки, вбудовані лабораторні, тест і сертифікат у Kwiga. О9.4 відкриває допуск на офлайн.</p>
+      <h2 id="on-h">Чотири онлайн-курси на Kwiga</h2>
+      <p class="lead">Як наш курс «Старт у сонячній енергетиці»: уроки, вбудовані лабораторні, тест і сертифікат. Тест курсу «Монтаж і безпека» — це допуск на офлайн.</p>
     </div>
     <div class="courses">
-      <div class="course"><span class="code">О9.1</span><h3>Основи УЗЕ</h3><p>Будова шафи, LFP, BMS, термінологія, виробники.</p></div>
-      <div class="course"><span class="code">О9.2</span><h3>EMS і режими</h3><p>Арбітраж, пік-шейвінг, резерв. Лабораторні в симуляторі.</p></div>
-      <div class="course"><span class="code">О9.3</span><h3>Розрахунок і проєкт</h3><p>Потужність, ємність, ввід, окупність, кілька шаф паралельно.</p></div>
-      <div class="course key"><span class="code">О9.4 · допуск</span><h3>Монтаж і безпека</h3><p>Майданчик, кабелі, пожежна безпека, протокол пуску.</p></div>
+      <div class="course"><span class="code">Курс 1</span><h3>Основи УЗЕ</h3><p>Будова шафи, LFP, BMS, терміни, виробники.</p></div>
+      <div class="course"><span class="code">Курс 2</span><h3>EMS і режими</h3><p>Нічний тариф, піки, резерв. Лабораторні в симуляторі.</p></div>
+      <div class="course"><span class="code">Курс 3</span><h3>Розрахунок і проєкт</h3><p>Потужність, ємність, ввід, окупність, паралель.</p></div>
+      <div class="course key"><span class="code">Курс 4 · допуск на офлайн</span><h3>Монтаж і безпека</h3><p>Майданчик, кабелі, пожежна безпека, протокол пуску.</p></div>
     </div>
     <div class="sim">
-      <p><b>Симулятор уже є.</b> «Доба підприємства: шафа УЗЕ» рахує добу погодинно: тариф, навантаження, блекаут, кількість шаф і окупність.</p>
+      <p><b>Симулятор уже працює.</b> «Доба підприємства: шафа УЗЕ» рахує погодинно: тариф, навантаження, блекаут, кількість шаф і окупність.</p>
       <a href="../uze/" target="_blank" rel="noopener">Відкрити симулятор →</a>
     </div>
   </div>
@@ -273,7 +336,7 @@ footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     <div class="head">
       <p class="eyebrow">Шлях 03</p>
       <h2 id="off-h">Офлайн-день на реальній шафі</h2>
-      <p class="lead">Тільки після О9. Три станції, ротація підгрупами по 4, двоє тренерів. З одним тренером — до 8 людей без вуличної станції.</p>
+      <p class="lead">Тільки після онлайн-курсів. Три станції, підгрупи по 4, двоє тренерів. З одним тренером — до 8 людей без вуличної станції.</p>
     </div>
     <div class="two">
       <div>
@@ -281,9 +344,9 @@ footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
         <div class="day">
           <div><span class="t">09:30</span><span>Інструктаж з охорони праці, тест допуску</span></div>
           <div><span class="t">10:00</span><span>Огляд шафи надворі підгрупами по 4, протокол пуску</span></div>
-          <div><span class="t">10:45</span><span>Заняття 1: перший пуск, ліміт мережі, арбітраж</span></div>
-          <div><span class="t">12:15</span><span>Обід. Шафа заряджається за розкладом групи</span></div>
-          <div><span class="t">13:00</span><span>Заняття 2: пік-шейвінг з двигуном, блекаут, аварії</span></div>
+          <div><span class="t">10:45</span><span>Заняття 1: перший пуск, ліміт мережі, нічний тариф</span></div>
+          <div><span class="t">12:15</span><span>Обід. Шафа заряджається за розкладом, який склала група</span></div>
+          <div><span class="t">13:00</span><span>Заняття 2: піки з двигуном, блекаут, аварії</span></div>
           <div><span class="t">14:45</span><span>Розбір логів EMS, кейс, сертифікат Viatec</span></div>
         </div>
       </div>
@@ -292,11 +355,11 @@ footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
         <ol class="works">
           <li>Пуск шафи за протоколом<span>Огляд, ізоляція, BMS, порядок автоматів</span></li>
           <li>Ліміт мережі<span>Виставити 30 кВт і перевірити по лічильнику</span></li>
-          <li>Арбітраж за тарифом<span>Розклад заряду і розряду, економія за добу</span></li>
-          <li>Пік-шейвінг<span>Три ступені навантаження + пуск двигуна</span></li>
-          <li>Блекаут<span>KM1 розімкнено: перехід в острів, час, що відключилось</span></li>
-          <li>Аварії<span>Перегрів, низький SOC, втрата зв'язку з EMS</span></li>
-          <li>Логи і звіт клієнту<span>Вивантажити дані, скласти звіт за день</span></li>
+          <li>Нічний тариф<span>Розклад заряду і розряду, економія за добу</span></li>
+          <li>Зрізаємо піки<span>Три ступені навантаження + пуск двигуна</span></li>
+          <li>Блекаут<span>Мережу вимкнено: перехід в острів, час, що відключилось</span></li>
+          <li>Аварії<span>Перегрів, низький заряд, втрата зв'язку з EMS</span></li>
+          <li>Звіт клієнту<span>Вивантажити логи, скласти звіт за день</span></li>
         </ol>
       </div>
     </div>
@@ -306,26 +369,33 @@ footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 <section class="band mist" id="lab" aria-labelledby="lab-h">
   <div class="in">
     <div class="head">
-      <p class="eyebrow">Лабораторія</p>
-      <h2 id="lab-h">Як вона виглядає з різних боків</h2>
-      <p class="lead">Шафа Deye MS-G215 надворі за огорожею, кабель у траншеї, аудиторія 8 × 6 м зі щитом, навантаженням і робочими місцями. Оберіть ракурс.</p>
+      <p class="eyebrow">Лабораторія · 3D</p>
+      <h2 id="lab-h">Покрутіть її самі</h2>
+      <p class="lead">Мишкою обертати, колесом наближати. Натискайте на підписи. Кнопка «Блекаут» вимикає мережу корпусу.</p>
     </div>
-    <div class="gal">
-      <figure class="stage">
-        <img id="gImg" src="img/1-overview.jpg" alt="Загальний вигляд лабораторії">
-        <figcaption><b id="gT">Загальний вигляд</b><span id="gP">Майданчик із шафою зліва, траншея, корпус з аудиторією справа.</span></figcaption>
-      </figure>
-      <div class="thumbs" id="thumbs" role="group" aria-label="Ракурси"></div>
-    </div>
-    <div class="links">
-      <a href="../uze-3d/" target="_blank" rel="noopener">Покрутити 3D-модель →</a>
-      <a href="../uze-lab/" target="_blank" rel="noopener">План, схема і перелік обладнання →</a>
+    <div class="lab3d" id="labBox">
+      <canvas id="labCv" aria-label="3D-модель лабораторії з керуванням"></canvas>
+      <div id="labLbl"></div>
+      <div class="bar3" role="toolbar" aria-label="Ракурс">
+        <button data-v="all" aria-pressed="true">Загальний</button>
+        <button data-v="cab" aria-pressed="false">Шафа надворі</button>
+        <button data-v="room" aria-pressed="false">Аудиторія</button>
+        <button data-v="top" aria-pressed="false">Зверху</button>
+        <span class="sp"></span>
+        <button id="labPeople" aria-pressed="true">Люди</button>
+        <button id="labBo" class="bo" aria-pressed="false">Блекаут</button>
+      </div>
+      <div class="info" id="labInfo" hidden><h3 id="iT"></h3><p id="iP"></p><dl id="iD"></dl></div>
     </div>
     <div class="facts">
-      <div><b>100 / 215</b><span>кВт / кВт·год, шафа MS-G215</span></div>
+      <div><b>100 / 215</b><span>кВт / кВт·год, шафа Deye MS-G215</span></div>
       <div><b>30 кВт</b><span>ліміт в EMS для навчання</span></div>
-      <div><b>63 А</b><span>ввід 3ф (під 100 кВт — 160 А)</span></div>
+      <div><b>12 + 2</b><span>студентів і тренерів, макс.</span></div>
       <div><b>≈43 кВт·год</b><span>≈400–500 грн за заняття</span></div>
+    </div>
+    <div class="links">
+      <a href="../uze-3d/" target="_blank" rel="noopener">3D на весь екран →</a>
+      <a href="../uze-lab/" target="_blank" rel="noopener">План, схема і перелік обладнання →</a>
     </div>
   </div>
 </section>
@@ -334,8 +404,8 @@ footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
   <div class="in">
     <div class="head">
       <p class="eyebrow">Лабораторія як проєкт</p>
-      <h2 id="pr-h">Бюджет, фінансування і етапи</h2>
-      <p class="lead">Цифри орієнтовні. Шафа — найбільша стаття, тому головне завдання проєкту — домовитися з виробником.</p>
+      <h2 id="pr-h">Скільки коштує і хто що дає</h2>
+      <p class="lead">Цифри орієнтовні. Найдорожче — шафа, тому головне завдання проєкту — домовитися з виробником.</p>
     </div>
     <div class="two">
       <div class="tbl">
@@ -360,24 +430,22 @@ footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
         <div class="rows">
           <div class="r"><span class="n">Deye</span><b>Демо-шафа</b><span>Безкоштовно або зі співфінансуванням. Натомість — навчені монтажники і продажі.</span></div>
           <div class="r"><span class="n">ВНЗ</span><b>Майданчик і ввід</b><span>НУБіП або КАІ: місце, лінія 63 А, аудиторія.</span></div>
-          <div class="r"><span class="n">Viatec</span><b>Інфраструктура і програма</b><span>Щит, навантаження, курси О9, тренери.</span></div>
+          <div class="r"><span class="n">Viatec</span><b>Інфраструктура і програма</b><span>Щит, навантаження, онлайн-курси, тренери.</span></div>
           <div class="r"><span class="n">Клієнти</span><b>Платні офлайн-дні</b><span>Окупають електроенергію і роботу тренерів.</span></div>
         </div>
       </div>
     </div>
-
     <h3 class="sub" style="margin-top:48px">Етапи</h3>
     <div class="stages">
       <div><b>1. Вебінари</b><span>Запуск серії, перші записи в Kwiga</span></div>
-      <div><b>2. Онлайн О9</b><span>Курси О9.1–О9.4 і лабораторні в симуляторі</span></div>
+      <div><b>2. Онлайн-курси</b><span>Чотири курси на Kwiga і лабораторні в симуляторі</span></div>
       <div><b>3. Домовленості</b><span>Виробник шафи, університет, проєкт електрика</span></div>
       <div><b>4. Лабораторія</b><span>Монтаж, пусконалагодження, перший офлайн-день</span></div>
     </div>
-
     <div class="ask">
       <h3>Що треба з'ясувати, щоб рухатися далі</h3>
       <ol>
-        <li>Скільки вільної потужності на вводі корпусу в НУБіП або КАІ — головний енергетик університету.</li>
+        <li>Скільки вільної потужності на вводі корпусу в НУБіП або КАІ — питання до головного енергетика.</li>
         <li>Чи готовий Deye або інший виробник дати демо-шафу.</li>
         <li>Де поставити майданчик 6 × 6 м і як далеко він від корпусу.</li>
       </ol>
@@ -392,22 +460,274 @@ footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
   </div>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script>
+const REDUCE=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ================= LIVE DAY CHART ================= */
 (function(){
-  const V=[
-    ['1-overview','Загальний вигляд','Майданчик із шафою зліва, траншея, корпус з аудиторією справа.'],
-    ['2-cabinet','Шафа надворі','Огорожа 6 × 6 м, бетон 3 × 3 м, зона обслуговування. Підгрупа 4 + тренер.'],
-    ['3-room','Аудиторія','Щит, навантаження 30 кВт, двигун, екран EMS, дві станції по 4 людини.'],
-    ['4-top','Зверху','План: шафа, траншея ≈15–25 м, ВРЩ, аудиторія 8 × 6 м.'],
-    ['5-room-side','Аудиторія збоку','Інший ракурс: щит і навантаження біля стіни, станції в центрі.'],
-    ['7-blackout','Режим «Блекаут»','KM1 розімкнено: шафа переходить в острів, на екрані EMS «ОСТРІВ».']
-  ];
-  const T=document.getElementById('thumbs'),I=document.getElementById('gImg'),GT=document.getElementById('gT'),GP=document.getElementById('gP');
-  V.forEach((v,i)=>{const b=document.createElement('button');b.setAttribute('aria-pressed',i===0);
-    b.innerHTML='<img src="img/'+v[0]+'.jpg" alt=""><span>'+v[1]+'</span>';
-    b.onclick=()=>{I.src='img/'+v[0]+'.jpg';I.alt=v[1];GT.textContent=v[1];GP.textContent=v[2];
-      T.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b))};
-    T.appendChild(b)});
+  const cv=document.getElementById('dayCv'),ctx=cv.getContext('2d');
+  // illustrative plant load, kW, 48 half-hours
+  const L=[];for(let i=0;i<48;i++){const h=i/2;let v=38+4*Math.sin(h/3);
+    if(h>=7.5&&h<18.5)v=72+6*Math.sin(h*1.3);
+    if(h>=8.5&&h<9.5)v+=24; if(h>=13.5&&h<14.5)v+=20; if(h>=17&&h<18)v+=12;
+    if(h>=18.5&&h<22)v=50; L.push(Math.round(v))}
+  const night=h=>h<7||h>=23;
+  function run(s){const G=[],S=[];let soc=s==='none'?0:30;const cap=215,P=100;
+    for(let i=0;i<48;i++){const h=i/2;let g=L[i],b=0;
+      if(s==='arb'){if(night(h)&&soc<95)b=-Math.min(60,(95-soc)/100*cap*2);else if(!night(h)&&h>=8&&soc>15)b=Math.min(L[i]-25,(soc-15)/100*cap*2,P);}
+      if(s==='peak'){const lim=70;if(L[i]>lim&&soc>10)b=Math.min(L[i]-lim,P);else if(L[i]<lim-15&&soc<90)b=-Math.min(25,lim-15-L[i]+10);}
+      if(s==='bo'){if(night(h)&&soc<95)b=-Math.min(50,(95-soc)/100*cap*2);
+        if(h>=14&&h<16.5){b=Math.min(L[i],P);} }
+      b=Math.max(-P,Math.min(P,b));soc=Math.max(0,Math.min(100,soc-b*0.5/cap*100));
+      g=(s==='bo'&&h>=14&&h<16.5)?0:L[i]-b;G.push(Math.max(0,Math.round(g)));S.push(Math.round(soc))}
+    return{G,S}}
+  const TXT={none:['Без шафи','Завод бере з мережі все, що споживає. Ранковий пуск і обідній пік видно на графіку, за них доплачують за перевищення потужності.'],
+    arb:['Нічний тариф','Шафа заряджається вночі по дешевому тарифу, а вдень віддає енергію. Завод купує менше дорогої денної енергії.'],
+    peak:['Зрізаємо піки','Мережі дозволено не більше 70 кВт. Усе, що вище, шафа закриває сама. Договірну потужність можна зменшити.'],
+    bo:['Блекаут о 14:00','О 14:00 мережа зникає. Шафа переходить в острів і тримає завод 2,5 години, поки є заряд.']};
+  let sc='arb',D=run(sc),cur=0,last=0,shown={G:D.G.slice(),S:D.S.slice()};
+  document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{sc=b.dataset.s;D=run(sc);
+    document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+    document.getElementById('sT').textContent=TXT[sc][0];document.getElementById('sP').textContent=TXT[sc][1];});
+  function css(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+  function size(){const r=cv.getBoundingClientRect(),d=Math.min(devicePixelRatio,2);cv.width=r.width*d;cv.height=r.height*d;ctx.setTransform(d,0,0,d,0,0)}
+  new ResizeObserver(size).observe(cv);size();
+  let visible=false;new IntersectionObserver(e=>visible=e[0].isIntersecting).observe(cv);
+  function draw(t){requestAnimationFrame(draw);if(!visible&&last)return;
+    const dt=Math.min(.05,(t-last)/1000||0);last=t;
+    // morph toward target
+    for(let i=0;i<48;i++){shown.G[i]+=(D.G[i]-shown.G[i])*.12;shown.S[i]+=(D.S[i]-shown.S[i])*.12}
+    if(!REDUCE)cur=(cur+dt*3)%48;else cur=28;
+    const W=cv.clientWidth,H=cv.clientHeight,l=44,r=40,tp=26,b=30,w=W-l-r,h=H-tp-b,mx=140;
+    const X=i=>l+i/47*w,Y=v=>tp+h-v/mx*h,YS=v=>tp+h-v/100*h;
+    const ink=css('--ink')||'#1A2E3B',mut=css('--muted')||'#51697A',line=css('--line')||'#C6D5DC';
+    ctx.clearRect(0,0,W,H);
+    // night bands
+    ctx.fillStyle=document.documentElement.matches(':root')&&matchMedia('(prefers-color-scheme: dark)').matches&&!document.documentElement.dataset.theme?'rgba(255,255,255,.05)':'rgba(31,59,77,.06)';
+    if(document.documentElement.dataset.theme==='dark')ctx.fillStyle='rgba(255,255,255,.05)';
+    ctx.fillRect(X(0),tp,X(14)-X(0),h);ctx.fillRect(X(46),tp,X(47)-X(46),h);
+    // grid
+    ctx.strokeStyle=line;ctx.lineWidth=1;ctx.fillStyle=mut;ctx.font='12px IBM Plex Mono, monospace';
+    [0,35,70,105,140].forEach(v=>{ctx.beginPath();ctx.moveTo(l,Y(v));ctx.lineTo(l+w,Y(v));ctx.stroke();ctx.textAlign='right';ctx.fillText(v,l-6,Y(v)+4)});
+    ctx.textAlign='left';ctx.fillText('кВт',l-30,12);ctx.textAlign='right';ctx.fillText('%',W-8,12);
+    [0,25,50,75,100].forEach(v=>{ctx.textAlign='left';ctx.fillText(v,l+w+6,YS(v)+4)});
+    ctx.textAlign='center';[0,6,12,18,24].forEach(hh=>{const i=Math.min(47,hh*2);ctx.fillText(String(hh).padStart(2,'0')+':00',X(i),H-8)});
+    // 70 limit for peak
+    if(sc==='peak'){ctx.setLineDash([6,5]);ctx.strokeStyle='#DA532C';ctx.beginPath();ctx.moveTo(l,Y(70));ctx.lineTo(l+w,Y(70));ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#DA532C';ctx.textAlign='left';ctx.fillText('ліміт 70 кВт',l+6,Y(70)-6)}
+    if(sc==='bo'){ctx.fillStyle='rgba(192,57,43,.12)';ctx.fillRect(X(28),tp,X(33)-X(28),h);ctx.fillStyle='#C0392B';ctx.textAlign='center';ctx.fillText('блекаут',(X(28)+X(33))/2,tp+14)}
+    // grid area
+    ctx.beginPath();ctx.moveTo(X(0),Y(0));shown.G.forEach((v,i)=>ctx.lineTo(X(i),Y(v)));ctx.lineTo(X(47),Y(0));ctx.closePath();
+    ctx.fillStyle='rgba(218,83,44,.28)';ctx.fill();
+    ctx.beginPath();shown.G.forEach((v,i)=>i?ctx.lineTo(X(i),Y(v)):ctx.moveTo(X(i),Y(v)));ctx.strokeStyle='#DA532C';ctx.lineWidth=2;ctx.stroke();
+    // load line
+    ctx.beginPath();L.forEach((v,i)=>i?ctx.lineTo(X(i),Y(v)):ctx.moveTo(X(i),Y(v)));ctx.strokeStyle=ink;ctx.lineWidth=2.5;ctx.stroke();
+    // soc
+    if(sc!=='none'){ctx.beginPath();shown.S.forEach((v,i)=>i?ctx.lineTo(X(i),YS(v)):ctx.moveTo(X(i),YS(v)));ctx.strokeStyle='#5895A7';ctx.lineWidth=2.5;ctx.setLineDash([2,0]);ctx.stroke()}
+    // cursor
+    const ci=Math.floor(cur),x=X(cur);ctx.strokeStyle=mut;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,tp);ctx.lineTo(x,tp+h);ctx.stroke();
+    const dot=(y,c)=>{ctx.beginPath();ctx.arc(x,y,5,0,7);ctx.fillStyle=c;ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke()};
+    dot(Y(L[ci]),ink);dot(Y(shown.G[ci]),'#DA532C');if(sc!=='none')dot(YS(shown.S[ci]),'#5895A7');
+    const hh=Math.floor(ci/2),mm=ci%2?'30':'00';
+    document.getElementById('nH').textContent=String(hh).padStart(2,'0')+':'+mm;
+    document.getElementById('nL').textContent=L[ci]+' кВт';
+    document.getElementById('nG').textContent=Math.round(D.G[ci])+' кВт';
+    document.getElementById('nS').textContent=sc==='none'?'—':Math.round(D.S[ci])+'%';
+  }
+  requestAnimationFrame(draw);
+})();
+
+/* ================= 3D LAB FACTORY ================= */
+function makeLab(cv,opt){
+  const R=new THREE.WebGLRenderer({canvas:cv,antialias:true});
+  R.setPixelRatio(Math.min(devicePixelRatio,opt.hero?1.75:2));R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;
+  const S=new THREE.Scene();const DAY=new THREE.Color(0xcfdde4),NIGHT=new THREE.Color(0x14232e);
+  S.background=DAY.clone();S.fog=new THREE.Fog(0xcfdde4,48,95);
+  const cam=new THREE.PerspectiveCamera(opt.hero?36:42,1,0.1,200);
+  const OC=new THREE.OrbitControls(cam,cv);OC.enableDamping=true;OC.maxPolarAngle=Math.PI*0.49;OC.minDistance=4;OC.maxDistance=60;
+  if(opt.hero){OC.enableZoom=false;OC.enablePan=false;OC.autoRotate=!REDUCE;OC.autoRotateSpeed=0.35;if(matchMedia('(pointer:coarse)').matches)OC.enabled=false}
+  const C={teal:0x5895A7,terra:0xDA532C,grass:0xB9D3A8,concrete:0xC9CFD2,floor:0xE9EEF0,wall:0xF4F7F8,yellow:0xF2C230,wood:0xC8B79A};
+  const M=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.75,metalness:.05},o||{}));
+  function box(w,h,d,c,x,y,z,o){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),c.isMaterial?c:M(c,o));m.position.set(x,y+h/2,z);m.castShadow=true;m.receiveShadow=true;S.add(m);return m}
+  function cyl(r,h,c,x,y,z){const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,16),M(c));m.position.set(x,y+h/2,z);m.castShadow=true;S.add(m);return m}
+  const hemi=new THREE.HemisphereLight(0xffffff,0x9fb3a0,.75);S.add(hemi);
+  const sun=new THREE.DirectionalLight(0xfff4e0,.85);sun.position.set(-14,22,14);sun.castShadow=true;
+  sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-25,right:20,top:15,bottom:-15,near:1,far:70});S.add(sun);S.add(sun.target);sun.target.position.set(-4,0,0);
+  const g=new THREE.Mesh(new THREE.PlaneGeometry(140,90),M(C.grass,{roughness:1}));g.rotation.x=-Math.PI/2;g.receiveShadow=true;S.add(g);
+  box(1.4,.02,12,C.concrete,-12,0,9);
+  // trees for life
+  [[-24,-8],[-22,7],[-6,-9],[12,-7],[13,6],[-26,0],[3,10]].forEach(([x,z],i)=>{cyl(.15,1.6,0x6b5a45,x,0,z);
+    const c=new THREE.Mesh(new THREE.SphereGeometry(1.1+(i%3)*.25,14,10),M(0x6f9e6a,{roughness:1}));c.position.set(x,2.3+(i%2)*.3,z);c.castShadow=true;S.add(c)});
+  // outdoor
+  const FX=-14,FZ=0;box(3,.2,3,C.concrete,FX,0,FZ,{roughness:.95});
+  const meshMat=new THREE.MeshStandardMaterial({color:0x5c6b73,transparent:true,opacity:.28,side:THREE.DoubleSide});
+  const postMat=M(0x5c6b73,{metalness:.5});
+  function fence(x1,z1,x2,z2,gap){const L=Math.hypot(x2-x1,z2-z1),n=Math.round(L/1.5);
+    for(let i=0;i<=n;i++){const t=i/n;box(.06,2,.06,postMat,x1+(x2-x1)*t,0,z1+(z2-z1)*t)}
+    (gap?[[0,(L-1)/2/L],[(L+1)/2/L,1]]:[[0,1]]).forEach(([a,b])=>{const p=new THREE.Mesh(new THREE.PlaneGeometry(L*(b-a),1.9),meshMat);
+      p.position.set(x1+(x2-x1)*(a+b)/2,1.05,z1+(z2-z1)*(a+b)/2);p.rotation.y=-Math.atan2(z2-z1,x2-x1);S.add(p)})}
+  fence(FX-3,FZ-3,FX+3,FZ-3);fence(FX+3,FZ-3,FX+3,FZ+3);fence(FX+3,FZ+3,FX-3,FZ+3,true);fence(FX-3,FZ+3,FX-3,FZ-3);
+  const cab=new THREE.Group();S.add(cab);cab.position.set(FX,.2,FZ-.3);
+  const body=new THREE.Mesh(new THREE.BoxGeometry(1.7,2.3,1.4),M(0xEEF2F4,{roughness:.5}));body.position.y=1.15;body.castShadow=true;cab.add(body);
+  const band=new THREE.Mesh(new THREE.BoxGeometry(1.72,.35,1.42),M(C.teal));band.position.y=1.85;cab.add(band);
+  [-0.42,0.42].forEach(x=>{const d=new THREE.Mesh(new THREE.BoxGeometry(.8,2.1,.02),M(0xE2E8EB,{roughness:.45}));d.position.set(x,1.1,.71);cab.add(d);
+    const hd=new THREE.Mesh(new THREE.BoxGeometry(.03,.25,.04),M(0x444444));hd.position.set(x+(x<0?.32:-.32),1.1,.74);cab.add(hd)});
+  for(let i=0;i<5;i++){const v=new THREE.Mesh(new THREE.BoxGeometry(.02,.05,1),M(0x7b8a92));v.position.set(.86,.4+i*.1,0);cab.add(v)}
+  const led=new THREE.Mesh(new THREE.SphereGeometry(.06,12,8),new THREE.MeshBasicMaterial({color:0x3fd27a}));led.position.set(.7,1.6,.73);cab.add(led);
+  const disp=new THREE.Mesh(new THREE.PlaneGeometry(.3,.2),new THREE.MeshBasicMaterial({color:0x2b7a8f}));disp.position.set(.42,1.5,.721);cab.add(disp);
+  const sz=new THREE.Mesh(new THREE.PlaneGeometry(2.2,1.1),new THREE.MeshBasicMaterial({color:C.yellow,transparent:true,opacity:.35}));sz.rotation.x=-Math.PI/2;sz.position.set(FX,.21,FZ+1);S.add(sz);
+  cyl(.1,.55,0xc4302b,FX-2.5,0,FZ+2.4);cyl(.05,3,0x5c6b73,FX+3,0,FZ-3);box(.25,.15,.15,0x333333,FX+2.9,3,FZ-2.9);
+  const lamp=new THREE.PointLight(0xffe2b0,0,9);lamp.position.set(FX+2.6,2.9,FZ-2.6);S.add(lamp);
+  // trench + cable
+  box(10.2,.04,.5,0x8b6b4e,-5.9,0,-.3);
+  const cable=new THREE.Mesh(new THREE.CylinderGeometry(.06,.06,10.2,8),M(C.terra));cable.rotation.z=Math.PI/2;cable.position.set(-5.9,.08,-.3);S.add(cable);
+  // building
+  box(9.2,.1,7.4,C.floor,4,0,0);const wallM=M(C.wall,{roughness:.9});
+  box(8.4,3,.2,wallM,4,0,-3.1);box(.2,3,6.4,wallM,-.1,0,0);box(.2,3,6.4,wallM,8.1,0,0);
+  box(5.6,1,.2,wallM,2.8,0,3.1);box(1.6,1,.2,wallM,7.3,0,3.1);
+  const winM=new THREE.MeshStandardMaterial({color:0x9cc3d2,emissive:0xffd9a0,emissiveIntensity:0});
+  [-1.5,1.5].forEach(z=>{const w=new THREE.Mesh(new THREE.PlaneGeometry(1.4,1.1),winM);w.position.set(7.99,1.8,z);w.rotation.y=-Math.PI/2;S.add(w)});
+  box(1.2,.08,7.4,0xd7dde0,-.8,0,0);box(.6,1.8,.35,0xb8c2c7,-.6,.08,-1.8);
+  const c2=new THREE.Mesh(new THREE.CylinderGeometry(.05,.05,1.6,8),M(C.terra));c2.position.set(-.6,.9,-1.25);S.add(c2);
+  box(.3,1.8,1.2,0xE3ECF0,.15,.3,-1);
+  for(let i=0;i<6;i++)box(.04,.18,.12,i==1?C.terra:0xffffff,.33,1.45,-1.45+i*.18);
+  const km=new THREE.Mesh(new THREE.SphereGeometry(.06,12,8),new THREE.MeshBasicMaterial({color:0x3fd27a}));km.position.set(.35,1.0,-1.3);S.add(km);
+  box(1.1,1.6,.9,0xEADAD3,.75,.05,1.9);
+  const lbF=new THREE.Mesh(new THREE.PlaneGeometry(.8,1.2),new THREE.MeshStandardMaterial({color:0x5b2a1c,emissive:C.terra,emissiveIntensity:.3}));lbF.position.set(1.31,.95,1.9);lbF.rotation.y=Math.PI/2;S.add(lbF);
+  box(.4,.4,.4,0x9aa7ad,.75,1.65,1.9);box(.4,.4,1,0x9aa7ad,.2,2.05,1.9);box(.04,.9,1.4,C.yellow,1.6,0,1.9);
+  box(.9,.15,.5,0x5c6b73,2.6,.05,2.2);
+  const mot=new THREE.Mesh(new THREE.CylinderGeometry(.22,.22,.55,20),M(0x2f6b80,{metalness:.3}));mot.rotation.z=Math.PI/2;mot.position.set(2.5,.45,2.2);S.add(mot);
+  const fly=new THREE.Mesh(new THREE.CylinderGeometry(.28,.28,.08,24),M(0x777777,{metalness:.6}));fly.rotation.z=Math.PI/2;fly.position.set(2.95,.45,2.2);S.add(fly);
+  const spoke=new THREE.Mesh(new THREE.BoxGeometry(.09,.5,.06),M(0xDA532C));spoke.position.copy(fly.position);spoke.position.x+=.05;S.add(spoke);
+  // screen
+  const sc=document.createElement('canvas');sc.width=512;sc.height=288;const sx=sc.getContext('2d');const stex=new THREE.CanvasTexture(sc);
+  const scr=new THREE.Mesh(new THREE.PlaneGeometry(1.7,.95),new THREE.MeshBasicMaterial({map:stex}));scr.position.set(5,1.7,-2.99);S.add(scr);
+  function drawScreen(t,mode,soc){sx.fillStyle='#10313f';sx.fillRect(0,0,512,288);sx.fillStyle='#9fd0de';sx.font='600 22px sans-serif';sx.fillText('EMS · MS-G215',20,36);
+    sx.fillStyle=mode==='bo'?'#ff8a5c':mode==='in'?'#7ee2a0':mode==='out'?'#ffb08f':'#cfe6ee';sx.fillText(mode==='bo'?'ОСТРІВ':mode==='in'?'ЗАРЯД':mode==='out'?'РОЗРЯД':'ОЧІКУВАННЯ',330,36);
+    sx.strokeStyle='#2c5566';sx.lineWidth=1;for(let i=0;i<5;i++){sx.beginPath();sx.moveTo(20,70+i*42);sx.lineTo(492,70+i*42);sx.stroke()}
+    sx.strokeStyle='#DA532C';sx.lineWidth=3;sx.beginPath();for(let x=0;x<=470;x+=6){const y=170-50*Math.sin((x+t*40)/60)-16*Math.sin((x+t*90)/23);x?sx.lineTo(20+x,y):sx.moveTo(20,y)}sx.stroke();
+    sx.fillStyle='#2a4b5a';sx.fillRect(20,236,472,16);sx.fillStyle='#5fc6a0';sx.fillRect(20,236,472*soc/100,16);
+    sx.fillStyle='#cfe6ee';sx.font='18px monospace';sx.fillText('SOC '+Math.round(soc)+'%',20,276);stex.needsUpdate=true}
+  box(1.6,.75,.7,C.wood,5,.05,-1.9);box(.5,.3,.03,0x222222,5.3,.8,-2.1);box(.5,.3,.03,0x222222,4.7,.8,-2.1);
+  function station(x,z){box(1.6,.75,.75,C.wood,x,.05,z);box(.45,.02,.3,0x333333,x,.8,z+.05);
+    const ls=new THREE.Mesh(new THREE.PlaneGeometry(.45,.3),new THREE.MeshBasicMaterial({color:0x2d6e84}));ls.position.set(x,.97,z-.12);ls.rotation.x=-.25;S.add(ls)}
+  station(3.8,-.1);station(6.4,-.1);
+  // people
+  const people=new THREE.Group();S.add(people);const crowd=[];
+  function person(x,z,tr,rot){const p=new THREE.Group();const b=new THREE.Mesh(new THREE.CylinderGeometry(.18,.22,1.1,14),M(tr?C.terra:C.teal));b.position.y=.6;b.castShadow=true;p.add(b);
+    const hd=new THREE.Mesh(new THREE.SphereGeometry(.15,16,12),M(0xE9C9A8));hd.position.y=1.32;hd.castShadow=true;p.add(hd);
+    if(tr){const hat=new THREE.Mesh(new THREE.SphereGeometry(.16,16,8,0,Math.PI*2,0,Math.PI/2),M(0xffffff));hat.position.y=1.36;p.add(hat)}
+    p.position.set(x,.05,z);p.rotation.y=rot||0;people.add(p);crowd.push({p,ph:Math.random()*6,hd});return p}
+  [[3.4,.6],[4.2,.6],[3.4,-.85],[4.2,-.85],[6,.6],[6.8,.6],[6,-.85],[6.8,-.85]].forEach(q=>person(q[0],q[1]));
+  const trainer=person(5,-2.5,true);
+  [[FX-1.1,FZ+1.6],[FX-.4,FZ+1.8],[FX+.4,FZ+1.8],[FX+1.1,FZ+1.6]].forEach(q=>person(q[0],q[1],false,Math.PI));
+  const tr2=person(FX+.9,FZ+.9,true,Math.PI);
+  const roomLight=new THREE.PointLight(0xfff1dc,.6,14);roomLight.position.set(4,2.8,0);S.add(roomLight);
+  // energy particles along path cabinet -> board
+  const PATH=[new THREE.Vector3(FX+.85,.5,-.3),new THREE.Vector3(-.6,.22,-.3),new THREE.Vector3(-.6,1.6,-1.25),new THREE.Vector3(.3,1.4,-1)];
+  const seg=[];let tot=0;for(let i=1;i<PATH.length;i++){const l=PATH[i].distanceTo(PATH[i-1]);seg.push(l);tot+=l}
+  function at(u){let d=u*tot;for(let i=0;i<seg.length;i++){if(d<=seg[i])return PATH[i].clone().lerp(PATH[i+1],d/seg[i]);d-=seg[i]}return PATH[PATH.length-1].clone()}
+  const NP=26,parts=[];const pm=new THREE.MeshBasicMaterial({color:0xffb08f});
+  for(let i=0;i<NP;i++){const m=new THREE.Mesh(new THREE.SphereGeometry(.09,10,8),pm);S.add(m);parts.push({m,u:i/NP})}
+  const glow=new THREE.PointLight(0xff8a5c,0,3);S.add(glow);
+
+  // labels (lab only)
+  const els=[];
+  if(opt.labels){const LBL=[['cab','Шафа MS-G215',[FX,3,FZ-.3],1],['fence','Огорожа 6×6',[FX-3,2.2,FZ+3]],['trench','Траншея ≈15–25 м',[-6,.6,-.3]],
+    ['vrsh','ВРЩ · 63 А',[-.9,1.1,-2.7]],['board','Щит ЩЛ + Блекаут',[.2,2.5,-.2],1],['load','Навантаження 30 кВт',[.75,2.6,1.9]],
+    ['motor','Двигун 5,5 кВт',[2.6,1.1,2.2]],['screen','Екран EMS · тренер',[5,2.5,-3]],['c1','С1 EMS',[3.8,1.9,-.1]],['c2','С2 Аналіз',[6.4,1.9,-.1]]];
+    LBL.forEach(([k,t,pos,hot])=>{const e=document.createElement('div');e.className='lbl'+(hot?' hot':'');e.textContent=t;e.tabIndex=0;
+      e.onclick=()=>opt.onPick(k,e,els);e.onkeydown=ev=>{if(ev.key==='Enter')opt.onPick(k,e,els)};opt.labels.appendChild(e);els.push({e,v:new THREE.Vector3(...pos)})})}
+
+  const V={all:[[6,16,20],[-4,0,0]],cab:[[FX+5,4.5,FZ+7],[FX,1.2,FZ]],room:[[4,7.5,9.5],[4,.8,0]],top:[[-3,30,.1],[-3,0,0]],hero:[[8,15,25],[-2.5,0,0]]};
+  const start=opt.hero?V.hero:V.all;cam.position.set(...start[0]);OC.target.set(...start[1]);
+  let anim=null;
+  const st={day:opt.hero?7.5:13,soc:55,mode:'idle',bo:false,flow:0,paused:REDUCE&&opt.hero,visible:true};
+  function go(k){const [p,t]=V[k];anim={p0:cam.position.clone(),t0:OC.target.clone(),p1:new THREE.Vector3(...p),t1:new THREE.Vector3(...t),k:0}}
+  function size(){const w=cv.clientWidth,h=cv.clientHeight;R.setSize(w,h,false);cam.aspect=w/h;
+    if(opt.hero&&w>900)cam.setViewOffset(w,h,-w*0.3,0,w,h);else cam.clearViewOffset();cam.updateProjectionMatrix()}
+  new ResizeObserver(size).observe(cv);size();
+  new IntersectionObserver(e=>st.visible=e[0].isIntersecting,{rootMargin:'100px'}).observe(cv);
+  const clock=new THREE.Clock();let scT=0;const tmp=new THREE.Color(),v=new THREE.Vector3();
+  function schedule(h){ // hero day script
+    if(h<6||h>=23)return['in','Заряд вночі','Вночі енергія дешева, шафа набирає заряд.',-30];
+    if(h<8)return['idle','Очікування','Ранок. Завод розганяється, шафа чекає піку.',0];
+    if(h<11)return['out','Розряд · пік','Ранковий пік: шафа віддає енергію, мережа не перевантажена.',30];
+    if(h<13)return['idle','Очікування','День. Навантаження рівне, шафа тримає резерв.',0];
+    if(h<15)return['out','Зрізає пік','Пуск двигуна. Шафа ловить кидок струму.',22];
+    if(h<17)return['idle','Очікування','Група аналізує логи EMS на станціях.',0];
+    if(h<19.5)return['out','Розряд · вечір','Вечірній пік, найдорожча енергія. Працює шафа.',30];
+    if(h<20.75)return['bo','Блекаут','Мережа зникла. Шафа перейшла в острів і тримає аудиторію.',18];
+    return['idle','Мережа повернулась','Мережа є. Шафа скоро почне нічний заряд.',0]}
+  function loop(){requestAnimationFrame(loop);const dt=Math.min(.05,clock.getDelta()),t=clock.elapsedTime;
+    if(!st.visible)return;
+    if(anim){anim.k=Math.min(1,anim.k+dt*1.4);const e=1-Math.pow(1-anim.k,3);cam.position.lerpVectors(anim.p0,anim.p1,e);OC.target.lerpVectors(anim.t0,anim.t1,e);if(anim.k>=1)anim=null}
+    OC.update();
+    let flow=0,mode='idle';
+    if(opt.hero){if(!st.paused)st.day=(st.day+dt*0.5)%24;const s=schedule(st.day);mode=s[0];flow=s[3];st.bo=mode==='bo';
+      if(!st.paused)st.soc=Math.max(8,Math.min(98,st.soc-flow*dt*0.5/215*100*.8));
+      opt.onTick&&opt.onTick(st.day,s,st.soc)}
+    else{mode=st.bo?'bo':'out';flow=st.bo?18:12}
+    st.mode=mode;
+    // daylight
+    const h=st.day,d=Math.max(0,Math.sin((h-6)/12*Math.PI));
+    tmp.copy(NIGHT).lerp(DAY,Math.min(1,d*1.4));S.background.copy(tmp);S.fog.color.copy(tmp);
+    hemi.intensity=.22+.55*d;sun.intensity=.08+.85*d;const ang=(h-6)/12*Math.PI;sun.position.set(-4-20*Math.cos(ang),2+22*Math.max(.05,Math.sin(ang)),14);
+    const nightF=1-Math.min(1,d*2);
+    roomLight.intensity+=((st.bo?.12:.55+.6*nightF)-roomLight.intensity)*.1;roomLight.color.set(st.bo?0x9fffc8:0xfff1dc);
+    winM.emissiveIntensity=st.bo?.05:.7*nightF;lamp.intensity=1.2*nightF;
+    km.material.color.set(st.bo?0xd8261c:0x3fd27a);
+    led.material.color.set(mode==='in'?0x3fd27a:mode==='out'?0xffa53a:mode==='bo'?0xff5a3a:0x8fd3e8);
+    if(!REDUCE){led.visible=mode==='bo'?Math.sin(t*8)>0:true;fly.rotation.x+=dt*(mode==='out'&&h>=13&&h<15?14:st.bo?2:6);spoke.rotation.x=fly.rotation.x;
+      lbF.material.emissiveIntensity=.25+.15*Math.sin(t*2);
+      crowd.forEach(c=>{c.p.position.y=.05+Math.abs(Math.sin(t*1.6+c.ph))*.025;c.hd.position.x=Math.sin(t*.7+c.ph)*.03});
+      tr2.position.x=FX+.9+Math.sin(t*.4)*.5;trainer.position.x=5+Math.sin(t*.3)*.6}
+    // particles
+    const sp=Math.abs(flow)/30;pm.color.set(flow<0?0x7ee2a0:0xffb08f);
+    parts.forEach((p,i)=>{if(sp<.05){p.m.visible=false;return}p.m.visible=true;p.u=(p.u+dt*.12*sp*(flow<0?-1:1)+1)%1;p.m.position.copy(at(p.u));p.m.scale.setScalar(.7+.5*Math.sin(t*6+i))});
+    glow.intensity=sp*.8;glow.position.copy(at(((t*.1)%1)));glow.color.set(flow<0?0x7ee2a0:0xff8a5c);
+    if((scT+=dt)>.15){scT=0;drawScreen(REDUCE?0:t,mode,st.soc)}
+    R.render(S,cam);
+    if(els.length){const w=cv.clientWidth,hh=cv.clientHeight;els.forEach(o=>{v.copy(o.v).project(cam);const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05;o.e.hidden=!vis;
+      if(vis){o.e.style.left=((v.x+1)/2*w)+'px';o.e.style.top=((1-v.y)/2*hh-10)+'px'}})}
+  }
+  loop();
+  return{go,st,people};
+}
+
+/* ================= INSTANCES ================= */
+(function(){
+  if(!window.THREE||!THREE.OrbitControls){
+    ['heroCv','labCv'].forEach(id=>{const c=document.getElementById(id);const im=document.createElement('img');im.src='img/'+(id==='heroCv'?'1-overview':'3-room')+'.jpg';im.alt='Лабораторія УЗЕ';im.className='fallback';im.style.height=getComputedStyle(c).height;c.replaceWith(im)});
+    return}
+  const $=id=>document.getElementById(id);
+  const hero=makeLab($('heroCv'),{hero:true,onTick:(h,s,soc)=>{
+    const hh=Math.floor(h),mm=Math.floor((h-hh)*60/15)*15;$('hClock').textContent=String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');
+    const m=$('hMode');if(m.textContent!==s[1]){m.textContent=s[1];m.className='mode '+s[0];$('hSay').textContent=s[2]}
+    $('hSoc').textContent=Math.round(soc)+'%';$('hSocBar').style.width=soc+'%';
+    $('hFlow').textContent=s[3]===0?'0 кВт':(s[3]<0?'← ':'→ ')+Math.abs(s[3])+' кВт'}});
+  if(REDUCE){hero.st.day=19.9}
+  const pb=$('hPause');pb.textContent=hero.st.paused?'Пуск':'Пауза';
+  pb.onclick=()=>{hero.st.paused=!hero.st.paused;pb.textContent=hero.st.paused?'Пуск':'Пауза'};
+
+  const INFO={
+    cab:['Шафа УЗЕ Deye MS-G215','Інвертор, батарея LFP, BMS, EMS, кондиціонер і пожежогасіння в одному корпусі. Стоїть на бетоні 3 × 3 м.',[['Потужність','100 кВт'],['Ємність','215 кВт·год'],['На навчанні','ліміт 30 кВт'],['Двері','відкриває тренер']]],
+    fence:['Огорожа 6 × 6 м','Сітка 2 м, хвіртка із замком. Жовта зона — обслуговування, мінімум 1 м. Вогнегасник, знаки, камера, заземлення.',[['В огорожі','4 студенти + тренер']]],
+    trench:['Траншея до корпусу','Силовий кабель і Ethernet у трубах. Кабель беремо під 160 А, щоб потім дати шафі повні 100 кВт.',[['Довжина','≈15–25 м'],['Глибина','≈0,7 м']]],
+    vrsh:['ВРЩ корпусу, автомат 63 А','Звідси лабораторія бере живлення. Автомат захищає ввід, якщо хтось зніме ліміт в EMS.',[['Ввід','3ф, 63 А']]],
+    board:['Щит лабораторії','Лічильник для EMS, контактор «Блекаут», автомати навантаження і двигуна, аварійна кнопка.',[['Лічильник','CT 100/5, RS485'],['Контактор','80 А, кнопка на пульті']]],
+    load:['Навантаження 30 кВт','Три ступені по 10 кВт. Студенти вмикають їх і дивляться, як шафа зрізає пік. Тепло йде у витяжку.',[['Ступені','3 × 10 кВт']]],
+    motor:['Двигун 5,5 кВт з маховиком','Прямий пуск дає кидок струму в 6–7 разів. Так видно, навіщо шафа і як реагує EMS.',[['Пусковий струм','≈6–7 × Iн']]],
+    screen:['Екран EMS і пульт тренера','EMS онлайн для всієї групи. На пульті кнопка «Блекаут» і аварійна кнопка.',[]],
+    c1:['Станція С1 · EMS','Режими, розклад заряду, межі заряду, ліміт мережі.',[['Людей','4']]],
+    c2:['Станція С2 · Аналіз','Логи EMS, лічильник, розрахунок економії, звіт клієнту.',[['Людей','4']]]};
+  function pick(k,e,els){const i=INFO[k];$('iT').textContent=i[0];$('iP').textContent=i[1];$('iD').innerHTML=i[2].map(r=>'<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>').join('');$('labInfo').hidden=false;els.forEach(x=>x.e.classList.toggle('on',x.e===e))}
+  const lab=makeLab($('labCv'),{labels:$('labLbl'),onPick:pick});
+  document.querySelectorAll('#labBox [data-v]').forEach(b=>b.onclick=()=>{lab.go(b.dataset.v);document.querySelectorAll('#labBox [data-v]').forEach(x=>x.setAttribute('aria-pressed',x===b))});
+  const lp=$('labPeople');lp.onclick=()=>{const on=lp.getAttribute('aria-pressed')!=='true';lp.setAttribute('aria-pressed',on);lab.people.visible=on};
+  const lb=$('labBo');lb.onclick=()=>{lab.st.bo=!lab.st.bo;lb.setAttribute('aria-pressed',lab.st.bo);
+    if(lab.st.bo){$('iT').textContent='Блекаут: мережу вимкнено';$('iP').textContent='Шафа переходить в острів і сама тримає навантаження. У аудиторії аварійне світло, на екрані EMS «ОСТРІВ».';$('iD').innerHTML='';$('labInfo').hidden=false}};
 })();
 </script>
 
