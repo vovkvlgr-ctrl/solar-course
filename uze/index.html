@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Доба підприємства з УЗЕ</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: navy bar → task strip → [object & cabinet setup | animated day: flows + 24h chart | money results] → hour table. Viatec palette, same as the solar lab. */
+:root{
+  --bg:#D9E3E8; --panel:#F7FAFB; --panel2:#E9EFF3; --line:#C9D6DE; --line2:#B3C4CF;
+  --ink:#17303D; --muted:#4F6672; --dim:#7D919C;
+  --navy:#1F3B4D; --teal:#5895A7; --accent:#DA532C; --accent-ink:#B5401C; --accent-soft:#F8E1D8;
+  --grid:#2F6FD0; --bat:#1E9E63; --load:#F05A12; --price:#7A4FD6; --soc:#1E9E63; --warn:#D08A0A; --err:#D2372B; --ok:#1E9E63;
+  --f:'IBM Plex Sans',system-ui,'Segoe UI',Arial,sans-serif; --mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f);font-size:14px;line-height:1.45;margin:0}
+.wrap{max-width:1440px;margin:0 auto;padding-block:14px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:12px}
+h1,h2,h3{margin:0;font-weight:600;text-wrap:balance} p{margin:0}
+.bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:var(--navy);border-radius:10px;padding:12px 16px;color:#fff}
+.brand{margin-right:auto;display:flex;flex-direction:column;gap:2px}
+.brand .e{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#F39A76;font-weight:700}
+.brand h1{font-size:19px}
+.clock{font-family:var(--mono);font-size:26px;font-weight:600}
+.seg{display:flex;border:1px solid #3D5C6E;border-radius:8px;overflow:hidden}
+.seg button{font:inherit;font-size:12.5px;font-weight:600;background:transparent;color:#CFE0E7;border:none;border-right:1px solid #3D5C6E;padding:7px 11px;cursor:pointer}
+.seg button:last-child{border-right:none}
+.seg button[aria-pressed="true"]{background:var(--teal);color:#fff}
+#play[aria-pressed="false"]{background:#E0A23A;color:var(--ink)}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.task{background:var(--accent-soft);border:1px solid #E9A58D;border-radius:10px;padding:10px 14px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.task .l{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);font-weight:700}
+.task p{flex:1;min-width:260px}
+.main{display:grid;grid-template-columns:290px minmax(0,1fr) 300px;gap:12px;align-items:start}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;min-width:0;box-shadow:0 1px 2px rgba(23,48,61,.08)}
+.ph{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 12px;background:var(--teal);border-radius:10px 10px 0 0}
+.ph h2{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#fff;font-weight:700}
+.ph span{color:#E6F0F4;font-size:12px;font-family:var(--mono)}
+.pb{padding:12px;display:flex;flex-direction:column;gap:12px}
+.grp{display:flex;flex-direction:column;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.grp:last-child{border-bottom:none;padding-bottom:0}
+.grp h3{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-ink);font-weight:700}
+label.sel{display:flex;flex-direction:column;gap:3px;font-size:12.5px;color:var(--muted)}
+select,input[type=number]{font:inherit;font-size:13.5px;color:var(--ink);background:var(--panel2);border:1px solid var(--line2);border-radius:6px;padding:6px 8px;width:100%}
+.sl{display:flex;flex-direction:column;gap:2px}
+.sl .r{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)}
+.sl output{font-family:var(--mono);color:var(--ink)}
+input[type=range]{width:100%;accent-color:var(--accent);margin:0}
+.strat{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.strat button{font:inherit;font-size:12.5px;font-weight:600;text-align:left;background:var(--panel2);border:1px solid var(--line2);border-radius:8px;padding:8px 9px;cursor:pointer;color:var(--ink);display:flex;flex-direction:column;gap:2px}
+.strat button small{font-weight:400;color:var(--muted);font-size:11.5px;line-height:1.3}
+.strat button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.hint{font-size:12px;color:var(--muted)}
+.flow svg,.chart svg{display:block;width:100%;height:auto}
+.flow text,.chart text{font-family:var(--mono)}
+.story{padding:12px 14px;border-top:1px solid var(--line);font-size:15.5px}
+.story b{font-family:var(--mono);font-weight:600}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:#E6F0F4}
+.legend i{display:inline-block;width:14px;height:4px;margin-right:5px;vertical-align:middle;border-radius:2px}
+.big{display:flex;flex-direction:column;gap:2px;padding:12px;border-radius:10px;background:var(--navy);color:#fff}
+.big .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#A9C3CE;font-weight:700}
+.big .v{font-family:var(--mono);font-size:30px;font-weight:600;line-height:1.1}
+.big .v.pos{color:#7BE0AE} .big .v.neg{color:#FF9A86}
+.big .s{font-size:12px;color:#CFE0E7}
+.kv{display:grid;grid-template-columns:1fr auto;gap:6px 10px;font-size:13px}
+.kv span:nth-child(odd){color:var(--muted)}
+.kv span:nth-child(even){font-family:var(--mono);text-align:right;font-weight:600}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cmp div{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.cmp .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.cmp .v{font-family:var(--mono);font-size:17px;font-weight:600}
+.tw{overflow-x:auto}
+table.hours{border-collapse:collapse;width:100%;font-size:12px;font-family:var(--mono);min-width:900px}
+table.hours th,table.hours td{padding:4px 5px;text-align:right;border-bottom:1px solid var(--line)}
+table.hours th:first-child,table.hours td:first-child{text-align:left;font-family:var(--f);color:var(--muted);font-weight:600;white-space:nowrap}
+table.hours td.cur{background:var(--accent-soft)}
+table.hours th.cur{background:var(--accent);color:#fff}
+.foot{font-size:12px;color:var(--dim);text-align:center}
+@media (max-width:1150px){.main{grid-template-columns:280px minmax(0,1fr)}.res{grid-column:1/-1}}
+@media (max-width:800px){.main{grid-template-columns:minmax(0,1fr)}}
+</style>
+
+</head><body>
+<div class="wrap">
+  <div class="bar">
+    <div class="brand"><span class="e">Viatec Academy · Лабораторія УЗЕ</span><h1>Доба підприємства: шафа УЗЕ</h1></div>
+    <span class="clock" id="clock">00:00</span>
+    <div class="seg"><button id="play" aria-pressed="false">▶ Прогнати добу</button><button data-sp="1" aria-pressed="false">повільно</button><button data-sp="3" aria-pressed="true">нормально</button><button data-sp="8" aria-pressed="false">швидко</button></div>
+  </div>
+
+  <div class="task"><span class="l">Завдання-приклад</span><p id="taskT"><b>Магазин, погодинні ціни.</b> Оберіть стратегію і кількість шаф так, щоб окупність була менше 6 років. Потім увімкніть відключення ввечері — чи вистачить резерву?</p></div>
+
+  <div class="main">
+    <section class="panel"><div class="ph"><h2>Об’єкт і шафа</h2></div><div class="pb" id="cfg"></div></section>
+
+    <section class="panel flow"><div class="ph"><h2>Що відбувається о <span id="hL">00:00</span></h2><div class="legend"><span><i style="background:var(--load)"></i>споживання</span><span><i style="background:var(--grid)"></i>з мережі</span><span><i style="background:var(--bat)"></i>шафа</span><span><i style="background:var(--price)"></i>ціна</span></div></div>
+      <svg id="flow" viewBox="0 0 900 190"></svg>
+      <p class="story" id="story"></p>
+      <div class="chart" style="padding:0 8px 8px"><svg id="chart" viewBox="0 0 900 330"></svg></div>
+    </section>
+
+    <aside class="res" style="display:flex;flex-direction:column;gap:12px">
+      <section class="panel"><div class="ph"><h2>Гроші</h2><span>умовні тарифи</span></div><div class="pb" id="money"></div></section>
+      <section class="panel"><div class="ph"><h2>Техніка</h2></div><div class="pb" id="tech"></div></section>
+    </aside>
+  </div>
+
+  <section class="panel"><div class="ph"><h2>Погодинно</h2><span>кВт · грн/кВт·год</span></div><div class="pb tw" id="table"></div></section>
+  <p class="foot">Прототип навчальної лабораторії курсу О9. Профілі споживання, ціни і вартість шафи умовні — для навчання. Шафа: 100 кВт / 215 кВт·год, ККД заряду-розряду 90 %.</p>
+</div>
+
+<script>
+(function(){
+'use strict';
+const $=s=>document.querySelector(s), clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const fmt=(x,d=0)=>{ if(!isFinite(x)) return '—'; let [i,f]=Math.abs(x).toFixed(d).split('.'); i=i.replace(/\B(?=(\d{3})+(?!\d))/g,' '); return (x<0?'−':'')+(f?i+','+f:i); };
+const hh=h=>String(Math.floor(h)).padStart(2,'0')+':'+String(Math.floor((h%1)*60)).padStart(2,'0');
+
+const OBJ={
+  shop:{n:'Супермаркет',p:[14,13,13,13,13,14,20,34,48,55,58,60,62,60,58,58,60,64,66,62,52,40,24,16]},
+  sto:{n:'СТО',p:[4,4,4,4,4,4,6,18,42,55,70,48,44,40,68,52,46,38,20,8,6,5,4,4]},
+  cold:{n:'Холодильний склад',p:[58,57,56,56,57,58,62,70,78,82,86,90,92,92,90,88,84,80,74,70,66,62,60,59]},
+  shop2:{n:'Цех',p:[15,15,15,15,15,18,40,120,175,160,150,140,90,150,160,150,130,60,25,18,16,15,15,15]}
+};
+const TAR={
+  two:{n:'Двозонний тариф',p:Array.from({length:24},(_,h)=>(h>=23||h<7)?4.5:9.0)},
+  rdn:{n:'Погодинні ціни (як на РДН)',p:[3.2,2.8,2.6,2.6,2.8,3.4,5.2,7.4,8.6,7.2,5.6,4.4,3.9,3.8,4.2,5.4,7.8,10.6,12.4,12.8,11.6,9.4,6.8,4.6]},
+  flat:{n:'Один тариф',p:Array(24).fill(8.0)}
+};
+const CAB={P:100,E:215,eff:0.9};
+const STRAT={
+  none:['Без УЗЕ','як зараз: усе з мережі'],
+  arb:['Арбітраж','заряд дешево, розряд дорого'],
+  peak:['Зрізання піку','тримати імпорт нижче межі'],
+  res:['Резерв','тримати заряд на блекаут']
+};
+let S={obj:'shop',tar:'rdn',n:1,strat:'arb',peakLim:45,socMin:10,socMax:95,out:false,outFrom:18,outLen:3,capex:2600000};
+let H=0, playing=false, speed=3, R=null;
+
+function simulate(st){
+  st=st||S.strat;
+  const L=OBJ[S.obj].p.slice(), price=TAR[S.tar].p, P=CAB.P*S.n, Emax=CAB.E*S.n*S.socMax/100, Emin=CAB.E*S.n*S.socMin/100, eta=Math.sqrt(CAB.eff);
+  let soc=st==='res'?Emax:Emin;
+  const ord=[...Array(24).keys()].sort((a,b)=>price[a]-price[b]||a-b);
+  const usable=Emax-Emin;
+  let chargeH=new Set(), disH=new Set();
+  if(st==='arb'){
+    const lo=price[ord[0]], hi=price[ord[23]];
+    if(hi*CAB.eff>lo){ let need=usable/eta, i=0; while(need>0&&i<24){ chargeH.add(ord[i]); need-=P; i++; }
+      let give=usable*eta, j=23; while(give>0&&j>=0){ const h=ord[j]; if(!chargeH.has(h)&&price[h]*CAB.eff>lo){ disH.add(h); give-=Math.min(P,L[h]); } j--; } }
+  }
+  const out=[]; let unserved=0;
+  for(let h=0;h<24;h++){
+    const isOut=S.out&&((h-S.outFrom+24)%24)<S.outLen;
+    let ch=0, dis=0, grid=L[h], lost=0;
+    if(isOut){
+      if(st!=='none'){ dis=Math.min(P,L[h],(soc-Emin*0)*eta); soc-=dis/eta; }
+      lost=L[h]-dis; grid=0; unserved+=lost;
+    } else if(st==='arb'){
+      if(chargeH.has(h)){ ch=Math.min(P,(Emax-soc)/eta); soc+=ch*eta; }
+      else if(disH.has(h)){ dis=Math.min(P,L[h],(soc-Emin)*eta); soc-=dis/eta; }
+    } else if(st==='peak'){
+      if(L[h]>S.peakLim){ dis=Math.min(P,L[h]-S.peakLim,(soc-Emin)*eta); soc-=dis/eta; }
+      else { const room=S.peakLim-L[h]; const cheap=price[h]<=price[ord[11]]; if(cheap||soc<Emin+usable*0.5){ ch=Math.min(P,room,(Emax-soc)/eta); soc+=ch*eta; } }
+    } else if(st==='res'){
+      if(soc<Emax){ ch=Math.min(P,(Emax-soc)/eta); soc+=ch*eta; }
+    }
+    if(!isOut) grid=L[h]+ch-dis;
+    out.push({h,load:L[h],price:price[h],ch,dis,grid,soc,socPct:soc/(CAB.E*S.n)*100,isOut,lost});
+  }
+  const costBase=L.reduce((t,l,h)=>t+l*price[h],0), cost=out.reduce((t,o)=>t+o.grid*price[o.h],0);
+  const peakBase=Math.max(...L), peakGrid=Math.max(...out.filter(o=>!o.isOut).map(o=>o.grid));
+  const disTot=out.reduce((t,o)=>t+o.dis,0);
+  return {out,costBase,cost,save:costBase-cost,peakBase,peakGrid,cycles:disTot/(CAB.E*S.n),unserved,disTot};
+}
+
+function cfgHTML(){
+  const opt=(o,v)=>Object.entries(o).map(([k,x])=>`<option value="${k}"${k===v?' selected':''}>${x.n}</option>`).join('');
+  const rng=(id,l,min,max,st,v,u)=>`<label class="sl"><span class="r">${l}<output id="o-${id}">${v} ${u}</output></span><input type="range" id="${id}" min="${min}" max="${max}" step="${st}" value="${v}"></label>`;
+  $('#cfg').innerHTML=`<div class="grp"><h3>Об’єкт</h3><label class="sel">Тип бізнесу<select id="obj">${opt(OBJ,S.obj)}</select></label><label class="sel">Ціна електроенергії<select id="tar">${opt(TAR,S.tar)}</select></label></div>
+   <div class="grp"><h3>Шафи УЗЕ · 100 кВт / 215 кВт·год</h3>${rng('n','Кількість шаф',0,4,1,S.n,'шт')}
+     <div class="kv"><span>Потужність</span><span id="kP">${S.n*100} кВт</span><span>Ємність</span><span id="kE">${S.n*215} кВт·год</span></div>
+     ${rng('socMin','Мінімальний заряд',5,30,5,S.socMin,'%')}</div>
+   <div class="grp"><h3>Стратегія EMS</h3><div class="strat">${Object.entries(STRAT).map(([k,v])=>`<button data-st="${k}" aria-pressed="${S.strat===k}">${v[0]}<small>${v[1]}</small></button>`).join('')}</div>
+     ${S.strat==='peak'?rng('peakLim','Межа імпорту з мережі',10,200,5,S.peakLim,'кВт'):''}</div>
+   <div class="grp"><h3>Відключення мережі</h3><label class="sl" style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" id="out" ${S.out?'checked':''} style="accent-color:var(--accent);width:18px;height:18px"> <span>Блекаут сьогодні</span></label>
+     ${S.out?rng('outFrom','Початок',0,23,1,S.outFrom,':00')+rng('outLen','Тривалість',1,8,1,S.outLen,'год'):''}</div>
+   <div class="grp"><h3>Вартість</h3><label class="sel">Шафа під ключ, грн (приклад)<input type="number" id="capex" min="100000" step="50000" value="${S.capex}"></label></div>`;
+}
+
+function flowSVG(o){
+  const W=900, y=95, a=Math.abs;
+  const line=(x1,x2,p,col,dir)=>{ const on=a(p)>0.5; const w=2+Math.min(a(p),200)/18; return `<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="#CFDCE3" stroke-width="10" stroke-linecap="round"/>${on?`<line class="fl" data-dir="${dir}" x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="${col}" stroke-width="${w}" stroke-dasharray="3 14" stroke-linecap="round"/>`:''}`; };
+  const box=(x,t,s1,s2,col,fill)=>`<rect x="${x-80}" y="${y-58}" width="160" height="116" rx="12" fill="${fill}" stroke="${col}" stroke-width="2"/><text x="${x}" y="${y-30}" text-anchor="middle" font-size="14" font-weight="600" fill="#17303D">${t}</text><text x="${x}" y="${y}" text-anchor="middle" font-size="20" font-weight="600" fill="${col}">${s1}</text><text x="${x}" y="${y+26}" text-anchor="middle" font-size="12" fill="#4F6672">${s2}</text>`;
+  const bat=o.ch>0.5?`▲ заряд ${fmt(o.ch)} кВт`:o.dis>0.5?`▼ розряд ${fmt(o.dis)} кВт`:'очікує';
+  let s=line(190,370,o.isOut?0:o.grid,'#2F6FD0',o.grid>=0?1:-1)+line(530,710,o.load-o.lost,'#F05A12',1);
+  s+=box(110,'Мережа',o.isOut?'НЕМАЄ':`${fmt(o.grid)} кВт`,o.isOut?'відключення':`${fmt(o.price,1)} грн/кВт·год`,o.isOut?'#D2372B':'#2F6FD0','#EEF4FB');
+  const pct=o.socPct; s+=`<rect x="370" y="${y-70}" width="160" height="140" rx="12" fill="#EAF6EF" stroke="#1E9E63" stroke-width="2"/><text x="450" y="${y-46}" text-anchor="middle" font-size="14" font-weight="600" fill="#17303D">Шафа УЗЕ ×${S.n}</text>
+    <rect x="395" y="${y-34}" width="34" height="88" rx="4" fill="#D3E9DD"/><rect x="395" y="${y-34+88*(1-pct/100)}" width="34" height="${88*pct/100}" rx="4" fill="#1E9E63"/>
+    <text x="485" y="${y-4}" text-anchor="middle" font-size="22" font-weight="600" fill="#1E9E63">${fmt(pct)}%</text><text x="485" y="${y+18}" text-anchor="middle" font-size="11.5" fill="#4F6672">${bat}</text>`;
+  s+=box(790,OBJ[S.obj].n,`${fmt(o.load)} кВт`,o.lost>0.5?`не вистачило ${fmt(o.lost)} кВт`:'споживання','#F05A12','#FDF0EA');
+  if(o.lost>0.5) s+=`<text x="790" y="${y+50}" text-anchor="middle" font-size="12" fill="#D2372B" font-weight="600">частина без живлення</text>`;
+  return s;
+}
+function chartSVG(r){
+  const W=900,Hh=330,pl=46,pr=46,pt=14,pb=34, iw=W-pl-pr, ih=Hh-pt-pb, X=h=>pl+iw*h/24, bw=iw/24;
+  const mx=Math.max(...r.out.map(o=>Math.max(o.load,o.grid,o.load+o.ch)))*1.12, Y=v=>pt+ih-ih*v/mx;
+  const pmx=Math.max(...r.out.map(o=>o.price))*1.15, YP=v=>pt+ih-ih*v/pmx;
+  let s='';
+  for(let k=0;k<4;k++){ const v=mx*k/4; s+=`<line x1="${pl}" x2="${W-pr}" y1="${Y(v)}" y2="${Y(v)}" stroke="#DCE5EA"/><text x="${pl-6}" y="${Y(v)+4}" font-size="10.5" text-anchor="end" fill="#7D919C">${fmt(v)}</text>`; }
+  s+=`<text x="${pl-6}" y="${pt-2}" font-size="10" text-anchor="end" fill="#7D919C">кВт</text><text x="${W-pr+6}" y="${pt-2}" font-size="10" fill="#7A4FD6">грн</text>`;
+  r.out.forEach(o=>{ if(o.isOut) s+=`<rect x="${X(o.h)}" y="${pt}" width="${bw}" height="${ih}" fill="#FBE4E1"/>`; });
+  r.out.forEach(o=>{ const x=X(o.h)+bw*0.12, w=bw*0.76; s+=`<rect x="${x}" y="${Y(Math.max(o.grid,0))}" width="${w}" height="${Y(0)-Y(Math.max(o.grid,0))}" rx="2" fill="#2F6FD0" opacity=".75"/>`;
+    if(o.dis>0.5) s+=`<rect x="${x}" y="${Y(o.grid+o.dis)}" width="${w}" height="${Y(o.grid)-Y(o.grid+o.dis)}" rx="2" fill="#1E9E63"/>`;
+    if(o.ch>0.5) s+=`<rect x="${x+w*0.25}" y="${Y(o.load+o.ch)}" width="${w*0.5}" height="${Y(o.load)-Y(o.load+o.ch)}" fill="none" stroke="#1E9E63" stroke-width="2" stroke-dasharray="3 2"/>`; });
+  let d=''; r.out.forEach((o,i)=>{ d+=(i?'L':'M')+(X(o.h)+bw/2).toFixed(1)+' '+Y(o.load).toFixed(1)+' '; }); s+=`<path d="${d}" fill="none" stroke="#F05A12" stroke-width="2.5"/>`;
+  let dp=''; r.out.forEach((o,i)=>{ dp+=(i?'L':'M')+(X(o.h)+bw/2).toFixed(1)+' '+YP(o.price).toFixed(1)+' '; }); s+=`<path d="${dp}" fill="none" stroke="#7A4FD6" stroke-width="2" stroke-dasharray="6 4"/>`;
+  [0,0.5,1].forEach(k=>{ const v=pmx*k/1.15; s+=`<text x="${W-pr+6}" y="${YP(v)+4}" font-size="10.5" fill="#7A4FD6">${fmt(v,1)}</text>`; });
+  if(S.strat==='peak'&&S.n>0) s+=`<line x1="${pl}" x2="${W-pr}" y1="${Y(S.peakLim)}" y2="${Y(S.peakLim)}" stroke="#D08A0A" stroke-width="2" stroke-dasharray="8 5"/><text x="${W-pr-4}" y="${Y(S.peakLim)-5}" font-size="11" text-anchor="end" fill="#D08A0A">межа ${S.peakLim} кВт</text>`;
+  for(let h=0;h<24;h+=3) s+=`<text x="${X(h)+bw/2}" y="${Hh-12}" font-size="10.5" text-anchor="middle" fill="#7D919C">${String(h).padStart(2,'0')}:00</text>`;
+  s+=`<g id="ph"><line y1="${pt}" y2="${pt+ih}" stroke="#DA532C" stroke-width="2"/><circle r="5" cy="${pt}" fill="#DA532C"/></g>`;
+  s+=`<text x="${pl}" y="${Hh-0}" font-size="10.5" fill="#4F6672">сині стовпці — з мережі · зелені — віддала шафа · пунктир зелений — заряд · помаранчева лінія — споживання · фіолетовий пунктир — ціна</text>`;
+  return s;
+}
+function results(){
+  const r=R, base=simulate('none');
+  const yr=r.save*365, cap=S.capex*S.n, pay=yr>0?cap/yr:Infinity;
+  $('#money').innerHTML=`<div class="big"><span class="k">Економія за добу</span><span class="v ${r.save>=0?'pos':'neg'}">${fmt(r.save)} грн</span><span class="s">за місяць ≈ ${fmt(r.save*30)} грн · за рік ≈ ${fmt(yr)} грн</span></div>
+    <div class="cmp"><div><span class="k">Без УЗЕ</span><br><span class="v">${fmt(r.costBase)} грн</span></div><div><span class="k">З УЗЕ</span><br><span class="v">${fmt(r.cost)} грн</span></div></div>
+    <div class="kv"><span>Вкладення (${S.n} ${S.n===1?'шафа':S.n<5?'шафи':'шаф'})</span><span>${fmt(cap)} грн</span><span>Окупність</span><span style="color:${pay<6?'var(--ok)':pay<10?'var(--warn)':'var(--err)'}">${S.n&&isFinite(pay)?fmt(pay,1)+' р.':'—'}</span></div>
+    <p class="hint">${S.n===0?'Додайте шафу, щоб побачити ефект.':pay<6?'Окупається швидко — сильний аргумент для клієнта.':pay<10?'Окупність середня: шукайте кращу стратегію або тариф.':'Довго окупається. Спробуйте арбітраж на погодинних цінах або менше шаф.'}</p>`;
+  const usable=CAB.E*S.n*(S.socMax-S.socMin)/100;
+  $('#tech').innerHTML=`<div class="kv"><span>Пік з мережі без УЗЕ</span><span>${fmt(r.peakBase)} кВт</span><span>Пік з мережі з УЗЕ</span><span style="color:${r.peakGrid<r.peakBase?'var(--ok)':'var(--ink)'}">${fmt(r.peakGrid)} кВт</span>
+    <span>Віддала шафа за добу</span><span>${fmt(r.disTot)} кВт·год</span><span>Цикли за добу</span><span>${fmt(r.cycles,2)}</span><span>Корисна ємність</span><span>${fmt(usable)} кВт·год</span>
+    ${S.out?`<span>Без живлення в блекаут</span><span style="color:${r.unserved>0.5?'var(--err)':'var(--ok)'}">${fmt(r.unserved)} кВт·год</span>`:''}</div>
+    <p class="hint">${r.cycles>1.1?'Понад 1 цикл на добу — ресурс шафи витрачається швидше, врахуйте в окупності.':'Ресурс LiFePO₄ — тисячі циклів, тож 1 цикл на добу — нормальний режим.'}</p>`;
+  const cols=r.out.map(o=>o.h);
+  const row=(n,f,cl)=>`<tr><td>${n}</td>${r.out.map(o=>`<td class="${o.h===Math.floor(H)?'cur':''}"${cl?` style="color:${cl(o)}"`:''}>${f(o)}</td>`).join('')}</tr>`;
+  $('#table').innerHTML=`<table class="hours"><thead><tr><th>Година</th>${cols.map(h=>`<th class="${h===Math.floor(H)?'cur':''}">${String(h).padStart(2,'0')}</th>`).join('')}</tr></thead><tbody>
+   ${row('Ціна, грн',o=>fmt(o.price,1),()=>'#7A4FD6')}${row('Споживання',o=>fmt(o.load),()=>'#F05A12')}${row('З мережі',o=>o.isOut?'—':fmt(o.grid),()=>'#2F6FD0')}${row('Шафа',o=>o.ch>0.5?'+'+fmt(o.ch):o.dis>0.5?'−'+fmt(o.dis):'·',o=>'#1E9E63')}${row('Заряд, %',o=>fmt(o.socPct))}</tbody></table>`;
+}
+function storyText(o){
+  const p=[]; const h=hh(H);
+  if(o.isOut){ p.push(`<b>${h}</b> — мережі немає.`); p.push(o.lost>0.5?`Шафа віддає ${fmt(o.dis)} кВт, але бракує <b style="color:var(--err)">${fmt(o.lost)} кВт</b> — частина обладнання без живлення.`:`Шафа тримає весь об’єкт: <b style="color:var(--bat)">${fmt(o.dis)} кВт</b>.`); }
+  else{
+    p.push(`<b>${h}</b> — ціна <b style="color:var(--price)">${fmt(o.price,1)} грн</b>, об’єкт споживає <b style="color:var(--load)">${fmt(o.load)} кВт</b>.`);
+    if(o.ch>0.5) p.push(`Шафа заряджається на <b style="color:var(--bat)">${fmt(o.ch)} кВт</b>, поки енергія ${o.price<=6?'дешева':'доступна'}.`);
+    else if(o.dis>0.5) p.push(`Шафа віддає <b style="color:var(--bat)">${fmt(o.dis)} кВт</b> — з мережі береться лише <b style="color:var(--grid)">${fmt(o.grid)} кВт</b>.`);
+    else p.push(`Шафа чекає, усе з мережі.`);
+  }
+  $('#story').innerHTML=p.join(' ');
+}
+function frameRender(){
+  const i=Math.min(23,Math.floor(H)), o=R.out[i];
+  $('#clock').textContent=hh(H); $('#hL').textContent=hh(H);
+  $('#flow').innerHTML=flowSVG(o); storyText(o);
+  const W=900,pl=46,pr=46,x=pl+(W-pl-pr)*H/24; const ph=$('#ph'); if(ph) ph.setAttribute('transform',`translate(${x} 0)`);
+}
+function full(){ R=simulate(); $('#chart').innerHTML=chartSVG(R); results(); frameRender(); }
+let dash=0,lt=performance.now(),lastI=-1;
+function loop(t){ const dt=Math.min(.1,(t-lt)/1000); lt=t;
+  if(playing){ H+=dt*speed*0.6; if(H>=24){ H=24-1e-6; playing=false; setPlay(); } }
+  const i=Math.floor(H); if(i!==lastI){ lastI=i; frameRender(); results(); } else if(playing){ const ph=$('#ph'); if(ph){ const x=46+(900-92)*H/24; ph.setAttribute('transform',`translate(${x} 0)`);} $('#clock').textContent=hh(H); }
+  dash+=dt*40; document.querySelectorAll('.fl').forEach(l=>l.setAttribute('stroke-dashoffset',(-dash*(+l.dataset.dir)).toFixed(1)));
+  requestAnimationFrame(loop); }
+function setPlay(){ const b=$('#play'); b.setAttribute('aria-pressed',playing); b.textContent=playing?'❚❚ Пауза':(H>=23.99?'↻ Ще раз':'▶ Прогнати добу'); }
+
+document.addEventListener('input',e=>{ const id=e.target.id; if(!id) return;
+  if(['n','socMin','peakLim','outFrom','outLen'].includes(id)){ S[id]=+e.target.value; const o=$('#o-'+id); if(o) o.textContent=e.target.value+' '+({n:'шт',socMin:'%',peakLim:'кВт',outFrom:':00',outLen:'год'}[id]); if(id==='n'){ $('#kP').textContent=S.n*100+' кВт'; $('#kE').textContent=S.n*215+' кВт·год'; } full(); }
+  if(id==='capex'){ S.capex=Math.max(0,+e.target.value||0); results(); } });
+document.addEventListener('change',e=>{ const id=e.target.id; if(id==='obj'||id==='tar'){ S[id]=e.target.value; if(id==='obj') S.peakLim=Math.round(Math.max(...OBJ[S.obj].p)*0.75/5)*5; cfgHTML(); full(); } if(id==='out'){ S.out=e.target.checked; cfgHTML(); full(); } });
+document.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return;
+  if(b.dataset.st){ S.strat=b.dataset.st; cfgHTML(); full(); }
+  if(b.id==='play'){ if(H>=23.99) H=0; playing=!playing; setPlay(); }
+  if(b.dataset.sp){ speed=+b.dataset.sp; document.querySelectorAll('[data-sp]').forEach(x=>x.setAttribute('aria-pressed',x===b)); if(!playing){ if(H>=23.99) H=0; playing=true; setPlay(); } } });
+H=18; cfgHTML(); full(); setPlay(); requestAnimationFrame(loop);
+})();
+</script>
+
+</body></html>
