@@ -130,6 +130,10 @@ nav a:hover,nav a:focus-visible{color:#fff}
 .sim{margin-top:24px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;background:var(--card);border:1px dashed var(--teal);border-radius:12px;padding:18px 22px}
 .sim p{flex:1;min-width:240px;color:var(--muted)}
 .sim a{color:var(--teal-dk);font-weight:600}
+.need{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.need li{display:grid;grid-template-columns:1fr 1.3fr;gap:16px;padding:12px 0;border-bottom:1px solid var(--line)}
+.need li span{color:var(--muted)}
+@media (max-width:600px){.need li{grid-template-columns:1fr;gap:2px}}
 
 .two{display:grid;grid-template-columns:1fr 1fr;gap:40px}
 .two>*{min-width:0}
@@ -270,7 +274,7 @@ footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
       </div>
     </div>
     <div class="talk">
-      <div><b>Клієнт питає: «Коли окупиться?»</b><span>Після курсу «Розрахунок і проєкт» ви рахуєте це разом з ним у симуляторі, на його тарифі.</span></div>
+      <div><b>Клієнт питає: «Коли окупиться?»</b><span>Після курсу «Розрахунок і проєкт» ви рахуєте це разом з ним, на його тарифі.</span></div>
       <div><b>Енергетик питає: «А пуск компресора?»</b><span>Після курсу «EMS і режими» ви показуєте, як EMS зрізає пік.</span></div>
       <div><b>Директор питає: «А блекаут?»</b><span>Після офлайн-дня ви це вже робили руками на реальній шафі.</span></div>
     </div>
@@ -285,7 +289,7 @@ footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     </div>
     <div class="paths">
       <a class="path" href="#webinars"><span class="num">01</span><h3>Серія вебінарів</h3><p>Шість зустрічей по годині. Від «що там усередині шафи» до трансляції з лабораторії.</p><span class="meta">безкоштовно · онлайн · без ліміту</span><span class="bar"></span></a>
-      <a class="path" href="#online"><span class="num">02</span><h3>Онлайн-курси</h3><p>Чотири курси на Kwiga. Лабораторні в симуляторі, тести, сертифікат.</p><span class="meta">самостійно · у своєму темпі</span><span class="bar"></span></a>
+      <a class="path" href="#online"><span class="num">02</span><h3>Онлайн-курси</h3><p>Чотири курси на Kwiga. Уроки, тести, сертифікат. Можна додати інтерактивний симулятор.</p><span class="meta">самостійно · у своєму темпі</span><span class="bar"></span></a>
       <a class="path hot" href="#offline"><span class="num">03</span><h3>Офлайн + лабораторія</h3><p>Один день на реальній шафі в НУБіП або КАІ. Пуск, режими, блекаут, аварії.</p><span class="meta">до 12 людей · після онлайн-курсів</span><span class="bar"></span></a>
     </div>
     <div class="route" aria-label="Маршрут навчання"><span>Вебінар</span><i></i><span>3 онлайн-курси</span><i></i><span>Курс безпеки · допуск</span><i></i><span>Офлайн-день</span><i></i><span>Сертифікат Viatec</span></div>
@@ -301,7 +305,7 @@ footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     </div>
     <div class="rows">
       <div class="r"><span class="n">1</span><b>Що таке УЗЕ і навіщо бізнесу</b><span>Відкриваємо шафу: інвертор, батарея LFP, BMS, EMS</span></div>
-      <div class="r"><span class="n">2</span><b>Як порахувати окупність</b><span>Наживо в симуляторі, на тарифі слухача</span></div>
+      <div class="r"><span class="n">2</span><b>Як порахувати окупність</b><span>Наживо, на тарифі слухача</span></div>
       <div class="r"><span class="n">3</span><b>Пік-шейвінг і договірна потужність</b><span>Як шафа ловить пуск двигуна</span></div>
       <div class="r"><span class="n">4</span><b>Блекаут і резерв</b><span>Острівний режим, ATS, що відключиться, а що ні</span></div>
       <div class="r"><span class="n">5</span><b>Як вибрати шафу</b><span>Виробники, кілька шаф паралельно, нарощування</span></div>
@@ -320,13 +324,12 @@ footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     </div>
     <div class="courses">
       <div class="course"><span class="code">Курс 1</span><h3>Основи УЗЕ</h3><p>Будова шафи, LFP, BMS, терміни, виробники.</p></div>
-      <div class="course"><span class="code">Курс 2</span><h3>EMS і режими</h3><p>Нічний тариф, піки, резерв. Лабораторні в симуляторі.</p></div>
+      <div class="course"><span class="code">Курс 2</span><h3>EMS і режими</h3><p>Нічний тариф, піки, резерв, налаштування EMS.</p></div>
       <div class="course"><span class="code">Курс 3</span><h3>Розрахунок і проєкт</h3><p>Потужність, ємність, ввід, окупність, паралель.</p></div>
       <div class="course key"><span class="code">Курс 4 · допуск на офлайн</span><h3>Монтаж і безпека</h3><p>Майданчик, кабелі, пожежна безпека, протокол пуску.</p></div>
     </div>
     <div class="sim">
-      <p><b>Симулятор уже працює.</b> «Доба підприємства: шафа УЗЕ» рахує погодинно: тариф, навантаження, блекаут, кількість шаф і окупність.</p>
-      <a href="../uze/" target="_blank" rel="noopener">Відкрити симулятор →</a>
+      <p><b>Можна розробити симулятор.</b> Інтерактивна «доба підприємства» прямо в уроці Kwiga: слухач обирає тариф, навантаження, кількість шаф, вмикає блекаут і бачить економію та окупність. Як живий графік вище, тільки з власними цифрами.</p>
     </div>
   </div>
 </section>
@@ -391,7 +394,7 @@ footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
       <div><b>100 / 215</b><span>кВт / кВт·год, шафа Deye MS-G215</span></div>
       <div><b>30 кВт</b><span>ліміт в EMS для навчання</span></div>
       <div><b>12 + 2</b><span>студентів і тренерів, макс.</span></div>
-      <div><b>≈43 кВт·год</b><span>≈400–500 грн за заняття</span></div>
+      <div><b>≈1,5 год</b><span>роботи шафи за заняття</span></div>
     </div>
     <div class="links">
       <a href="../uze-3d/" target="_blank" rel="noopener">3D на весь екран →</a>
@@ -404,26 +407,22 @@ footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
   <div class="in">
     <div class="head">
       <p class="eyebrow">Лабораторія як проєкт</p>
-      <h2 id="pr-h">Скільки коштує і хто що дає</h2>
-      <p class="lead">Цифри орієнтовні. Найдорожче — шафа, тому головне завдання проєкту — домовитися з виробником.</p>
+      <h2 id="pr-h">Що потрібно і хто що дає</h2>
+      <p class="lead">Головне в проєкті — домовитися з виробником шафи і з університетом. Решту Академія робить сама.</p>
     </div>
     <div class="two">
-      <div class="tbl">
-        <table>
-          <thead><tr><th>Стаття</th><th style="text-align:right">тис. грн</th></tr></thead>
-          <tbody>
-            <tr><td>Шафа 100 кВт / 215 кВт·год</td><td class="q">2 500–3 500</td></tr>
-            <tr><td>Майданчик, огорожа, заземлення</td><td class="q">80–150</td></tr>
-            <tr><td>Кабель під 160 А, траншея, монтаж</td><td class="q">100–200</td></tr>
-            <tr><td>Щит, лічильник, контактор «Блекаут»</td><td class="q">60–100</td></tr>
-            <tr><td>Навантаження 30 кВт, двигун 5,5 кВт</td><td class="q">110–200</td></tr>
-            <tr><td>Екран, ПК, ноутбуки, роутер</td><td class="q">120–180</td></tr>
-            <tr><td>Засоби захисту, вогнегасники, термокамера</td><td class="q">30–60</td></tr>
-            <tr><td>Проєкт, погодження, пусконалагодження</td><td class="q">50–100</td></tr>
-            <tr class="tot"><td>Без шафи</td><td class="q">≈550–1 000</td></tr>
-            <tr class="tot"><td>З шафою</td><td class="q">≈3 000–4 500</td></tr>
-          </tbody>
-        </table>
+      <div>
+        <h3 class="sub">Що потрібно</h3>
+        <ul class="need">
+          <li><b>Шафа УЗЕ 100 кВт / 215 кВт·год</b><span>Наприклад Deye MS-G215</span></li>
+          <li><b>Майданчик</b><span>Бетон 3 × 3 м, огорожа 6 × 6 м, заземлення</span></li>
+          <li><b>Кабель і траншея</b><span>Переріз під 160 А, Ethernet у трубі</span></li>
+          <li><b>Щит лабораторії</b><span>Лічильник, контактор «Блекаут», автомати, аварійна кнопка</span></li>
+          <li><b>Навантаження</b><span>Блок 30 кВт (3 × 10 кВт) і двигун 5,5 кВт з маховиком</span></li>
+          <li><b>Аудиторія</b><span>Екран EMS, ПК тренера, ноутбуки на станціях, роутер</span></li>
+          <li><b>Безпека</b><span>Засоби захисту, вогнегасники, знаки, термокамера</span></li>
+          <li><b>Проєкт і запуск</b><span>Проєкт електрика, погодження, пусконалагодження</span></li>
+        </ul>
       </div>
       <div>
         <h3 class="sub">Хто що дає</h3>
@@ -438,7 +437,7 @@ footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     <h3 class="sub" style="margin-top:48px">Етапи</h3>
     <div class="stages">
       <div><b>1. Вебінари</b><span>Запуск серії, перші записи в Kwiga</span></div>
-      <div><b>2. Онлайн-курси</b><span>Чотири курси на Kwiga і лабораторні в симуляторі</span></div>
+      <div><b>2. Онлайн-курси</b><span>Чотири курси на Kwiga, за потреби — симулятор</span></div>
       <div><b>3. Домовленості</b><span>Виробник шафи, університет, проєкт електрика</span></div>
       <div><b>4. Лабораторія</b><span>Монтаж, пусконалагодження, перший офлайн-день</span></div>
     </div>
@@ -456,7 +455,7 @@ footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 <footer>
   <div class="in">
     <span>Viatec Academy · напрям «Енергетика»</span>
-    <span>Розміри і ціни орієнтовні, остаточно — за паспортом шафи, ПУЕ і проєктом</span>
+    <span>Розміри орієнтовні, остаточно — за паспортом шафи, ПУЕ і проєктом</span>
   </div>
 </footer>
 
