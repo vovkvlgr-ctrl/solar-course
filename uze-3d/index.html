@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Лабораторія УЗЕ 3D</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: 3D-сцена на всю ширину, над нею кнопки ракурсів, справа/знизу картка вибраного об'єкта */
+:root{
+  --bg:#D9E3E8; --panel:#F7FAFB; --ink:#1F3B4D; --muted:#55707F; --line:#B9CBD4;
+  --teal:#5895A7; --teal-soft:#DCEBF0; --terra:#DA532C; --terra-soft:#F6DDD3;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#13222C;--panel:#1B2E3A;--ink:#E3EDF2;--muted:#9AB3C0;--line:#35505F;--teal:#7DB5C6;--teal-soft:#21404D;--terra:#EE7650;--terra-soft:#4A2A20;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#13222C;--panel:#1B2E3A;--ink:#E3EDF2;--muted:#9AB3C0;--line:#35505F;--teal:#7DB5C6;--teal-soft:#21404D;--terra:#EE7650;--terra-soft:#4A2A20;color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5}
+.wrap{max-width:1200px;margin:0 auto;padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:14px}
+h1{margin:0;font-size:clamp(22px,3.6vw,30px);text-wrap:balance}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal)}
+.lead{margin:0;color:var(--muted);max-width:75ch}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.bar button{font:inherit;font-size:14px;font-weight:500;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:8px 14px;border-radius:4px;cursor:pointer}
+.bar button[aria-pressed="true"]{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+.bar button.bo{border-color:var(--terra);color:var(--terra)}
+.bar button.bo[aria-pressed="true"]{background:var(--terra);color:#fff}
+.bar button:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.bar .sp{flex:1}
+.stage{position:relative;height:min(72vh,680px);min-height:420px;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#cfdde4}
+#cv{display:block;width:100%;height:100%;touch-action:none}
+.lbl{position:absolute;transform:translate(-50%,-100%);font-size:12px;font-weight:600;background:var(--panel);color:var(--ink);border:1px solid var(--line);padding:3px 8px;border-radius:3px;white-space:nowrap;cursor:pointer;pointer-events:auto;box-shadow:0 2px 6px rgba(31,59,77,.15)}
+.lbl::after{content:"";position:absolute;left:50%;top:100%;width:1px;height:10px;background:var(--muted)}
+.lbl.hot{border-color:var(--terra);color:var(--terra)}
+.lbl.on{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+.hint{position:absolute;left:10px;bottom:10px;font-size:12px;color:#1F3B4D;background:rgba(247,250,251,.85);padding:4px 8px;border-radius:3px}
+.card{position:absolute;right:10px;top:10px;width:min(320px,calc(100% - 20px));background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;box-shadow:0 6px 18px rgba(31,59,77,.18)}
+.card h3{margin:0;font-size:16px}
+.card p{margin:0;font-size:14px;color:var(--muted)}
+.card .x{position:absolute;right:8px;top:6px;border:0;background:none;color:var(--muted);font-size:18px;cursor:pointer}
+.card dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:13px}
+.card dt{color:var(--muted)} .card dd{margin:0;font-family:var(--mono);font-size:12.5px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.facts div{background:var(--panel);padding:12px 14px;display:flex;flex-direction:column}
+.facts b{font-family:var(--mono);font-size:19px;font-variant-numeric:tabular-nums}
+.facts span{font-size:13px;color:var(--muted)}
+.facts .t b{color:var(--terra)}
+.note{font-size:13px;color:var(--muted);margin:0}
+.note a{color:var(--teal)}
+@media (max-width:600px){.card{top:auto;bottom:10px}.hint{display:none}}
+</style>
+
+</head><body>
+<div class="wrap">
+  <div class="eyebrow">Viatec Academy · лабораторія УЗЕ</div>
+  <h1>Реальна лабораторія УЗЕ в 3D</h1>
+  <p class="lead">Шафа Deye MS-G215 надворі за огорожею, траншея до корпусу, аудиторія 8 × 6 м зі щитом, навантаженням і робочими місцями. Крутіть мишкою, натискайте на підписи.</p>
+
+  <div class="bar" role="toolbar" aria-label="Ракурс">
+    <button id="vAll" aria-pressed="true">Загальний вигляд</button>
+    <button id="vCab" aria-pressed="false">Шафа надворі</button>
+    <button id="vRoom" aria-pressed="false">Аудиторія</button>
+    <button id="vTop" aria-pressed="false">Зверху</button>
+    <span class="sp"></span>
+    <button id="bPeople" aria-pressed="true">Люди: 12 + 2</button>
+    <button id="bBlack" class="bo" aria-pressed="false">Блекаут</button>
+  </div>
+
+  <div class="stage" id="stage">
+    <canvas id="cv"></canvas>
+    <div id="labels"></div>
+    <div class="hint">ЛКМ — обертати · колесо — наблизити · ПКМ — зсунути</div>
+    <div class="card" id="card">
+      <button class="x" id="cx" aria-label="Закрити">×</button>
+      <h3 id="cT">Як читати сцену</h3>
+      <p id="cP">Бірюзові фігури — студенти, теракотові — тренери. Натисніть на будь-який підпис, щоб побачити, що це і навіщо.</p>
+      <dl id="cD"></dl>
+    </div>
+  </div>
+
+  <div class="facts">
+    <div><b>100 кВт / 215</b><span>кВт·год, шафа MS-G215</span></div>
+    <div class="t"><b>30 кВт</b><span>ліміт в EMS для навчання</span></div>
+    <div><b>63 А</b><span>ввід 3ф (під 100 кВт — 160 А)</span></div>
+    <div class="t"><b>12 + 2</b><span>студентів + тренерів, макс.</span></div>
+    <div><b>4 + 1</b><span>одночасно біля шафи</span></div>
+    <div><b>≈43 кВт·год</b><span>≈400–500 грн за заняття</span></div>
+  </div>
+  <p class="note">Розміри орієнтовні, остаточно — за паспортом шафи, ПУЕ і проєктом. Креслення, схема і перелік обладнання: <a href="../uze-lab/" target="_blank" rel="noopener">план лабораторії</a>.</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function(){
+const stage=document.getElementById('stage'),cv=document.getElementById('cv'),LB=document.getElementById('labels');
+const R=new THREE.WebGLRenderer({canvas:cv,antialias:true});
+R.setPixelRatio(Math.min(devicePixelRatio,2));R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;
+const S=new THREE.Scene();S.background=new THREE.Color(0xcfdde4);S.fog=new THREE.Fog(0xcfdde4,45,90);
+const cam=new THREE.PerspectiveCamera(42,1,0.1,200);
+const OC=new THREE.OrbitControls(cam,cv);OC.enableDamping=true;OC.maxPolarAngle=Math.PI*0.49;OC.minDistance=4;OC.maxDistance=60;
+
+const C={navy:0x1F3B4D,teal:0x5895A7,terra:0xDA532C,grass:0xB9D3A8,concrete:0xC9CFD2,floor:0xE9EEF0,wall:0xF4F7F8,steel:0x8A9AA3,white:0xffffff,dark:0x22313a,yellow:0xF2C230,wood:0xC8B79A};
+const M=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.75,metalness:.05},o||{}));
+function box(w,h,d,c,x,y,z,o){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),c.isMaterial?c:M(c,o));m.position.set(x,y+h/2,z);m.castShadow=true;m.receiveShadow=true;S.add(m);return m}
+function cyl(r,h,c,x,y,z,seg){const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,seg||16),M(c));m.position.set(x,y+h/2,z);m.castShadow=true;S.add(m);return m}
+
+// light
+const hemi=new THREE.HemisphereLight(0xffffff,0x9fb3a0,.75);S.add(hemi);
+const sun=new THREE.DirectionalLight(0xffffff,.85);sun.position.set(-14,22,14);sun.castShadow=true;
+sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-25,right:20,top:15,bottom:-15,near:1,far:60});S.add(sun);
+
+// ground
+const g=new THREE.Mesh(new THREE.PlaneGeometry(120,80),M(C.grass,{roughness:1}));g.rotation.x=-Math.PI/2;g.receiveShadow=true;S.add(g);
+// path
+box(1.4,.02,12,C.concrete,-12,0,9);
+
+/* ===== OUTDOOR: fence 6x6 centered (-14,0,0) ===== */
+const FX=-14,FZ=0;
+box(3,.2,3,C.concrete,FX,0,FZ,{roughness:.95}); // pad
+// fence posts + mesh
+const meshMat=new THREE.MeshStandardMaterial({color:0x5c6b73,transparent:true,opacity:.28,side:THREE.DoubleSide,wireframe:false});
+const postMat=M(0x5c6b73,{metalness:.5});
+function fenceSide(x1,z1,x2,z2,gap){
+  const L=Math.hypot(x2-x1,z2-z1),n=Math.round(L/1.5);
+  for(let i=0;i<=n;i++){const t=i/n;box(.06,2,.06,postMat,x1+(x2-x1)*t,0,z1+(z2-z1)*t)}
+  const segs=gap?[[0,(L-1)/2/L],[(L+1)/2/L,1]]:[[0,1]];
+  segs.forEach(([a,b])=>{const l=L*(b-a);const p=new THREE.Mesh(new THREE.PlaneGeometry(l,1.9),meshMat);
+    p.position.set(x1+(x2-x1)*(a+b)/2,1.05,z1+(z2-z1)*(a+b)/2);p.rotation.y=-Math.atan2(z2-z1,x2-x1);S.add(p)});
+}
+fenceSide(FX-3,FZ-3,FX+3,FZ-3);fenceSide(FX+3,FZ-3,FX+3,FZ+3);fenceSide(FX+3,FZ+3,FX-3,FZ+3,true);fenceSide(FX-3,FZ+3,FX-3,FZ-3);
+// gate (open)
+const gate=new THREE.Mesh(new THREE.PlaneGeometry(1,1.9),new THREE.MeshStandardMaterial({color:0x5c6b73,transparent:true,opacity:.45,side:THREE.DoubleSide}));
+gate.position.set(FX-0.5+0.5*Math.cos(.9),1.05,FZ+3+0.5*Math.sin(.9));gate.rotation.y=-.9;S.add(gate);
+
+// cabinet MS-G215 (approx 1.7 x 2.3 x 1.4)
+const cab=new THREE.Group();S.add(cab);cab.position.set(FX,.2,FZ-.3);
+const cabBody=new THREE.Mesh(new THREE.BoxGeometry(1.7,2.3,1.4),M(0xEEF2F4,{roughness:.5}));cabBody.position.y=1.15;cabBody.castShadow=true;cab.add(cabBody);
+const band=new THREE.Mesh(new THREE.BoxGeometry(1.72,.35,1.42),M(C.teal));band.position.y=1.85;cab.add(band);
+// doors
+[-0.42,0.42].forEach(x=>{const d=new THREE.Mesh(new THREE.BoxGeometry(.8,2.1,.02),M(0xE2E8EB,{roughness:.45}));d.position.set(x,1.1,.71);cab.add(d);
+ const h=new THREE.Mesh(new THREE.BoxGeometry(.03,.25,.04),M(0x444));h.position.set(x+(x<0?.32:-.32),1.1,.74);cab.add(h)});
+// vents
+for(let i=0;i<5;i++){const v=new THREE.Mesh(new THREE.BoxGeometry(.02,.05,1),M(0x7b8a92));v.position.set(.86,.4+i*.1,0);cab.add(v)}
+// AC unit
+const ac=new THREE.Mesh(new THREE.BoxGeometry(.6,.7,.08),M(0xd5dde1));ac.position.set(-.86,1.4,0);ac.rotation.y=Math.PI/2;cab.add(ac);
+const led=new THREE.Mesh(new THREE.SphereGeometry(.05,12,8),new THREE.MeshBasicMaterial({color:0x3fd27a}));led.position.set(.7,1.6,.73);cab.add(led);
+const disp=new THREE.Mesh(new THREE.PlaneGeometry(.3,.2),new THREE.MeshBasicMaterial({color:0x163c4c}));disp.position.set(.42,1.5,.721);cab.add(disp);
+// service zone marking
+const sz=new THREE.Mesh(new THREE.PlaneGeometry(2.2,1.1),new THREE.MeshBasicMaterial({color:C.yellow,transparent:true,opacity:.35}));sz.rotation.x=-Math.PI/2;sz.position.set(FX,.21,FZ+1.0);S.add(sz);
+// extinguisher + sign + camera pole
+cyl(.1,.55,0xc4302b,FX-2.5,0,FZ+2.4);
+const sign=new THREE.Mesh(new THREE.CircleGeometry(.25,3),new THREE.MeshBasicMaterial({color:C.yellow,side:THREE.DoubleSide}));sign.position.set(FX+1.5,1.4,FZ+3.02);sign.rotation.z=Math.PI/2;S.add(sign);
+cyl(.05,3,0x5c6b73,FX+3,0,FZ-3);box(.25,.15,.15,0x333,FX+2.9,3,FZ-2.9);
+// earthing
+cyl(.03,.25,0x8c6a3a,FX-1.2,.2,FZ-1.4);
+
+/* ===== TRENCH ===== */
+const trench=box(10.2,.04,.5,0x8b6b4e,-5.9,0,-.3);
+const cable=new THREE.Mesh(new THREE.CylinderGeometry(.06,.06,10.2,8),M(C.terra));cable.rotation.z=Math.PI/2;cable.position.set(-5.9,.08,-.3);S.add(cable);
+// break marker posts
+[-9,-6,-3].forEach(x=>{box(.08,.6,.08,C.terra,x,0,.1)});
+
+/* ===== BUILDING: room x 0..8, z -3..3 ===== */
+const BX=0;
+box(9.2,.1,7.4,C.floor,4,0,0); // floor slab
+const wallM=M(C.wall,{roughness:.9});
+box(8.4,3,.2,wallM,4,0,-3.1);        // back wall
+box(.2,3,6.4,wallM,-.1,0,0);         // left wall (to street)
+box(.2,3,6.4,wallM,8.1,0,0);         // right wall
+// front wall low (cutaway) with door gap
+box(5.6,1,.2,wallM,2.8,0,3.1);box(1.6,1,.2,wallM,7.3,0,3.1);
+// windows on right wall
+for(let z of[-1.5,1.5]){const w=new THREE.Mesh(new THREE.PlaneGeometry(1.4,1.1),new THREE.MeshStandardMaterial({color:0x9cc3d2,emissive:0x203845,emissiveIntensity:.2}));w.position.set(7.99,1.8,z);w.rotation.y=-Math.PI/2;S.add(w)}
+// corridor + VRSh outside left wall
+box(1.2,.08,7.4,0xd7dde0,-.8,0,0);
+const vrsh=box(.6,1.8,.35,0xb8c2c7,-.6,0.08,-1.8);
+// cable from trench into building to VRSh then through wall to board
+const c2=new THREE.Mesh(new THREE.CylinderGeometry(.05,.05,1.6,8),M(C.terra));c2.position.set(-.6,.9,-1.25);S.add(c2);
+
+// control board ЩЛ on left wall
+const board=box(.3,1.8,1.2,0xE3ECF0,.15,.3,-1);
+const bd=new THREE.Mesh(new THREE.PlaneGeometry(1.1,1.6),M(0xd0dee5));bd.position.set(.31,1.2,-1);bd.rotation.y=Math.PI/2;S.add(bd);
+// breakers row
+for(let i=0;i<6;i++){box(.04,.18,.12,i==1?C.terra:0xffffff,.33,1.45,-1.45+i*.18)}
+const kmLamp=new THREE.Mesh(new THREE.SphereGeometry(.05,12,8),new THREE.MeshBasicMaterial({color:0x3fd27a}));kmLamp.position.set(.35,1.0,-1.3);S.add(kmLamp);
+const estop=cyl(.07,.05,0xd8261c,.33,1.75,-.6);estop.rotation.z=Math.PI/2;
+
+// load bank
+const lb=box(1.1,1.6,.9,0xEADAD3,.75,.05,1.9);
+const lbFront=new THREE.Mesh(new THREE.PlaneGeometry(.8,1.2),new THREE.MeshStandardMaterial({color:0x5b2a1c,emissive:C.terra,emissiveIntensity:.3}));lbFront.position.set(1.31,.95,1.9);lbFront.rotation.y=Math.PI/2;S.add(lbFront);
+// duct
+box(.4,.4,.4,0x9aa7ad,.75,1.65,1.9);box(.4,.4,1,0x9aa7ad,.2,2.05,1.9);
+// rail guard
+box(.04,.9,1.4,0xF2C230,1.6,0,1.9);
+
+// motor on frame
+box(.9,.15,.5,0x5c6b73,2.6,.05,2.2);
+const mot=new THREE.Mesh(new THREE.CylinderGeometry(.22,.22,.55,20),M(0x2f6b80,{metalness:.3}));mot.rotation.z=Math.PI/2;mot.position.set(2.5,.45,2.2);mot.castShadow=true;S.add(mot);
+const fly=new THREE.Mesh(new THREE.CylinderGeometry(.28,.28,.08,24),M(0x777,{metalness:.6}));fly.rotation.z=Math.PI/2;fly.position.set(2.95,.45,2.2);S.add(fly);
+
+// screen on back wall
+const scr=new THREE.Mesh(new THREE.PlaneGeometry(1.7,.95),new THREE.MeshBasicMaterial({color:0x10313f}));scr.position.set(5,1.7,-2.99);S.add(scr);
+// fake EMS chart on screen
+const scvs=document.createElement('canvas');scvs.width=512;scvs.height=288;const sctx=scvs.getContext('2d');
+const stex=new THREE.CanvasTexture(scvs);scr.material=new THREE.MeshBasicMaterial({map:stex});
+function drawScreen(t,bo){sctx.fillStyle='#10313f';sctx.fillRect(0,0,512,288);
+ sctx.fillStyle='#9fd0de';sctx.font='600 20px sans-serif';sctx.fillText('EMS · MS-G215',20,34);
+ sctx.fillStyle=bo?'#ff8a5c':'#7ee2a0';sctx.fillText(bo?'ОСТРІВ':'МЕРЕЖА',360,34);
+ sctx.strokeStyle='#2c5566';for(let i=0;i<5;i++){sctx.beginPath();sctx.moveTo(20,70+i*45);sctx.lineTo(492,70+i*45);sctx.stroke()}
+ sctx.strokeStyle='#DA532C';sctx.lineWidth=3;sctx.beginPath();for(let x=0;x<=470;x+=6){const y=180-60*Math.sin((x+t*40)/60)-20*Math.sin((x+t*90)/23);x?sctx.lineTo(20+x,y):sctx.moveTo(20,y)}sctx.stroke();
+ sctx.strokeStyle='#5895A7';sctx.beginPath();for(let x=0;x<=470;x+=6){const y=230-30*Math.cos((x+t*25)/90);x?sctx.lineTo(20+x,y):sctx.moveTo(20,y)}sctx.stroke();
+ sctx.fillStyle='#cfe6ee';sctx.font='16px monospace';sctx.fillText('SOC 64%   P 28 кВт   Мережа ≤30',20,275);stex.needsUpdate=true}
+
+// instructor desk
+box(1.6,.75,.7,C.wood,5,.05,-1.9);box(.5,.3,.03,0x222,5.3,.8,-2.1);box(.5,.3,.03,0x222,4.7,.8,-2.1);
+const btn=cyl(.08,.06,0xd8261c,5.6,.8,-1.7);
+
+// stations
+function station(x,z,name){box(1.6,.75,.75,C.wood,x,.05,z);const lap=box(.45,.02,.3,0x333,x,.8,z+.05);
+ const ls=new THREE.Mesh(new THREE.PlaneGeometry(.45,.3),new THREE.MeshBasicMaterial({color:0x2d6e84}));ls.position.set(x,.97,z-.12);ls.rotation.x=-.25;S.add(ls)}
+station(3.8,-.1);station(6.4,-.1);
+
+// people
+const people=new THREE.Group();S.add(people);
+function person(x,z,trainer,rot){const g=new THREE.Group();const col=trainer?C.terra:C.teal;
+ const b=new THREE.Mesh(new THREE.CylinderGeometry(.18,.22,1.1,14),M(col));b.position.y=.6;b.castShadow=true;g.add(b);
+ const h=new THREE.Mesh(new THREE.SphereGeometry(.15,16,12),M(0xE9C9A8));h.position.y=1.32;h.castShadow=true;g.add(h);
+ if(trainer){const hat=new THREE.Mesh(new THREE.SphereGeometry(.16,16,8,0,Math.PI*2,0,Math.PI/2),M(0xffffff));hat.position.y=1.36;g.add(hat)}
+ g.position.set(x,.05,z);g.rotation.y=rot||0;people.add(g)}
+// C1 & C2 (4 each)
+[[3.4,.6],[4.2,.6],[3.4,-.85],[4.2,-.85]].forEach(p=>person(p[0],p[1]));
+[[6,.6],[6.8,.6],[6,-.85],[6.8,-.85]].forEach(p=>person(p[0],p[1]));
+// trainer at desk
+person(5,-2.5,true);
+// C3 outdoors near cabinet: 4 + trainer
+[[FX-1.1,FZ+1.6],[FX-.4,FZ+1.8],[FX+.4,FZ+1.8],[FX+1.1,FZ+1.6]].forEach(p=>person(p[0],p[1],false,Math.PI));
+person(FX+.9,FZ+.9,true,Math.PI);
+
+// room light
+const roomLight=new THREE.PointLight(0xfff6e8,.6,14);roomLight.position.set(4,2.8,0);S.add(roomLight);
+
+/* ===== LABELS ===== */
+const INFO={
+ cab:{t:'Шафа УЗЕ Deye MS-G215',p:'Промислова шафа: інвертор (PCS), батарея LFP, BMS, EMS, кондиціонер і пожежогасіння в одному корпусі. Стоїть на бетоні 3 × 3 м.',d:[['Потужність','100 кВт'],['Ємність','215 кВт·год'],['На навчанні','ліміт 30 кВт'],['Двері','відкриває тільки тренер']]},
+ fence:{t:'Огорожа 6 × 6 м',p:'Сітка 2 м, хвіртка із замком. Жовта зона перед шафою — зона обслуговування, мінімум 1 м. Тут вогнегасник, знаки, камера і контур заземлення.',d:[['В огорожі','4 студенти + тренер'],['Камера','трансляція на вебінар']]},
+ trench:{t:'Траншея до корпусу',p:'Силовий кабель і Ethernet у трубах. Переріз кабелю беремо під 160 А, щоб потім можна було дати шафі повні 100 кВт.',d:[['Довжина','≈15–25 м'],['Глибина','≈0,7 м']]},
+ vrsh:{t:'ВРЩ корпусу, QF1 63 А',p:'Звідси лабораторія отримує живлення. Автомат 63 А захищає ввід, якщо хтось зніме ліміт у EMS.',d:[['Ввід','3ф, 63 А'],['Під повну потужність','160 А']]},
+ board:{t:'Щит лабораторії ЩЛ',p:'Лічильник з трансформаторами струму (дає EMS дані мережі), контактор KM1 «Блекаут», автомати ступенів навантаження і двигуна, аварійна кнопка.',d:[['Лічильник','CT 100/5, RS485'],['KM1','80 А, кнопка на пульті'],['Станція','С3 (з тренером)']]},
+ load:{t:'Навантажувальний блок 30 кВт',p:'Три ступені по 10 кВт (ТЕНи з вентилятором). Студенти вмикають їх і дивляться, як шафа зрізає пік. Гаряче повітря виводимо назовні.',d:[['Ступені','3 × 10 кВт'],['Тепло','≈30 кВт → витяжка']]},
+ motor:{t:'Двигун 5,5 кВт з маховиком',p:'Прямий пуск дає кидок струму в 6–7 разів. Так видно, навіщо УЗЕ і як EMS реагує на піки.',d:[['Пусковий струм','≈6–7 × Iн']]},
+ screen:{t:'Екран 75″ і пульт тренера',p:'EMS онлайн для всієї групи. На пульті кнопка «Блекаут» (KM1) і друга аварійна кнопка.',d:[['Тренер','1 в аудиторії']]},
+ c1:{t:'Станція С1 · Налаштування EMS',p:'Режими: арбітраж, пік-шейвінг, резерв. Розклад заряду, межі SOC, ліміт мережі.',d:[['Людей','4']]},
+ c2:{t:'Станція С2 · Аналіз і звіт',p:'Логи EMS, лічильник, розрахунок економії, звіт клієнту.',d:[['Людей','4']]},
+};
+const LBL=[
+ ['cab','Шафа MS-G215',[FX,3,FZ-.3],1],['fence','Огорожа 6×6',[FX-3,2.2,FZ+3]],['trench','Траншея ≈15–25 м',[-6,.6,-.3]],
+ ['vrsh','ВРЩ · 63 А',[-.9,1.1,-2.7]],['board','Щит ЩЛ + Блекаут',[.2,2.5,-.2],1],['load','Навантаження 30 кВт',[.75,2.6,1.9]],
+ ['motor','Двигун 5,5 кВт',[2.6,1.1,2.2]],['screen','Екран EMS · тренер',[5,2.5,-3]],['c1','С1 EMS',[3.8,1.9,-.1]],['c2','С2 Аналіз',[6.4,1.9,-.1]],
+];
+const els=LBL.map(([k,txt,pos,hot])=>{const e=document.createElement('div');e.className='lbl'+(hot?' hot':'');e.textContent=txt;e.tabIndex=0;
+ e.onclick=()=>show(k,e);e.onkeydown=ev=>{if(ev.key==='Enter')show(k,e)};LB.appendChild(e);return{e,v:new THREE.Vector3(...pos)}});
+const card=document.getElementById('card');
+function show(k,e){const i=INFO[k];document.getElementById('cT').textContent=i.t;document.getElementById('cP').textContent=i.p;
+ document.getElementById('cD').innerHTML=(i.d||[]).map(r=>'<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>').join('');card.hidden=false;
+ els.forEach(x=>x.e.classList.toggle('on',x.e===e))}
+document.getElementById('cx').onclick=()=>{card.hidden=true;els.forEach(x=>x.e.classList.remove('on'))};
+
+/* ===== VIEWS ===== */
+const V={vAll:[[6,16,20],[-4,0,0]],vCab:[[FX+5,4.5,FZ+7],[FX,1.2,FZ]],vRoom:[[4,7.5,9.5],[4,.8,0]],vTop:[[-3,34,.1],[-3,0,0]]};
+let anim=null;
+function go(id){document.querySelectorAll('#vAll,#vCab,#vRoom,#vTop').forEach(b=>b.setAttribute('aria-pressed',b.id===id));
+ const [p,t]=V[id];anim={p0:cam.position.clone(),t0:OC.target.clone(),p1:new THREE.Vector3(...p),t1:new THREE.Vector3(...t),k:0}}
+['vAll','vCab','vRoom','vTop'].forEach(id=>document.getElementById(id).onclick=()=>go(id));
+cam.position.set(...V.vAll[0]);OC.target.set(...V.vAll[1]);
+
+const bP=document.getElementById('bPeople');bP.onclick=()=>{const on=bP.getAttribute('aria-pressed')!=='true';bP.setAttribute('aria-pressed',on);people.visible=on};
+let BO=false;const bB=document.getElementById('bBlack');
+bB.onclick=()=>{BO=!BO;bB.setAttribute('aria-pressed',BO);kmLamp.material.color.set(BO?0xd8261c:0x3fd27a);led.material.color.set(BO?0xffa53a:0x3fd27a);
+ if(BO){document.getElementById('cT').textContent='Блекаут: KM1 розімкнено';document.getElementById('cP').textContent='Мережа корпусу відключена. Шафа переходить в острівний режим і сама тримає навантаження. Студенти фіксують час переходу і що відключилось.';document.getElementById('cD').innerHTML='<dt>Перевірити</dt><dd>чи PCS вміє on/off-grid</dd>';card.hidden=false}};
+
+/* ===== LOOP ===== */
+function size(){const w=stage.clientWidth,h=stage.clientHeight;R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}
+new ResizeObserver(size).observe(stage);size();
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const clock=new THREE.Clock();let st=0;
+function loop(){requestAnimationFrame(loop);const dt=clock.getDelta(),t=clock.elapsedTime;
+ if(anim){anim.k=Math.min(1,anim.k+dt*1.4);const e=1-Math.pow(1-anim.k,3);cam.position.lerpVectors(anim.p0,anim.p1,e);OC.target.lerpVectors(anim.t0,anim.t1,e);if(anim.k>=1)anim=null}
+ OC.update();
+ if(!reduce){fly.rotation.x+=dt*(BO?2:9);lbFront.material.emissiveIntensity=.3+.15*Math.sin(t*2);led.visible=BO?Math.sin(t*6)>0:true}
+ roomLight.intensity+=((BO?.15:.6)-roomLight.intensity)*.1;
+ if((st+=dt)>.15){st=0;drawScreen(reduce?0:t,BO)}
+ R.render(S,cam);
+ const w=stage.clientWidth,h=stage.clientHeight,v=new THREE.Vector3();
+ els.forEach(o=>{v.copy(o.v).project(cam);const vis=v.z<1&&v.x>-1.05&&v.x<1.05&&v.y>-1.05&&v.y<1.05;o.e.hidden=!vis;
+  if(vis){o.e.style.left=((v.x+1)/2*w)+'px';o.e.style.top=((1-v.y)/2*h-10)+'px'}});
+}
+drawScreen(0,false);loop();
+})();
+</script>
+
+</body></html>
